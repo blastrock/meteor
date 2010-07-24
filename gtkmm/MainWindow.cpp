@@ -112,7 +112,7 @@ MainWindow::MainWindow () :
 	menubar->items().push_back(
 			Gtk::Menu_Helpers::StockMenuElem(Gtk::Stock::HELP, *menu_help));
 
-	Gtk::Image* mainimage = manage(new Gtk::Image("../../images/meteor.png"));
+	Gtk::Image* mainimage = manage(new Gtk::Image("../../data/meteor.png"));
 
 	m_statusbar.set_has_resize_grip(false);
 
