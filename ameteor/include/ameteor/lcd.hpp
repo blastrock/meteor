@@ -35,6 +35,11 @@ namespace AMeteor
 		public :
 			Lcd ();
 
+			void Init(sf::WindowHandle display = 0)
+			{
+				return m_screen.Init(display);
+			}
+
 			void Reset ();
 
 			const uint16_t* GetSurface () const

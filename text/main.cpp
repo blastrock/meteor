@@ -50,6 +50,8 @@ int main (int argc, char **argv)
 	AMeteor::_keypad.BindKey('s',            (AMeteor::Keypad::Button)0x100);
 	AMeteor::_keypad.BindKey('q',            (AMeteor::Keypad::Button)0x200);
 
+	AMeteor::_lcd.Init();
+
 	AMeteor::_cpu.Run();
 
 	return 0;

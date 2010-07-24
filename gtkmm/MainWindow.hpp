@@ -24,6 +24,7 @@
 #include <gtkmm/window.h>
 #include <gtkmm/checkmenuitem.h>
 #include <gtkmm/statusbar.h>
+#include <gtkmm/drawingarea.h>
 
 class MainWindow : public Gtk::Window
 {
@@ -32,6 +33,7 @@ class MainWindow : public Gtk::Window
 
 	private :
 		Gtk::Statusbar m_statusbar;
+		Gtk::DrawingArea m_viewport;
 
 		DisassemblerWindow m_disassemblerWindow;
 		PaletteWindow m_paletteWindow;
@@ -58,6 +60,9 @@ class MainWindow : public Gtk::Window
 
 		void on_quit ();
 		bool on_delete_event(GdkEventAny* event);
+
+		bool on_key_press_event(GdkEventKey* key);
+		bool on_key_release_event(GdkEventKey* key);
 
 		void on_vblank ();
 };

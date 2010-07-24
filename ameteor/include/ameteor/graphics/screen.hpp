@@ -39,6 +39,11 @@ namespace AMeteor
 				Screen (Memory& memory, Io& io);
 				~Screen ();
 
+				void Init(sf::WindowHandle display)
+				{
+					return m_renderer.Init(display);
+				}
+
 				const uint16_t* GetSurface () const
 				{
 					return m_surface;

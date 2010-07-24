@@ -19,18 +19,20 @@
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <SFML/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <X11/Xlib.h>
 
 namespace AMeteor
 {
 	namespace Graphics
 	{
-		class Renderer : public sf::Window
+		class Renderer : public sf::RenderWindow
 		{
 			public:
 				Renderer(const uint16_t* surface);
 				~Renderer();
 
+				void Init(sf::WindowHandle display = 0);
 				void VBlank ();
 
 				void EventResize (unsigned int w, unsigned int h);

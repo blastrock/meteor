@@ -25,12 +25,30 @@ namespace AMeteor
 	namespace Graphics
 	{
 		Renderer::Renderer (const uint16_t* surface) :
-			sf::Window (),
+			sf::RenderWindow (),
 			m_base(surface),
 			m_tbase(new uint16_t[240*160]),
 			m_w(0),
 			m_h(0),
 			m_quit(false)
+		{
+		}
+
+		Renderer::~Renderer ()
+		{
+			m_quit = true;
+			// TODO check for errors
+			// we send the signal to make the thread continue and quit
+			pthread_cond_signal(&m_cond);
+			pthread_join(m_thread, NULL);
+			pthread_cond_destroy(&m_cond);
+			pthread_mutex_destroy(&m_mutex);
+
+			delete [] m_tbase;
+		}
+
+		// TODO check if we crash if we don't Init()
+		void Renderer::Init(sf::WindowHandle display)
 		{
 			static const int Square[] = {
 					0, 0,
@@ -46,7 +64,10 @@ namespace AMeteor
 				sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
 			}
 
-			this->Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+			if (display)
+				this->Create (display);
+			else
+				this->Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
 			this->SetActive();
 
 			// TODO check (may be called multiple times)
@@ -99,19 +120,6 @@ namespace AMeteor
 				puts("Error: cannot create renderer thread");
 				abort();
 			}
-		}
-
-		Renderer::~Renderer ()
-		{
-			m_quit = true;
-			// TODO check for errors
-			// we send the signal to make the thread continue and quit
-			pthread_cond_signal(&m_cond);
-			pthread_join(m_thread, NULL);
-			pthread_cond_destroy(&m_cond);
-			pthread_mutex_destroy(&m_mutex);
-
-			delete [] m_tbase;
 		}
 
 		void Renderer::VBlank ()

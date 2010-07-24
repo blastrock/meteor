@@ -28,6 +28,8 @@
 
 #include "debug.hpp"
 
+#include <gdk/gdkx.h>
+
 MainWindow::MainWindow () :
 	Gtk::Window(),
 	m_disassemblerWindow(),
@@ -112,13 +114,15 @@ MainWindow::MainWindow () :
 	menubar->items().push_back(
 			Gtk::Menu_Helpers::StockMenuElem(Gtk::Stock::HELP, *menu_help));
 
-	Gtk::Image* mainimage = manage(new Gtk::Image("../../data/meteor.png"));
+	//Gtk::Image* mainimage = manage(new Gtk::Image("../../data/meteor.png"));
+
+	m_viewport.set_size_request(4*240, 4*160);
 
 	m_statusbar.set_has_resize_grip(false);
 
 	Gtk::VBox* mainvbox = manage(new Gtk::VBox);
 	mainvbox->pack_start(*menubar);
-	mainvbox->pack_start(*mainimage);
+	mainvbox->pack_start(m_viewport);
 	mainvbox->pack_start(m_statusbar);
 
 	this->add(*mainvbox);
@@ -133,6 +137,24 @@ MainWindow::MainWindow () :
 
 	AMeteor::_lcd.signal_vblank.connect(sigc::mem_fun(*this,
 				&MainWindow::on_vblank));
+
+	GtkDrawingArea* sw = m_viewport.gobj();
+	gtk_widget_realize(GTK_WIDGET(sw));
+	gtk_widget_set_double_buffered(GTK_WIDGET(sw), FALSE);
+	GdkWindow* win = GTK_WIDGET(sw)->window;
+	XFlush(GDK_WINDOW_XDISPLAY(win));
+	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
+
+	AMeteor::_keypad.BindKey('w',            (AMeteor::Keypad::Button)0x001);
+	AMeteor::_keypad.BindKey('x',            (AMeteor::Keypad::Button)0x002);
+	AMeteor::_keypad.BindKey('z',            (AMeteor::Keypad::Button)0x004);
+	AMeteor::_keypad.BindKey('a',            (AMeteor::Keypad::Button)0x008);
+	AMeteor::_keypad.BindKey(GDK_Right, (AMeteor::Keypad::Button)0x010);
+	AMeteor::_keypad.BindKey(GDK_Left,  (AMeteor::Keypad::Button)0x020);
+	AMeteor::_keypad.BindKey(GDK_Up,    (AMeteor::Keypad::Button)0x040);
+	AMeteor::_keypad.BindKey(GDK_Down,  (AMeteor::Keypad::Button)0x080);
+	AMeteor::_keypad.BindKey('s',            (AMeteor::Keypad::Button)0x100);
+	AMeteor::_keypad.BindKey('q',            (AMeteor::Keypad::Button)0x200);
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
@@ -149,7 +171,7 @@ void MainWindow::on_open ()
 		m_disassemblerWindow.Reload();
 		m_statusbar.push("ROM loaded.");
 	}*/
-		AMeteor::_memory.LoadBios("/home/blastrock/GBA.BIOS");
+		//AMeteor::_memory.LoadBios("/home/blastrock/GBA.BIOS");
 		AMeteor::_memory.LoadRom("/home/blastrock/gba/g3.gba");
 		AMeteor::_memory.LoadCart("/home/blastrock/gba/g3.sav");
 		//AMeteor::_memory.LoadRom("/home/blastrock/GBA.BIOS");
@@ -252,4 +274,16 @@ bool MainWindow::on_delete_event(GdkEventAny* event __attribute((unused)))
 {
 	on_quit();
 	return true;
+}
+
+bool MainWindow::on_key_press_event(GdkEventKey* key)
+{
+	AMeteor::_keypad.KeyPressed(key->keyval);
+	return Gtk::Window::on_key_press_event(key);
+}
+
+bool MainWindow::on_key_release_event(GdkEventKey* key)
+{
+	AMeteor::_keypad.KeyReleased(key->keyval);
+	return Gtk::Window::on_key_release_event(key);
 }
