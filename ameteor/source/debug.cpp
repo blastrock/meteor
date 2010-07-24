@@ -22,7 +22,9 @@
 #include <sstream>
 #include <map>
 
+#if defined METDEBUG && defined METDEBUGLOG
 std::ofstream debug_stream("debug.log");
+#endif
 extern unsigned long i;
 
 namespace AMeteor
@@ -30,6 +32,7 @@ namespace AMeteor
 	// TODO make this more guidelined (like the above assert)
 	void debug_bits(uint32_t u)
 	{
+#if defined METDEBUG && defined METDEBUGLOG
 		for (register int8_t c = 31; c >= 0; --c)
 		{
 			STDBG << !!(u & (((uint32_t)0x1) << c));
@@ -37,10 +40,14 @@ namespace AMeteor
 				STDBG << ' ';
 		}
 		STDBG << std::endl;
+#else
+		(void)u;
+#endif
 	}
 
 	void debug_bits_16(uint16_t u)
 	{
+#if defined METDEBUG && defined METDEBUGLOG
 		for (register int8_t c = 15; c >= 0; --c)
 		{
 			STDBG << !!(u & (((uint32_t)0x1) << c));
@@ -48,6 +55,9 @@ namespace AMeteor
 				STDBG << ' ';
 		}
 		STDBG << std::endl;
+#else
+		(void)u;
+#endif
 	}
 
 #ifdef MYDEBUG
