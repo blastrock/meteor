@@ -39,6 +39,17 @@ int main (int argc, char **argv)
 	if (!AMeteor::LoadState("ss.mst"))
 		puts("state load fail");
 
+	AMeteor::_keypad.BindKey('w',            (AMeteor::Keypad::Button)0x001);
+	AMeteor::_keypad.BindKey('x',            (AMeteor::Keypad::Button)0x002);
+	AMeteor::_keypad.BindKey('z',            (AMeteor::Keypad::Button)0x004);
+	AMeteor::_keypad.BindKey('a',            (AMeteor::Keypad::Button)0x008);
+	AMeteor::_keypad.BindKey(sf::Key::Right, (AMeteor::Keypad::Button)0x010);
+	AMeteor::_keypad.BindKey(sf::Key::Left,  (AMeteor::Keypad::Button)0x020);
+	AMeteor::_keypad.BindKey(sf::Key::Up,    (AMeteor::Keypad::Button)0x040);
+	AMeteor::_keypad.BindKey(sf::Key::Down,  (AMeteor::Keypad::Button)0x080);
+	AMeteor::_keypad.BindKey('s',            (AMeteor::Keypad::Button)0x100);
+	AMeteor::_keypad.BindKey('q',            (AMeteor::Keypad::Button)0x200);
+
 	AMeteor::_cpu.Run();
 
 	return 0;

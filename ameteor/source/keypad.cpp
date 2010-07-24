@@ -26,101 +26,35 @@ namespace AMeteor
 	{
 	}
 
-	//XXX remove that ?
-	Keypad::~Keypad ()
+	void Keypad::KeyPressed(int code)
 	{
+		if (m_keys.count(code))
+			m_keyinput &= ~m_keys[code];
 	}
 
-	bool Keypad::KeyPressed(int code)
+	void Keypad::KeyReleased(int code)
 	{
-		switch (code)
-		{
-#define CHECKDOWN(key, val) \
-	case key: \
-		m_keyinput &= ~((uint16_t)val); \
-		return true
-			CHECKDOWN('w',            0x001);
-			CHECKDOWN('x',            0x002);
-			CHECKDOWN('z',            0x004);
-			CHECKDOWN('a',            0x008);
-			CHECKDOWN(sf::Key::Right, 0x010);
-			CHECKDOWN(sf::Key::Left,  0x020);
-			CHECKDOWN(sf::Key::Up,    0x040);
-			CHECKDOWN(sf::Key::Down,  0x080);
-			CHECKDOWN('s',            0x100);
-			CHECKDOWN('q',            0x200);
-			default:
-				return false;
-#undef CHECKDOWN
-		}
+		if (m_keys.count(code))
+			m_keyinput |= m_keys[code];
 	}
 
-	bool Keypad::KeyReleased(int code)
+	void Keypad::JoyButtonPressed (uint16_t joyid, uint16_t button)
 	{
-		switch (code)
-		{
-#define CHECKUP(key, val) \
-	case key: \
-		m_keyinput |= val; \
-		return true
-			CHECKUP('w',            0x001);
-			CHECKUP('x',            0x002);
-			CHECKUP('z',            0x004);
-			CHECKUP('a',            0x008);
-			CHECKUP(sf::Key::Right, 0x010);
-			CHECKUP(sf::Key::Left,  0x020);
-			CHECKUP(sf::Key::Up,    0x040);
-			CHECKUP(sf::Key::Down,  0x080);
-			CHECKUP('s',            0x100);
-			CHECKUP('q',            0x200);
-			default:
-				return false;
-#undef CHECKUP
-		}
+		uint32_t id = ((int)joyid) << 16 | button;
+		if (m_joys.count(id))
+			m_keyinput &= ~m_joys[id];
 	}
 
-	bool Keypad::JoyButtonPressed (unsigned int joyid, unsigned int button)
+	void Keypad::JoyButtonReleased (uint16_t joyid, uint16_t button)
 	{
-		switch (button)
-		{
-#define CHECKDOWN(key, val) \
-	case key: \
-		m_keyinput &= ~((uint16_t)val); \
-		return true
-			CHECKDOWN(2, 0x001);
-			CHECKDOWN(0, 0x002);
-			CHECKDOWN(8, 0x004);
-			CHECKDOWN(9, 0x008);
-			CHECKDOWN(6, 0x100);
-			CHECKDOWN(4, 0x200);
-			default:
-				return false;
-#undef CHECKDOWN
-		}
-	}
-
-	bool Keypad::JoyButtonReleased (unsigned int joyid, unsigned int button)
-	{
-		switch (button)
-		{
-#define CHECKUP(key, val) \
-	case key: \
-		m_keyinput |= val; \
-		return true
-			CHECKUP(2, 0x001);
-			CHECKUP(0, 0x002);
-			CHECKUP(8, 0x004);
-			CHECKUP(9, 0x008);
-			CHECKUP(6, 0x100);
-			CHECKUP(4, 0x200);
-			default:
-				return false;
-#undef CHECKUP
-		}
+		uint32_t id = ((int)joyid) << 16 | button;
+		if (m_joys.count(id))
+			m_keyinput |= m_joys[id];
 	}
 
 	bool Keypad::JoyMoved (unsigned int joyid, unsigned int axis, float pos)
 	{
+		/* TODO
 		switch (axis)
 		{
 			case 4:
@@ -142,6 +76,8 @@ namespace AMeteor
 			default:
 				return false;
 		}
+		*/
+		return false;
 	}
 
 	void Keypad::VBlank ()
