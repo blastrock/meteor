@@ -19,11 +19,6 @@
 
 #include <stdint.h>
 
-namespace sf
-{
-	class Window;
-}
-
 namespace AMeteor
 {
 	class Keypad

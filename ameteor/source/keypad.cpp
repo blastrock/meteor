@@ -17,7 +17,6 @@
 #include "ameteor/keypad.hpp"
 #include "globals.hpp"
 #include "ameteor.hpp"
-#include <SFML/Window.hpp>
 
 namespace AMeteor
 {
