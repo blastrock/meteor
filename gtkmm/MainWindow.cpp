@@ -19,7 +19,6 @@
 #include <gtkmm/main.h>
 #include <gtkmm/menu.h>
 #include <gtkmm/menubar.h>
-#include <gtkmm/box.h>
 #include <gtkmm/stock.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/messagedialog.h>
@@ -33,7 +32,8 @@
 MainWindow::MainWindow () :
 	Gtk::Window(),
 	m_action(ACT_NOTHING),
-	m_sstate(0)
+	m_sstate(0),
+	m_mainimage("../../data/meteor.png")
 {
 	this->set_title("Meteor");
 	this->set_resizable(false);
@@ -133,18 +133,13 @@ MainWindow::MainWindow () :
 	menubar->items().push_back(
 			Gtk::Menu_Helpers::StockMenuElem(Gtk::Stock::HELP, *menu_help));
 
-	//Gtk::Image* mainimage = manage(new Gtk::Image("../../data/meteor.png"));
-
-	m_viewport.set_size_request(4*240, 4*160);
-
 	m_statusbar.set_has_resize_grip(false);
 
-	Gtk::VBox* mainvbox = manage(new Gtk::VBox);
-	mainvbox->pack_start(*menubar);
-	mainvbox->pack_start(m_viewport);
-	mainvbox->pack_start(m_statusbar);
+	m_mainvbox.pack_start(*menubar);
+	m_mainvbox.pack_start(m_mainimage);
+	m_mainvbox.pack_start(m_statusbar);
 
-	this->add(*mainvbox);
+	this->add(m_mainvbox);
 	this->show_all_children();
 
 	m_disassemblerWindow.signal_hide().connect(sigc::mem_fun(*this,
@@ -156,13 +151,6 @@ MainWindow::MainWindow () :
 
 	AMeteor::_lcd.signal_vblank.connect(sigc::mem_fun(*this,
 				&MainWindow::on_vblank));
-
-	GtkDrawingArea* sw = m_viewport.gobj();
-	gtk_widget_realize(GTK_WIDGET(sw));
-	gtk_widget_set_double_buffered(GTK_WIDGET(sw), FALSE);
-	GdkWindow* win = GTK_WIDGET(sw)->window;
-	XFlush(GDK_WINDOW_XDISPLAY(win));
-	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
 
 	m_config.LoadFile("meteor.cfg");
 
@@ -211,6 +199,21 @@ void MainWindow::on_run ()
 {
 	if (AMeteor::_cpu.IsRunning())
 		return;
+
+	Gtk::Box_Helpers::BoxList& blist = m_mainvbox.children();
+
+	blist.remove(m_mainimage);
+	blist.insert(blist.find(m_statusbar), m_viewport);
+
+	m_viewport.set_size_request(4*240, 4*160);
+	m_viewport.show();
+
+	GtkDrawingArea* sw = m_viewport.gobj();
+	gtk_widget_realize(GTK_WIDGET(sw));
+	gtk_widget_set_double_buffered(GTK_WIDGET(sw), FALSE);
+	GdkWindow* win = GTK_WIDGET(sw)->window;
+	XFlush(GDK_WINDOW_XDISPLAY(win));
+	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
 
 	while (true)
 	{

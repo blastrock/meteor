@@ -30,17 +30,36 @@ namespace AMeteor
 			m_tbase(new uint16_t[240*160]),
 			m_w(0),
 			m_h(0),
-			m_quit(false)
+			m_thread(0),
+			m_quit(false),
+			m_pbo(0),
+			m_texture(0),
+			m_vbo(0)
 		{
+			cpu_set_t set;
+			CPU_ZERO(&set);
+			CPU_SET(1, &set);
+			sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
+
+			int ret = pthread_mutex_init(&m_mutex, NULL);
+			if (ret)
+			{
+				puts("Error: cannot create renderer mutex");
+				abort();
+			}
+			ret = pthread_cond_init(&m_cond, NULL);
+			if (ret)
+			{
+				puts("Error: cannot create renderer condition variable");
+				abort();
+			}
 		}
 
 		Renderer::~Renderer ()
 		{
-			m_quit = true;
+			Uninit();
+
 			// TODO check for errors
-			// we send the signal to make the thread continue and quit
-			pthread_cond_signal(&m_cond);
-			pthread_join(m_thread, NULL);
 			pthread_cond_destroy(&m_cond);
 			pthread_mutex_destroy(&m_mutex);
 
@@ -50,6 +69,31 @@ namespace AMeteor
 		// TODO check if we crash if we don't Init()
 		void Renderer::Init(sf::WindowHandle display)
 		{
+			Uninit();
+
+			if (display)
+				this->Create (display);
+			else
+				this->Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+
+			InitGl();
+
+			int ret = pthread_create(&m_thread, NULL, EntryPoint, this);
+			if (ret)
+			{
+				puts("Error: cannot create renderer thread");
+				abort();
+			}
+		}
+
+		void Renderer::Uninit()
+		{
+			StopThread();
+			UninitGl();
+		}
+
+		void Renderer::InitGl()
+		{
 			static const int Square[] = {
 					0, 0,
 					1, 0,
@@ -57,17 +101,6 @@ namespace AMeteor
 					0, 1,
 			};
 
-			{
-				cpu_set_t set;
-				CPU_ZERO(&set);
-				CPU_SET(1, &set);
-				sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
-			}
-
-			if (display)
-				this->Create (display);
-			else
-				this->Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
 			this->SetActive();
 
 			// TODO check (may be called multiple times)
@@ -101,24 +134,31 @@ namespace AMeteor
 
 			this->Display();
 			this->SetActive(false);
+		}
 
-			int ret = pthread_mutex_init(&m_mutex, NULL);
-			if (ret)
+		void Renderer::StopThread()
+		{
+			if (m_thread)
 			{
-				puts("Error: cannot create renderer mutex");
-				abort();
+				m_quit = true;
+				// TODO check for errors
+				// we send the signal to make the thread continue and quit
+				pthread_cond_signal(&m_cond);
+				pthread_join(m_thread, NULL);
+				// FIXME ? is this safe ? is the m_thread still allocated ?
+				m_thread = 0;
 			}
-			ret = pthread_cond_init(&m_cond, NULL);
-			if (ret)
+		}
+
+		void Renderer::UninitGl()
+		{
+			if (this->SetActive())
 			{
-				puts("Error: cannot create renderer condition variable");
-				abort();
-			}
-			ret = pthread_create(&m_thread, NULL, EntryPoint, this);
-			if (ret)
-			{
-				puts("Error: cannot create renderer thread");
-				abort();
+				glDeleteBuffers(1, &m_pbo);
+				glDeleteTextures(1, &m_texture);
+				glDeleteBuffers(1, &m_vbo);
+				m_vbo = m_texture = m_vbo = false;
+				this->Close();
 			}
 		}
 
@@ -196,10 +236,6 @@ namespace AMeteor
 				this->Display();
 			}
 			pthread_mutex_unlock(&m_mutex);
-
-			glDeleteBuffers(1, &m_pbo);
-			glDeleteTextures(1, &m_texture);
-			glDeleteBuffers(1, &m_vbo);
 		}
 	}
 }

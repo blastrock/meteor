@@ -33,6 +33,7 @@ namespace AMeteor
 				~Renderer();
 
 				void Init(sf::WindowHandle display = 0);
+				void Uninit();
 				void VBlank ();
 
 				void EventResize (unsigned int w, unsigned int h);
@@ -50,6 +51,10 @@ namespace AMeteor
 				GLuint m_pbo;
 				GLuint m_texture;
 				GLuint m_vbo;
+
+				void InitGl();
+				void StopThread();
+				void UninitGl();
 
 				static void* EntryPoint (void* ptr);
 				void MainLoop ();

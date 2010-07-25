@@ -26,6 +26,7 @@
 #include <gtkmm/checkmenuitem.h>
 #include <gtkmm/statusbar.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/box.h>
 
 class MainWindow : public Gtk::Window
 {
@@ -43,8 +44,10 @@ class MainWindow : public Gtk::Window
 		uint8_t m_sstate;
 		Config m_config;
 
+		Gtk::VBox m_mainvbox;
 		Gtk::Statusbar m_statusbar;
 		Gtk::DrawingArea m_viewport;
+		Gtk::Image m_mainimage;
 
 		DisassemblerWindow m_disassemblerWindow;
 		PaletteWindow m_paletteWindow;
