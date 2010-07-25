@@ -54,7 +54,7 @@ namespace AMeteor
 			void SetCartType (uint8_t type);
 			void SetCartFile (const char* filename);
 
-			void Reset ();
+			void Reset (bool rom = true);
 			void ClearWbram ();
 			void ClearWcram ();
 			void ClearPalette ();
