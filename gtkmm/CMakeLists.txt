@@ -18,6 +18,7 @@ add_executable(meteor
 	VramArea.cpp
 	VramWindow.cpp
 
+	Config.cpp
 	MainWindow.cpp
 	main.cpp
 )

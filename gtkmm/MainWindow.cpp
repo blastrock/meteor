@@ -145,16 +145,24 @@ MainWindow::MainWindow () :
 	XFlush(GDK_WINDOW_XDISPLAY(win));
 	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
 
-	AMeteor::_keypad.BindKey('w',            (AMeteor::Keypad::Button)0x001);
-	AMeteor::_keypad.BindKey('x',            (AMeteor::Keypad::Button)0x002);
-	AMeteor::_keypad.BindKey('z',            (AMeteor::Keypad::Button)0x004);
-	AMeteor::_keypad.BindKey('a',            (AMeteor::Keypad::Button)0x008);
-	AMeteor::_keypad.BindKey(GDK_Right, (AMeteor::Keypad::Button)0x010);
-	AMeteor::_keypad.BindKey(GDK_Left,  (AMeteor::Keypad::Button)0x020);
-	AMeteor::_keypad.BindKey(GDK_Up,    (AMeteor::Keypad::Button)0x040);
-	AMeteor::_keypad.BindKey(GDK_Down,  (AMeteor::Keypad::Button)0x080);
-	AMeteor::_keypad.BindKey('s',            (AMeteor::Keypad::Button)0x100);
-	AMeteor::_keypad.BindKey('q',            (AMeteor::Keypad::Button)0x200);
+	m_config.LoadFile("meteor.cfg");
+
+	int tmp;
+#define ASSIGN_BUTTON(btn) \
+	tmp = m_config.GetInt("keyboard_" #btn); \
+	if (tmp != INT_MIN) \
+		AMeteor::_keypad.BindKey(tmp, AMeteor::Keypad::BTN_##btn);
+	ASSIGN_BUTTON(A);
+	ASSIGN_BUTTON(B);
+	ASSIGN_BUTTON(L);
+	ASSIGN_BUTTON(R);
+	ASSIGN_BUTTON(START);
+	ASSIGN_BUTTON(SELECT);
+	ASSIGN_BUTTON(LEFT);
+	ASSIGN_BUTTON(RIGHT);
+	ASSIGN_BUTTON(UP);
+	ASSIGN_BUTTON(DOWN);
+#undef ASSIGN_BUTTON
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);

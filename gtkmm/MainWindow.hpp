@@ -20,6 +20,7 @@
 #include "DisassemblerWindow.hpp"
 #include "PaletteWindow.hpp"
 #include "VramWindow.hpp"
+#include "Config.hpp"
 
 #include <gtkmm/window.h>
 #include <gtkmm/checkmenuitem.h>
@@ -32,6 +33,8 @@ class MainWindow : public Gtk::Window
 		MainWindow ();
 
 	private :
+		Config m_config;
+
 		Gtk::Statusbar m_statusbar;
 		Gtk::DrawingArea m_viewport;
 
