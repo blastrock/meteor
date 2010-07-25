@@ -32,9 +32,8 @@
 
 MainWindow::MainWindow () :
 	Gtk::Window(),
-	m_disassemblerWindow(),
-	m_paletteWindow(),
-	m_vramWindow()
+	m_action(ACT_NOTHING),
+	m_sstate(0)
 {
 	this->set_title("Meteor");
 	this->set_resizable(false);
@@ -65,15 +64,35 @@ MainWindow::MainWindow () :
 				"_Reset", Gtk::AccelKey('r', Gdk::CONTROL_MASK), *img,
 				sigc::mem_fun(*this, &MainWindow::on_reset)));
 
+	Gtk::Menu* menu_sstate = manage(new Gtk::Menu);
+	Gtk::Menu* menu_lstate = manage(new Gtk::Menu);
+	{
+		char tmp[2];
+		tmp[0] = '1';
+		tmp[1] = '\0';
+		for (char c = 0; c < 9; ++c, ++tmp[0])
+			menu_sstate->items().push_back(Gtk::Menu_Helpers::MenuElem(
+						tmp, Gtk::AccelKey(GDK_F1 + c, Gdk::CONTROL_MASK),
+						sigc::bind<uint8_t>(sigc::mem_fun(
+								*this, &MainWindow::on_save_state), c)));
+
+		tmp[0] = '1';
+		for (char c = 0; c < 9; ++c, ++tmp[0])
+			menu_lstate->items().push_back(Gtk::Menu_Helpers::MenuElem(
+						tmp, Gtk::AccelKey(GDK_F1 + c, (Gdk::ModifierType)0),
+						sigc::bind<uint8_t>(sigc::mem_fun(
+								*this, &MainWindow::on_load_state), c)));
+	}
+
 	Gtk::Menu* menu_state = manage(new Gtk::Menu);
 	img = manage(new Gtk::Image(Gtk::Stock::SAVE,
 				Gtk::ICON_SIZE_MENU));
 	menu_state->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
-				"Save", *img, sigc::mem_fun(*this, &MainWindow::on_save_state)));
+				"Save", *img, *menu_sstate));
 	img = manage(new Gtk::Image(Gtk::Stock::OPEN,
 				Gtk::ICON_SIZE_MENU));
 	menu_state->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
-				"Load", *img, sigc::mem_fun(*this, &MainWindow::on_load_state)));
+				"Load", *img, *menu_lstate));
 
 	Gtk::Menu* menu_debug = manage(new Gtk::Menu);
 	Gtk::Menu_Helpers::CheckMenuElem disassemblercheck(
@@ -190,7 +209,28 @@ void MainWindow::on_open ()
 
 void MainWindow::on_run ()
 {
-	AMeteor::Run();
+	if (AMeteor::_cpu.IsRunning())
+		return;
+
+	while (true)
+	{
+		AMeteor::Run();
+
+		// The emulator has been stopped
+		switch (m_action)
+		{
+			case ACT_SAVE:
+				SaveState(m_sstate);
+				break;
+			case ACT_LOAD:
+				LoadState(m_sstate);
+				break;
+			default:
+				return; // nothing to do
+		}
+		m_action = ACT_NOTHING;
+		m_sstate = 0;
+	}
 }
 
 void MainWindow::on_menu_disassembler_toggle ()
@@ -258,24 +298,56 @@ void MainWindow::on_quit ()
 	Gtk::Main::quit();
 }
 
-void MainWindow::on_save_state ()
+void MainWindow::on_save_state (uint8_t n)
 {
-	if (!AMeteor::SaveState("ss.mst"))
+	if (AMeteor::_cpu.IsRunning())
+	{
+		m_action = ACT_SAVE;
+		m_sstate = n;
+		AMeteor::_cpu.Stop();
+	}
+	else
+		SaveState(n);
+}
+
+void MainWindow::SaveState(uint8_t n)
+{
+	char file[] = "ssX.mst";
+	file[2] = n+'1';
+	if (!AMeteor::SaveState(file))
 	{
 		Gtk::MessageDialog dlg(*this, "Cannot save state !", false,
 				Gtk::MESSAGE_ERROR);
 		dlg.run();
 	}
+	else
+		m_statusbar.push("State saved");
 }
 
-void MainWindow::on_load_state ()
+void MainWindow::on_load_state (uint8_t n)
 {
-	if (!AMeteor::LoadState("ss.mst"))
+	if (AMeteor::_cpu.IsRunning())
+	{
+		m_action = ACT_LOAD;
+		m_sstate = n;
+		AMeteor::_cpu.Stop();
+	}
+	else
+		LoadState(n);
+}
+
+void MainWindow::LoadState(uint8_t n)
+{
+	char file[] = "ssX.mst";
+	file[2] = n+'1';
+	if (!AMeteor::LoadState(file))
 	{
 		Gtk::MessageDialog dlg(*this, "Cannot load state !", false,
 				Gtk::MESSAGE_ERROR);
 		dlg.run();
 	}
+	else
+		m_statusbar.push("State loaded");
 }
 
 bool MainWindow::on_delete_event(GdkEventAny* event __attribute((unused)))

@@ -33,6 +33,14 @@ class MainWindow : public Gtk::Window
 		MainWindow ();
 
 	private :
+		enum Action
+		{
+			ACT_NOTHING,
+			ACT_SAVE,
+			ACT_LOAD
+		};
+		Action m_action;
+		uint8_t m_sstate;
 		Config m_config;
 
 		Gtk::Statusbar m_statusbar;
@@ -46,6 +54,9 @@ class MainWindow : public Gtk::Window
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refVramCheck;
 
+		void SaveState (uint8_t n);
+		void LoadState (uint8_t n);
+
 		void on_open ();
 		void on_menu_disassembler_toggle ();
 		void on_menu_palette_toggle ();
@@ -58,8 +69,8 @@ class MainWindow : public Gtk::Window
 		void on_stop ();
 		void on_reset ();
 
-		void on_save_state ();
-		void on_load_state ();
+		void on_save_state (uint8_t n);
+		void on_load_state (uint8_t n);
 
 		void on_quit ();
 		bool on_delete_event(GdkEventAny* event);
