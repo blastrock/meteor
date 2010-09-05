@@ -19,6 +19,8 @@
 #include <cstring>
 #include <sys/syscall.h>
 #include <sched.h>
+// TODO try to remove this include
+#include <stdio.h>
 
 namespace AMeteor
 {

@@ -20,6 +20,7 @@
 #include "arguments.hpp"
 
 #include <string>
+#include <stdint.h>
 
 namespace AMeteor
 {

@@ -23,6 +23,8 @@
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/treemodelcolumn.h>
 
+#include <stdint.h>
+
 class DisassemblerTreeView : public Gtk::HBox
 {
 	public :

@@ -19,6 +19,8 @@
 
 #include <gtkmm/drawingarea.h>
 
+#include <stdint.h>
+
 class VramArea : public Gtk::DrawingArea
 {
 	public :

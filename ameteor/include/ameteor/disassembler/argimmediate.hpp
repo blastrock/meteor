@@ -18,6 +18,7 @@
 #define __ARG_IMMEDIATE_H__
 
 #include "argument.hpp"
+#include <stdint.h>
 
 namespace AMeteor
 {

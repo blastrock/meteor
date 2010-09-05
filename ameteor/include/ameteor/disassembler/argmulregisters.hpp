@@ -19,6 +19,7 @@
 
 #include "argument.hpp"
 
+#include <stdint.h>
 #include <vector>
 
 namespace AMeteor

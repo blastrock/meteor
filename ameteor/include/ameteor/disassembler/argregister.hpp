@@ -19,6 +19,8 @@
 
 #include "argument.hpp"
 
+#include <stdint.h>
+
 namespace AMeteor
 {
 	namespace Disassembler
