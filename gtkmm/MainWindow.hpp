@@ -38,7 +38,8 @@ class MainWindow : public Gtk::Window
 		{
 			ACT_NOTHING,
 			ACT_SAVE,
-			ACT_LOAD
+			ACT_LOAD,
+			ACT_CLOSE
 		};
 		Action m_action;
 		uint8_t m_sstate;
@@ -59,6 +60,7 @@ class MainWindow : public Gtk::Window
 
 		void SaveState (uint8_t n);
 		void LoadState (uint8_t n);
+		void CloseRom();
 
 		void on_open ();
 		void on_menu_disassembler_toggle ();
@@ -71,6 +73,7 @@ class MainWindow : public Gtk::Window
 		void on_run ();
 		void on_stop ();
 		void on_reset ();
+		void on_close ();
 
 		void on_save_state (uint8_t n);
 		void on_load_state (uint8_t n);

@@ -39,6 +39,10 @@ namespace AMeteor
 			{
 				return m_screen.Init(display);
 			}
+			void Uninit()
+			{
+				return m_screen.Uninit();
+			}
 
 			void Reset ();
 

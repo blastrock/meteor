@@ -20,7 +20,6 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <X11/Xlib.h>
 
 namespace AMeteor
 {
@@ -53,8 +52,9 @@ namespace AMeteor
 				GLuint m_vbo;
 
 				void InitGl();
-				void StopThread();
 				void UninitGl();
+				void StartThread();
+				void StopThread();
 
 				static void* EntryPoint (void* ptr);
 				void MainLoop ();

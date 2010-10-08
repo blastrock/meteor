@@ -25,6 +25,15 @@ namespace AMeteor
 	{
 		void CheckEvents (sf::Window& win)
 		{
+			// FIXME
+			// when using the gtkmm frontend, we can't GetEvent() on an sf window
+			// without waiting some time
+			// this dirty fix works, but we have to know why it crashes and how to
+			// fix it cleanly
+			static int i = 0;
+			if (i++ < 2)
+				return;
+
 			sf::Event event;
 			while (win.GetEvent(event))
 			{

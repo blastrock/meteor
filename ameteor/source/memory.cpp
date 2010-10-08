@@ -77,7 +77,7 @@ namespace AMeteor
 	void Memory::SetCartType (uint8_t type)
 	{
 		if (m_cart)
-			delete [] m_cart;
+			delete m_cart;
 		switch (type)
 		{
 			case CTYPE_UNKNOWN:

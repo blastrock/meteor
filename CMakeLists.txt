@@ -55,13 +55,13 @@ set(AMeteor_LIBRARIES
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -g")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -pg")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -fomit-frame-pointer")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -fomit-frame-pointer")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 add_definitions(-DNDEBUG)
 add_definitions(-DX86_ASM=1)
 #add_definitions(-DMETDEBUG)
 #add_definitions(-DMETDEBUGLOG)
 #add_definitions(-DDISASSEMBLE)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-aliasing=3 -Wmissing-noreturn -pedantic -ansi -pipe")

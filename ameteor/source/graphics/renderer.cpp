@@ -19,6 +19,7 @@
 #include <cstring>
 #include <sys/syscall.h>
 #include <sched.h>
+#include <X11/Xlib.h>
 // TODO try to remove this include
 #include <stdio.h>
 
@@ -33,7 +34,6 @@ namespace AMeteor
 			m_w(0),
 			m_h(0),
 			m_thread(0),
-			m_quit(false),
 			m_pbo(0),
 			m_texture(0),
 			m_vbo(0)
@@ -79,13 +79,7 @@ namespace AMeteor
 				this->Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
 
 			InitGl();
-
-			int ret = pthread_create(&m_thread, NULL, EntryPoint, this);
-			if (ret)
-			{
-				puts("Error: cannot create renderer thread");
-				abort();
-			}
+			StartThread();
 		}
 
 		void Renderer::Uninit()
@@ -97,10 +91,10 @@ namespace AMeteor
 		void Renderer::InitGl()
 		{
 			static const int Square[] = {
-					0, 0,
-					1, 0,
-					1, 1,
-					0, 1,
+				0, 0,
+				1, 0,
+				1, 1,
+				0, 1,
 			};
 
 			this->SetActive();
@@ -138,6 +132,17 @@ namespace AMeteor
 			this->SetActive(false);
 		}
 
+		void Renderer::StartThread()
+		{
+			m_quit = false;
+			int ret = pthread_create(&m_thread, NULL, EntryPoint, this);
+			if (ret)
+			{
+				puts("Error: cannot create renderer thread");
+				abort();
+			}
+		}
+
 		void Renderer::StopThread()
 		{
 			if (m_thread)
@@ -159,7 +164,7 @@ namespace AMeteor
 				glDeleteBuffers(1, &m_pbo);
 				glDeleteTextures(1, &m_texture);
 				glDeleteBuffers(1, &m_vbo);
-				m_vbo = m_texture = m_vbo = false;
+				m_vbo = m_texture = m_vbo = 0;
 				this->Close();
 			}
 		}
@@ -194,8 +199,6 @@ namespace AMeteor
 				sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
 			}
 
-			this->SetActive();
-
 			void* buf;
 
 			// TODO check for errors
@@ -204,6 +207,9 @@ namespace AMeteor
 			{
 				// this unlocks the mutex while waiting
 				pthread_cond_wait(&m_cond, &m_mutex);
+
+				if (!this->SetActive())
+					puts("Can't activate window !");
 
 				if (m_w && m_h)
 				{
@@ -237,6 +243,8 @@ namespace AMeteor
 
 				this->Display();
 			}
+
+			this->SetActive(false);
 			pthread_mutex_unlock(&m_mutex);
 		}
 	}

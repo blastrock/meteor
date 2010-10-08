@@ -42,6 +42,9 @@ MainWindow::MainWindow () :
 	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
 				Gtk::Stock::OPEN, sigc::mem_fun(*this,
 					&MainWindow::on_open)));
+	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
+				Gtk::Stock::CLOSE, sigc::mem_fun(*this,
+					&MainWindow::on_close)));
 	menu_file->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
 	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
 				Gtk::Stock::QUIT, sigc::mem_fun(*this,
@@ -133,14 +136,23 @@ MainWindow::MainWindow () :
 	menubar->items().push_back(
 			Gtk::Menu_Helpers::StockMenuElem(Gtk::Stock::HELP, *menu_help));
 
+	m_viewport.set_double_buffered(false);
+	m_viewport.set_size_request(4*240, 4*160);
+
 	m_statusbar.set_has_resize_grip(false);
 
 	m_mainvbox.pack_start(*menubar);
 	m_mainvbox.pack_start(m_mainimage);
+	m_mainvbox.pack_start(m_viewport);
 	m_mainvbox.pack_start(m_statusbar);
 
 	this->add(m_mainvbox);
-	this->show_all_children();
+
+	menubar->show_all();
+	m_mainimage.show_all();
+	m_statusbar.show_all();
+	m_mainvbox.show();
+	this->show();
 
 	m_disassemblerWindow.signal_hide().connect(sigc::mem_fun(*this,
 				&MainWindow::on_disassembler_hide));
@@ -195,23 +207,39 @@ void MainWindow::on_open ()
 		m_statusbar.push("ROM loaded.");
 }
 
+void MainWindow::on_close ()
+{
+	if (AMeteor::_cpu.IsRunning())
+	{
+		m_action = ACT_CLOSE;
+		AMeteor::_cpu.Stop();
+	}
+	else
+	{
+		CloseRom();
+	}
+}
+
+void MainWindow::CloseRom()
+{
+	AMeteor::Reset();
+	AMeteor::_lcd.Uninit();
+
+	m_viewport.hide();
+	m_mainimage.show();
+}
+
 void MainWindow::on_run ()
 {
 	if (AMeteor::_cpu.IsRunning())
 		return;
 
-	Gtk::Box_Helpers::BoxList& blist = m_mainvbox.children();
-
-	blist.remove(m_mainimage);
-	blist.insert(blist.find(m_statusbar), m_viewport);
-
-	m_viewport.set_size_request(4*240, 4*160);
+	m_mainimage.hide();
 	m_viewport.show();
 
-	GtkDrawingArea* sw = m_viewport.gobj();
-	gtk_widget_realize(GTK_WIDGET(sw));
-	gtk_widget_set_double_buffered(GTK_WIDGET(sw), FALSE);
-	GdkWindow* win = GTK_WIDGET(sw)->window;
+	GtkWidget* widget = GTK_WIDGET(m_viewport.gobj());
+	gtk_widget_realize(widget);
+	GdkWindow* win = widget->window;
 	XFlush(GDK_WINDOW_XDISPLAY(win));
 	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
 
@@ -228,6 +256,10 @@ void MainWindow::on_run ()
 			case ACT_LOAD:
 				LoadState(m_sstate);
 				break;
+			case ACT_CLOSE:
+				m_action = ACT_NOTHING;
+				CloseRom();
+				return;
 			default:
 				return; // nothing to do
 		}

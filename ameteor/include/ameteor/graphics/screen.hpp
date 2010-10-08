@@ -43,6 +43,10 @@ namespace AMeteor
 				{
 					return m_renderer.Init(display);
 				}
+				void Uninit()
+				{
+					return m_renderer.Uninit();
+				}
 
 				const uint16_t* GetSurface () const
 				{
