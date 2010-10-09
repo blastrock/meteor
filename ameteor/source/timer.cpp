@@ -65,7 +65,7 @@ namespace AMeteor
 			uint16_t cnt = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
 			if (m_control.b.start && (cnt && (0x1 << 7))
 					&& m_control.b.prescaler != (cnt & 0x3))
-				_assert("Prescaler changed while timer " << (int)m_num << " was up");
+				met_abort("Prescaler changed while timer " << (int)m_num << " was up");
 			m_control.w = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
 
 			if (!m_control.b.start)
@@ -73,7 +73,7 @@ namespace AMeteor
 		}
 
 		if (m_num == 0 && m_control.b.countup)
-			_assert("Count-up on first timer !");
+			met_abort("Count-up on first timer !");
 	}
 
 	uint16_t Timer::GetCount () const

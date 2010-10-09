@@ -22,11 +22,11 @@
 #include <iomanip>
 #include <cstdlib>
 
-// for asserts
+// for abort macro
 #include "ameteor.hpp"
 
 #ifdef METDEBUG
-#define _assert(str) \
+#define met_abort(str) \
 	{ \
 		std::cerr << IOS_NOR << "Fatal error :\n" << str << "\nFile : " \
 		<< __FILE__ << "\nLine : " << __LINE__ << "\nr15 = " \
@@ -36,7 +36,7 @@
 		abort(); \
 	}
 #else
-#define _assert(str) \
+#define met_abort(str) \
 	{ }
 #endif
 

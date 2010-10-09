@@ -75,7 +75,7 @@ ARM Binary Opcode Format
 #ifdef METDEBUG
 #	define NOT_PC(reg) \
 		if (reg == 15) \
-			_assert("Register is PC")
+			met_abort("Register is PC")
 #	define NOT_PC_ALL() \
 		NOT_PC(Rn); \
 		NOT_PC(Rd); \
@@ -83,7 +83,7 @@ ARM Binary Opcode Format
 		NOT_PC(Rm)
 #	define NOT_SAME2(reg1, reg2) \
 		if (reg1 == reg2) \
-			_assert("Two same registers")
+			met_abort("Two same registers")
 #	define NOT_SAME3(reg1, reg2, reg3) \
 		NOT_SAME2(reg1, reg2); \
 		NOT_SAME2(reg2, reg3); \
@@ -106,15 +106,15 @@ namespace AMeteor
 	ARM(BXBLX)
 	{
 		if ((code & 0x0FFFFF00) != 0x012FFF00)
-			_assert("Bits 8-27 must be 0001 00101111 11111111 for BX/BLX instructions");
+			met_abort("Bits 8-27 must be 0001 00101111 11111111 for BX/BLX instructions");
 
 		if (Rm == 15)
-			_assert("Branching on PC is undefined");
+			met_abort("Branching on PC is undefined");
 
 		if (code & (0x1 << 5)) // BLX
 		{
 			R(14) = R(15);
-			_assert("BLX not completly implemented");
+			met_abort("BLX not completly implemented");
 		}
 		// else BX
 
@@ -127,7 +127,7 @@ namespace AMeteor
 		else
 		{
 			if (R(Rm) & 0x3)
-				_assert("BX with ARM on non 32 bit aligned address");
+				met_abort("BX with ARM on non 32 bit aligned address");
 			R(15) = R(Rm)+4;
 			CYCLES32NSeq(R(15), 3);
 		}
@@ -137,10 +137,10 @@ namespace AMeteor
 	ARM(BBL)
 	{
 		if (((code >> 25) & 0x7) != 0x5)
-			_assert("Bits 25-27 must be 101 for B/BL/BLX instructions");
+			met_abort("Bits 25-27 must be 101 for B/BL/BLX instructions");
 
 		if (((code >> 28) & 0xF) == 0xF)
-			_assert("BLX not implemented");
+			met_abort("BLX not implemented");
 
 		int32_t off = code & 0x00FFFFFF;
 		// Extend the sign bit
@@ -165,7 +165,7 @@ namespace AMeteor
 	NIARM(_DataProcShiftImm)
 	{
 		if ((code >> 26) & 0x3)
-			_assert("Bits 26-27 must be 00 for DataProc instructions");
+			met_abort("Bits 26-27 must be 00 for DataProc instructions");
 
 		uint8_t shift;
 		uint32_t op2 = 0; // to avoid a warning
@@ -174,7 +174,7 @@ namespace AMeteor
 
 		uint8_t rm = Rm;
 		if (rm == 15 && !(code & (0x1 << 20)) && (code & (0x1 << 4)))
-			_assert("Rm = 15, not implemented");
+			met_abort("Rm = 15, not implemented");
 
 		shift = (code >> 7) & 0x1F;
 		switch ((code >> 5) & 0x3)
@@ -232,9 +232,9 @@ namespace AMeteor
 	NIARM(_DataProcShiftReg)
 	{
 		if ((code >> 26) & 0x3)
-			_assert("Bits 26-27 must be 00 for DataProc instructions");
+			met_abort("Bits 26-27 must be 00 for DataProc instructions");
 		if (code & (0x1 << 7))
-			_assert("Bit 7 must be 0 for DataProc with shift by register instructions");
+			met_abort("Bit 7 must be 0 for DataProc with shift by register instructions");
 
 		uint8_t shift;
 		uint32_t op1, op2 = 0; // to avoid a warning
@@ -243,7 +243,7 @@ namespace AMeteor
 
 		uint8_t rm = Rm;
 		if (rm == 15 && !(code & (0x1 << 20)) && (code & (0x1 << 4)))
-			_assert("Rm = 15, not implemented");
+			met_abort("Rm = 15, not implemented");
 
 		op1 = R(Rn);
 
@@ -316,7 +316,7 @@ namespace AMeteor
 	NIARM(_DataProcImm)
 	{
 		if ((code >> 26) & 0x3)
-			_assert("Bits 26-27 must be 00 for DataProc instructions");
+			met_abort("Bits 26-27 must be 00 for DataProc instructions");
 
 		uint32_t op2;
 		bool shiftcarry = FLAG_C;
@@ -343,9 +343,9 @@ namespace AMeteor
 		{
 		}
 		else if (!((code >> 20) & 0x1) || (rd != 0x0 && rd != 0xF))
-			_assert("Set condition bit not set for test operation or Rd not acceptable for a test");
+			met_abort("Set condition bit not set for test operation or Rd not acceptable for a test");
 		if ((opcode == 0xD || opcode == 0xF) && Rn)
-			_assert("Rn not null for MOV or MVN");
+			met_abort("Rn not null for MOV or MVN");
 
 #ifndef X86_ASM
 		uint32_t res;
@@ -653,7 +653,7 @@ namespace AMeteor
 				case 0x9 : // TEQ
 				case 0xA : // CMP
 				case 0xB : // CMN
-					_assert("Comparison or test without set flags bit");
+					met_abort("Comparison or test without set flags bit");
 					break;
 				case 0xC : // ORR
 					R(rd) = op1 | op2;
@@ -686,18 +686,18 @@ namespace AMeteor
 			CYCLES32Seq(R(15), 1);
 
 		if (opcode >= 0x8 && opcode <= 0xB && rd == 0xF)
-			_assert("P test instruction (not implemented)");
+			met_abort("P test instruction (not implemented)");
 	}
 
 	// PSR Transfer (MRS, MSR)
 	ARM(PSR)
 	{
 		if ((code >> 26) & 0x3)
-			_assert("Bits 26-27 must be 00 for PSR instructions");
+			met_abort("Bits 26-27 must be 00 for PSR instructions");
 		if (((code >> 23) & 0x3) != 0x2)
-			_assert("Bits 23-24 must be 10 for PSR instructions");
+			met_abort("Bits 23-24 must be 10 for PSR instructions");
 		if (code & (0x1 << 20))
-			_assert("Bit 20 must be 0 for PSR instructions");
+			met_abort("Bit 20 must be 0 for PSR instructions");
 
 		bool oncpsr = !(code & (0x1 << 22));
 		if (oncpsr)
@@ -707,7 +707,7 @@ namespace AMeteor
 		if (code & (0x1 << 21)) // MSR
 		{
 			if (((code >> 12) & 0xF) != 0xF)
-				_assert("Bits 12-15 must be 0xF for MSR instruction");
+				met_abort("Bits 12-15 must be 0xF for MSR instruction");
 
 			uint32_t val;
 			if (code & (0x1 << 25))
@@ -718,7 +718,7 @@ namespace AMeteor
 			else
 			{
 				if ((code >> 4) & 0xFF)
-					_assert("Bits 4-11 must be 0 for MSR instruction");
+					met_abort("Bits 4-11 must be 0 for MSR instruction");
 				val = R(Rm);
 			}
 			if (!(code & (0x1 << 19)))
@@ -742,11 +742,11 @@ namespace AMeteor
 		else // MRS
 		{
 			if ((code >> 25) & 0x1)
-				_assert("Bit 25 must be 0 for MRS instruction");
+				met_abort("Bit 25 must be 0 for MRS instruction");
 			if (((code >> 16) & 0xF) != 0xF)
-				_assert("Bits 16-19 must be 0xF for MRS instruction");
+				met_abort("Bits 16-19 must be 0xF for MRS instruction");
 			if (code & 0xFFF)
-				_assert("Bits 0-11 must be 0 for MRS instruction");
+				met_abort("Bits 0-11 must be 0 for MRS instruction");
 			R(Rd) = psr;
 		}
 
@@ -758,18 +758,18 @@ namespace AMeteor
 	{
 		// NOTE : In this instruction Rn and Rd are inverted
 		if ((code >> 25) & 0x7)
-			_assert("Bits 25-27 must be 000 for Multiply instructions");
+			met_abort("Bits 25-27 must be 000 for Multiply instructions");
 		if (code & (0x1 << 24))
 		{
 			if (!(code & (0x1 << 7)))
-				_assert("Bit 7 must be 1 for halfword multiply");
+				met_abort("Bit 7 must be 1 for halfword multiply");
 			if (code & (0x1 << 4))
-				_assert("Bit 7 must be 0 for halfword multiply");
+				met_abort("Bit 7 must be 0 for halfword multiply");
 		}
 		else
 		{
 			if (((code >> 4) & 0xF) != 0x9)
-				_assert("Bits 4-7 must be 1001 for non halfword multiplies");
+				met_abort("Bits 4-7 must be 1001 for non halfword multiplies");
 		}
 		NOT_PC_ALL();
 
@@ -777,7 +777,7 @@ namespace AMeteor
 		{
 			case 0x0 : // MUL
 				if (Rd != 0)
-					_assert("Rd must be 0 for MUL instructions");
+					met_abort("Rd must be 0 for MUL instructions");
 				NOT_SAME2(Rn, Rm);
 				R(Rn) = R(Rm)*R(Rs);
 				if (code & (0x1 << 20))
@@ -872,7 +872,7 @@ namespace AMeteor
 			case 0xA : // SMLALxy
 			case 0xB : // SMULxy
 			default :
-				_assert("Not implemented multiply instruction or unknown");
+				met_abort("Not implemented multiply instruction or unknown");
 		}
 	}
 
@@ -883,16 +883,16 @@ namespace AMeteor
 	ARM(LDRSTR)
 	{
 		if (((code >> 28) & 0xF) == 0xF)
-			_assert("PLD instructions not implemented");
+			met_abort("PLD instructions not implemented");
 		if (((code >> 26) & 0x3) != 0x1)
-			_assert("Bits 26-27 must be 01 for LDR/STR instructions");
+			met_abort("Bits 26-27 must be 01 for LDR/STR instructions");
 
 		uint32_t offset;
 
 		if (code & (0x1 << 25)) // register offset
 		{
 			if (code & (0x1 << 4))
-				_assert("Bit 4 must be 0 for LDR or STR instruction with register offset");
+				met_abort("Bit 4 must be 0 for LDR or STR instruction with register offset");
 			offset = (code >> 7) & 0x1F;
 			switch ((code >> 5) & 0x3)
 			{
@@ -950,7 +950,7 @@ namespace AMeteor
 			{
 				R(Rd) = MEM.Read8(add);
 				if (Rd == 15)
-					_assert("LDRB to R15 !");
+					met_abort("LDRB to R15 !");
 				CYCLES16NSeq(add, 1);
 				ICYCLES(1);
 				CYCLES32Seq(R(15), 1);
@@ -1001,11 +1001,11 @@ namespace AMeteor
 	ARM(STRLDR_HD)
 	{
 		if ((code >> 25) & 0x7)
-			_assert("Bits 25-27 must be 000 for halfword transfer instructions");
+			met_abort("Bits 25-27 must be 000 for halfword transfer instructions");
 		if (!(code & (0x1 << 7)) || !(code & (0x1 << 4)))
-			_assert("Bits 4 and 7 must be 1 for halfword transfer instructions");
+			met_abort("Bits 4 and 7 must be 1 for halfword transfer instructions");
 		if (Rd == 15)
-			_assert("operation on r15, not implemented");
+			met_abort("operation on r15, not implemented");
 
 		uint8_t rd = Rd;
 
@@ -1015,7 +1015,7 @@ namespace AMeteor
 		else // register offset
 		{
 			if ((code >> 8) & 0xF)
-				_assert("Bits 8-11 must be 0 for halfword transfer with register offset instructions");
+				met_abort("Bits 8-11 must be 0 for halfword transfer with register offset instructions");
 			NOT_PC(Rm);
 			off = R(Rm);
 		}
@@ -1029,12 +1029,12 @@ namespace AMeteor
 				add -= off;
 		}
 		else if (code & (0x1 << 21))
-			_assert("Bit 21 must be 0 for post indexed halfword transfers instructions");
+			met_abort("Bit 21 must be 0 for post indexed halfword transfers instructions");
 
 		switch (((code >> 18) & 0x4) | ((code >> 5) & 0x3))
 		{
 			case 0x0:
-				_assert("Reserved for SWP instruction !");
+				met_abort("Reserved for SWP instruction !");
 				break;
 			case 0x1: // STRH
 				MEM.Write16(add, rd == 15 ? R(15) + 4 : R(rd));
@@ -1043,11 +1043,11 @@ namespace AMeteor
 				break;
 			case 0x2: // LDRD
 				if (rd % 2)
-					_assert("Register number not even for double word transfer");
+					met_abort("Register number not even for double word transfer");
 				if (add % 8)
-					_assert("Address not double word aligned");
+					met_abort("Address not double word aligned");
 				if (rd == 15)
-					_assert("Rd is 15 for double word transfer !");
+					met_abort("Rd is 15 for double word transfer !");
 				R(rd) = MEM.Read32(add);
 				R(rd+1) = MEM.Read32(add+4);
 				CYCLES32NSeq(add, 2);
@@ -1056,18 +1056,18 @@ namespace AMeteor
 				break;
 			case 0x3: // STRD
 				if (rd % 2)
-					_assert("Register number not even for double word transfer");
+					met_abort("Register number not even for double word transfer");
 				if (add % 8)
-					_assert("Address not double word aligned");
+					met_abort("Address not double word aligned");
 				if (rd == 15)
-					_assert("Rd is 15 for double word transfer !");
+					met_abort("Rd is 15 for double word transfer !");
 				MEM.Write32(add, R(rd));
 				MEM.Write32(add + 4, rd == 14 ? R(15) + 4 : R(rd+1));
 				CYCLES32NSeq(add, 2);
 				CYCLES32NSeq(R(15), 1);
 				break;
 			case 0x4:
-				_assert("Reserved !");
+				met_abort("Reserved !");
 				break;
 			case 0x5: // LDRH
 				R(rd) = MEM.Read16(add);
@@ -1110,9 +1110,9 @@ namespace AMeteor
 	ARM(LDMSTM)
 	{
 		if (((code >> 25) & 0x7) != 0x4)
-			_assert("Bits 25-27 must be 100 for LDM/STM instructions");
+			met_abort("Bits 25-27 must be 100 for LDM/STM instructions");
 		if (code & (0x1 << 22))
-			_assert("not implemented");
+			met_abort("not implemented");
 
 		static const uint8_t NumBits[] =
 			{0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4};
@@ -1181,11 +1181,11 @@ namespace AMeteor
 	ARM(SWP)
 	{
 		if (((code >> 23) & 0x1F) != 0x02)
-			_assert("Bits 23-27 must be 00010 for SWP instructions");
+			met_abort("Bits 23-27 must be 00010 for SWP instructions");
 		if ((code >> 20) & 0x3)
-			_assert("Bits 20-21 must be 00 for SWP instructions");
+			met_abort("Bits 20-21 must be 00 for SWP instructions");
 		if (((code >> 4) & 0xFF) != 0x09)
-			_assert("Bits 4-11 must be 00001001 for SWP instructions");
+			met_abort("Bits 4-11 must be 00001001 for SWP instructions");
 
 		if (code & (0x1 << 22)) // SWPB
 		{
@@ -1207,7 +1207,7 @@ namespace AMeteor
 	ARM(SWI)
 	{
 		if (((code >> 24) & 0xF) != 0xF)
-			_assert("Bits 24-27 must be 1111 for SWI instructions");
+			met_abort("Bits 24-27 must be 1111 for SWI instructions");
 
 		CPU.SoftwareInterrupt((code >> 16) & 0xFF);
 
@@ -1449,7 +1449,7 @@ namespace AMeteor
 							aBXBLX();
 							break;
 						default:
-							_assert("unknown");
+							met_abort("unknown");
 							break;
 					}
 					break;
@@ -1471,10 +1471,10 @@ namespace AMeteor
 					if (code & (0x1 << 24))
 						aSWI();
 					else
-						_assert("unknown");
+						met_abort("unknown");
 					break;
 				default:
-					{	std::cerr << IOS_ADD << R(15)-8 << " : " << IOS_ADD << code << " : "; debug_bits(code); _assert("not implemented"); }
+					{	std::cerr << IOS_ADD << R(15)-8 << " : " << IOS_ADD << code << " : "; debug_bits(code); met_abort("not implemented"); }
 					break;
 			}
 	}

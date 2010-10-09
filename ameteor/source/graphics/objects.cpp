@@ -99,7 +99,7 @@ namespace AMeteor
 			uint32_t objnum;
 			// FIXME is this possible ?
 			if (begin & 0x3)
-				_assert("OamWrite not 4 byte aligned");
+				met_abort("OamWrite not 4 byte aligned");
 			if (begin <= 0x07000000)
 				objnum = 0;
 			else
@@ -139,7 +139,7 @@ namespace AMeteor
 				case 6:
 					break;
 				default :
-					_assert("Oam access not 16 bits aligned");
+					met_abort("Oam access not 16 bits aligned");
 					break;
 			}
 		}
@@ -160,7 +160,7 @@ namespace AMeteor
 					iter->UpdateAttr2(pOam[2]);
 					break;
 				default :
-					_assert("Oam access not 32 bits aligned");
+					met_abort("Oam access not 32 bits aligned");
 					break;
 			}
 		}

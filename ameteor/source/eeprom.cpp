@@ -61,7 +61,7 @@ namespace AMeteor
 
 	uint8_t Eeprom::Read (uint16_t MET_UNUSED(add))
 	{
-		_assert("8 bits write to EEPROM");
+		met_abort("8 bits write to EEPROM");
 		return 0;
 	}
 
@@ -93,7 +93,7 @@ namespace AMeteor
 
 	bool Eeprom::Write (uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 	{
-		_assert("8 bits write to EEPROM");
+		met_abort("8 bits write to EEPROM");
 		return false;
 	}
 	//XXX
@@ -106,7 +106,7 @@ namespace AMeteor
 				if (val & 0x1)
 					m_state = WAITING;
 				else
-					_assert("First bit is not 1");
+					met_abort("First bit is not 1");
 				return false;
 			case WAITING:
 				m_add = 0;
@@ -126,12 +126,12 @@ namespace AMeteor
 				{
 					m_state = READ_END;
 					if (m_size == 0x2000 && (m_add & 0x3C000))
-						_assert("In large EEPROM, 4 upper address bits are not 0");
+						met_abort("In large EEPROM, 4 upper address bits are not 0");
 				}
 				return false;
 			case READ_END:
 				if (val & 0x1)
-					_assert("Last bit of EEPROM read request is not 0");
+					met_abort("Last bit of EEPROM read request is not 0");
 				m_pos = 0;
 				m_state = READ_GARBAGE;
 				return false;
@@ -146,7 +146,7 @@ namespace AMeteor
 					m_state = WRITE_DATA;
 					m_pos = 0;
 					if (m_size == 0x2000 && (m_add & 0x3C000))
-						_assert("In large EEPROM, 4 upper address bits are not 0");
+						met_abort("In large EEPROM, 4 upper address bits are not 0");
 				}
 				return false;
 			case WRITE_DATA:
@@ -161,7 +161,7 @@ namespace AMeteor
 				return true;
 			case WRITE_END:
 				if (val & 0x1)
-					_assert("Last bit of EEPROM write request is not 0");
+					met_abort("Last bit of EEPROM write request is not 0");
 				return false;
 		}
 	}
@@ -170,14 +170,14 @@ namespace AMeteor
 	bool Eeprom::Write (uint16_t* pData, uint16_t size)
 	{
 		if (!(*pData & 0x1))
-			_assert("Bit 1 is not 1 in EEPROM DMA");
+			met_abort("Bit 1 is not 1 in EEPROM DMA");
 		++pData;
 
 		uint16_t add = 0;
 		if (*pData & 0x1) // read
 		{
 			if (size != 9 && size != 17)
-				_assert("Invalid size for read");
+				met_abort("Invalid size for read");
 			++pData;
 
 			// read address
@@ -185,11 +185,11 @@ namespace AMeteor
 					++i, ++pData)
 				add = (add << 1) | (*pData & 0x1);
 			if (m_size == 0x2000 && (add & 0x3C00))
-				_assert("In large EEPROM, 4 upper address bits are not 0");
+				met_abort("In large EEPROM, 4 upper address bits are not 0");
 
 			//XXX
 			/*if (*pData & 0x1)
-				_assert("Last bit of EEPROM read request is not 0");*/
+				met_abort("Last bit of EEPROM read request is not 0");*/
 
 			m_add = add*8;
 			m_state = READ_GARBAGE;
@@ -200,7 +200,7 @@ namespace AMeteor
 		else // write
 		{
 			if (size != 73 && size != 81)
-				_assert("Invalid size for write");
+				met_abort("Invalid size for write");
 			++pData;
 
 			// read address
@@ -208,7 +208,7 @@ namespace AMeteor
 					++i, ++pData)
 				add = (add << 1) | (*pData & 0x1);
 			if (m_size == 0x2000 && (add & 0x3C00))
-				_assert("In large EEPROM, 4 upper address bits are not 0");
+				met_abort("In large EEPROM, 4 upper address bits are not 0");
 
 			// read data
 			uint8_t* pMem = m_data + add*8;
@@ -222,7 +222,7 @@ namespace AMeteor
 			}
 
 			if (*pData & 0x1)
-				_assert("Last bit of EEPROM write request is not 0");
+				met_abort("Last bit of EEPROM write request is not 0");
 
 			m_state = IDLE;
 
@@ -235,7 +235,7 @@ namespace AMeteor
 	void Eeprom::Read (uint16_t* pOut)
 	{
 		if (m_state != READ)
-			_assert("Read in invalid EEPROM state");
+			met_abort("Read in invalid EEPROM state");
 
 		pOut += 4; // ignore these
 		uint8_t* pData = m_data + m_add;

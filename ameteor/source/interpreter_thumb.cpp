@@ -76,7 +76,7 @@ U_|_1___1___1___0___1_|_________________________var___________|_1_|UNDEF ARM9
 #ifdef METDEBUG
 #	define NOT_PC(reg) \
 		if (reg == 15) \
-			_assert("Register is PC")
+			met_abort("Register is PC")
 #else
 #	define NOT_PC(reg) {}
 #endif
@@ -93,7 +93,7 @@ namespace AMeteor
 	{
 		if ((code >> 13) & 0x7)
 		{
-			_assert("Bits 13-15 must be 000 for shift instructions");
+			met_abort("Bits 13-15 must be 000 for shift instructions");
 		}
 
 		uint8_t off = Off;
@@ -157,7 +157,7 @@ namespace AMeteor
 				}
 				break;
 			case 0x3: // reserved
-				_assert("Bits 11-12 must not be 11 for shift instructions");
+				met_abort("Bits 11-12 must not be 11 for shift instructions");
 				break;
 		}
 
@@ -169,7 +169,7 @@ namespace AMeteor
 	{
 		if (((code >> 11) & 0x1F) != 0x3)
 		{
-			_assert("Bits 11-15 should be 00011 for add/substract");
+			met_abort("Bits 11-15 should be 00011 for add/substract");
 		}
 
 		uint32_t op2;
@@ -223,7 +223,7 @@ namespace AMeteor
 	{
 		if (((code >> 13) & 0x7) != 0x1)
 		{
-			_assert("Bits 13-15 must be 001 for immediate instructions");
+			met_abort("Bits 13-15 must be 001 for immediate instructions");
 		}
 
 		switch ((code >> 11) & 0x3)
@@ -300,7 +300,7 @@ namespace AMeteor
 	{
 		if (((code >> 10) & 0x3F) != 0x10)
 		{
-			_assert("Bits 10-15 must be 010000 for ALU instructions");
+			met_abort("Bits 10-15 must be 010000 for ALU instructions");
 		}
 
 		uint8_t opcode = (code >> 6) & 0xF;
@@ -574,7 +574,7 @@ namespace AMeteor
 	{
 		if (((code >> 10) & 0x3F) != 0x11)
 		{
-			_assert("Bits 10-15 must be 010001 for HiReg instructions");
+			met_abort("Bits 10-15 must be 010001 for HiReg instructions");
 		}
 
 		uint8_t rd = HiRd, rs = HiRs;
@@ -629,11 +629,11 @@ namespace AMeteor
 				break;
 			case 0x3:
 				if (Rd)
-					_assert("Rd must be 0 for BX/BLX instructions");
+					met_abort("Rd must be 0 for BX/BLX instructions");
 				if (code & (0x1 << 7)) // BLX
 				{
 					NOT_PC(rs);
-					_assert("BLX not implemented");
+					met_abort("BLX not implemented");
 				}
 				else // BX
 				{
@@ -659,7 +659,7 @@ namespace AMeteor
 	{
 		if (((code >> 11) & 0x1F) != 0x9)
 		{
-			_assert("Bits 11-15 must be 01001 for LDR with imm instructions");
+			met_abort("Bits 11-15 must be 01001 for LDR with imm instructions");
 		}
 
 		uint32_t add = (R(15) & 0xFFFFFFFC) + (Imm << 2);
@@ -676,7 +676,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0x5)
 		{
-			_assert("Bits 12-15 must be 0101 for LDR/STR with reg instructions");
+			met_abort("Bits 12-15 must be 0101 for LDR/STR with reg instructions");
 		}
 
 		uint32_t add = R(Ro) + R(Rs);
@@ -738,7 +738,7 @@ namespace AMeteor
 	{
 		if (((code >> 13) & 0x7) != 0x3)
 		{
-			_assert("Bits 13-15 must be 011 for LDR/STR with off instructions");
+			met_abort("Bits 13-15 must be 011 for LDR/STR with off instructions");
 		}
 
 		uint32_t add;
@@ -778,7 +778,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0x8)
 		{
-			_assert("Bits 12-15 must be 1000 for LDRH/STRH with off instructions");
+			met_abort("Bits 12-15 must be 1000 for LDRH/STRH with off instructions");
 		}
 
 		uint32_t add = R(Rs) + (Off * 2);
@@ -802,7 +802,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0x9)
 		{
-			_assert("Bits 12-15 must be 1001 for LDR/STR SP-relative instructions");
+			met_abort("Bits 12-15 must be 1001 for LDR/STR SP-relative instructions");
 		}
 
 		uint32_t add = R(13) + (Imm << 2);
@@ -826,7 +826,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0xA)
 		{
-			_assert("Bits 12-15 must be 1010 for ADD relative instructions");
+			met_abort("Bits 12-15 must be 1010 for ADD relative instructions");
 		}
 
 		if (code & (0x1 << 11)) // with SP
@@ -846,7 +846,7 @@ namespace AMeteor
 	{
 		if (((code >> 8) & 0xFF) != 0xB0)
 		{
-			_assert("Bits 8-15 must be 10110000 for ADD to SP instructions");
+			met_abort("Bits 8-15 must be 10110000 for ADD to SP instructions");
 		}
 
 		if (code & (0x1 << 7)) // substract
@@ -866,11 +866,11 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0xB)
 		{
-			_assert("Bits 12-15 must be 1011 for PUSH/POP instructions");
+			met_abort("Bits 12-15 must be 1011 for PUSH/POP instructions");
 		}
 		if (((code >> 9) & 0x3) != 0x2)
 		{
-			_assert("Bits 9-10 must be 10 for PUSH/POP instructions");
+			met_abort("Bits 9-10 must be 10 for PUSH/POP instructions");
 		}
 
 		static const uint8_t NumBits[] =
@@ -933,7 +933,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0xC)
 		{
-			_assert("Bits 12-15 must be 1100 for STM/LDM instructions");
+			met_abort("Bits 12-15 must be 1100 for STM/LDM instructions");
 		}
 
 		static const uint8_t NumBits[] =
@@ -981,7 +981,7 @@ namespace AMeteor
 	{
 		if (((code >> 12) & 0xF) != 0xD)
 		{
-			_assert("Bits 12-15 must be 1101 for branch on condition instructions");
+			met_abort("Bits 12-15 must be 1101 for branch on condition instructions");
 		}
 
 		bool branch = false;
@@ -1044,10 +1044,10 @@ namespace AMeteor
 					branch = true;
 				break;
 			case 0xE: // undefined
-				_assert("Undefined branch on condition");
+				met_abort("Undefined branch on condition");
 				break;
 			case 0xF: // reserved for SWI instruction
-				_assert("Bits 8-11 must not be 1111 for branch instruction");
+				met_abort("Bits 8-11 must not be 1111 for branch instruction");
 				break;
 		}
 
@@ -1075,7 +1075,7 @@ namespace AMeteor
 	{
 		if (((code >> 11) & 0x1F) != 0x1C)
 		{
-			_assert("Bits 11-15 must be 11100 for branch instructions");
+			met_abort("Bits 11-15 must be 11100 for branch instructions");
 		}
 
 		int32_t off = (code & 0x7FF) << 1;
@@ -1091,7 +1091,7 @@ namespace AMeteor
 	{
 		if (((code >> 11) & 0x1F) != 0x1E)
 		{
-			_assert("Bits 11-15 must be 11110 for long branch instructions");
+			met_abort("Bits 11-15 must be 11110 for long branch instructions");
 		}
 
 		if (code & (0x1 << 10)) // negative offset
@@ -1115,9 +1115,9 @@ namespace AMeteor
 		}
 		else // BLX
 		{
-			_assert("BLX not implemented");
+			met_abort("BLX not implemented");
 			if (code & 0x1)
-				_assert("BLX with odd address");
+				met_abort("BLX with odd address");
 			FLAG_T = 0;
 		}
 
@@ -1192,7 +1192,7 @@ namespace AMeteor
 							tPUSHPOP();
 							break;
 						default:
-							_assert("not implemented or unknown");
+							met_abort("not implemented or unknown");
 							break;
 					}
 				}
@@ -1223,7 +1223,7 @@ namespace AMeteor
 						t_BL2();
 						break;
 					default:
-						_assert("not implemented or unknown");
+						met_abort("not implemented or unknown");
 						break;
 				}
 				break;

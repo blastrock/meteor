@@ -146,7 +146,7 @@ namespace AMeteor
 						m_objs.DrawLineHighOnly(line, lineObj);
 					break;
 				default :
-					_assert("not supported : " << (m_dispcnt & 0x7));
+					met_abort("not supported : " << (m_dispcnt & 0x7));
 					break;
 			}
 

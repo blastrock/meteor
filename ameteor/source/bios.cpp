@@ -149,7 +149,7 @@ namespace AMeteor
 					VBlankIntrWait();
 					break;
 				default:
-					_assert("not implemented : " << (int)swiComment);
+					met_abort("not implemented : " << (int)swiComment);
 					break;
 			}
 
@@ -393,7 +393,7 @@ namespace AMeteor
 		void Div ()
 		{
 			if (!R(1))
-				_assert("Div by 0");
+				met_abort("Div by 0");
 
 			int32_t number = R(0), denom = R(1);
 
@@ -642,7 +642,7 @@ namespace AMeteor
 			uint32_t header = MEM.Read32(src);
 			src += 4;
 			if (((header >> 4) & 0xF) != 1)
-				_assert("This is not LZ77 data");
+				met_abort("This is not LZ77 data");
 			uint32_t size = header >> 8;
 			debug("LZ77UnCompWram from " << IOS_ADD << R(0) << " to " << IOS_ADD << R(1) << ", len : " << size);
 			uint32_t dest = R(1);
@@ -716,7 +716,7 @@ namespace AMeteor
 			uint32_t header = MEM.Read32(src);
 			src += 4;
 			if (((header >> 4) & 0xF) != 1)
-				_assert("This is not LZ77 data");
+				met_abort("This is not LZ77 data");
 			uint32_t size = header >> 8;
 			debug("LZ77UnCompVram from " << IOS_ADD << R(0) << " to " << IOS_ADD << R(1) << ", len : " << size);
 			uint32_t dest = R(1);
@@ -810,11 +810,11 @@ namespace AMeteor
 			uint32_t header = MEM.Read32(src);
 			src += 4;
 			if (((header >> 4) & 0xF) != 2)
-				_assert("This is not Huffman data");
+				met_abort("This is not Huffman data");
 			uint8_t blockLen = header & 0xF;
 			uint32_t size = header >> 8;
 			if (size % 4)
-				_assert("Size not multiple of 4 in HuffUnComp");
+				met_abort("Size not multiple of 4 in HuffUnComp");
 			uint32_t treeStart = src + 1;
 			src += 2 + MEM.Read8(src) * 2;
 
@@ -881,7 +881,7 @@ namespace AMeteor
 			uint32_t header = MEM.Read32(src);
 			src += 4;
 			if (((header >> 4) & 0xF) != 3)
-				_assert("This is not RL data");
+				met_abort("This is not RL data");
 			uint32_t size = header >> 8;
 			debug("RLUnCompWram from " << IOS_ADD << R(0) << " to " << IOS_ADD << R(1) << ", len : " << size);
 			uint32_t dest = R(1);
@@ -954,7 +954,7 @@ namespace AMeteor
 			uint32_t header = MEM.Read32(src);
 			src += 4;
 			if (((header >> 4) & 0xF) != 3)
-				_assert("This is not RL data");
+				met_abort("This is not RL data");
 			uint32_t size = header >> 8;
 			debug("RLUnCompVram from " << IOS_ADD << R(0) << " to " << IOS_ADD << R(1) << ", len : " << size);
 			uint32_t dest = R(1);

@@ -38,7 +38,7 @@
 
 // XXX
 #if 0
-#define debugm _assert
+#define debugm met_abort
 #else
 #define debugm debug
 #endif
@@ -202,7 +202,7 @@ namespace AMeteor
 		memset(m_brom, 0, 0x00004000);
 		file.read((char*)m_brom, 0x00004000);
 		if (!file.good())
-			_assert("Error while reading file");
+			met_abort("Error while reading file");
 	}
 
 	void Memory::LoadRom (const char* filename)
@@ -212,7 +212,7 @@ namespace AMeteor
 		std::memset(m_rom, 0, 0x02000000);
 		file.read((char*)m_rom, 0x02000000);
 		if (!file.good() && !file.eof())
-			_assert("Error while reading file");
+			met_abort("Error while reading file");
 	}
 
 	// TODO should manage different errors by returning ints
@@ -550,7 +550,7 @@ namespace AMeteor
 				{
 					debugm("Unknown address for Read16 : " << IOS_ADD << add);
 					if (R(15) == add)
-						_assert("Illegal PC");
+						met_abort("Illegal PC");
 					// FIXME : in arm state, vba returns read16(r15 + (add & 2))
 					return Read16(R(15));
 				}
@@ -578,7 +578,7 @@ namespace AMeteor
 				{
 					debugm("Unknown address for Read32 : " << IOS_ADD << add);
 					if (R(15) == add)
-						_assert("Illegal PC");
+						met_abort("Illegal PC");
 					if (FLAG_T)
 					{
 						uint16_t o = Read16(R(15));
@@ -635,7 +635,7 @@ namespace AMeteor
 					if (baseadd == 5 || baseadd == 6)
 						r[1] = val;
 					else if (baseadd == 7)
-						_assert("not implemented");
+						met_abort("not implemented");
 				}
 				break;
 		}
@@ -661,7 +661,7 @@ namespace AMeteor
 				//debugm("Writing on read only memory");
 				break;
 			case 0x0E:
-				_assert("Writing 16 bytes in SRAM/Flash");
+				met_abort("Writing 16 bytes in SRAM/Flash");
 				break;
 			default:
 				uint16_t *r = (uint16_t*)GetRealAddress(add, 2);
@@ -698,7 +698,7 @@ namespace AMeteor
 				debugm("Writing on read only memory");
 				break;
 			case 0x0E:
-				_assert("Writing 32 bytes in SRAM/Flash");
+				met_abort("Writing 32 bytes in SRAM/Flash");
 				break;
 			default:
 				uint32_t *r = (uint32_t*)GetRealAddress(add, 4);
@@ -725,24 +725,24 @@ namespace AMeteor
 			else if (size == 9 || size == 73)
 				SetCartType(CTYPE_EEPROM512);
 			else
-				_assert("Unknown DMA3 size for EEPROM");
+				met_abort("Unknown DMA3 size for EEPROM");
 		}
 		else if (m_carttype != CTYPE_EEPROM512 && m_carttype != CTYPE_EEPROM8192)
-			_assert("EEPROM DMA3 on non EEPROM cartridge");
+			met_abort("EEPROM DMA3 on non EEPROM cartridge");
 
 		Eeprom* eeprom = static_cast<Eeprom*>(m_cart);
 		if (size == 17 || size == 81)
 		{
 			if (eeprom->GetSize() != 0x2000)
-				_assert("DMA3 size not corresponding to EEPROM size");
+				met_abort("DMA3 size not corresponding to EEPROM size");
 		}
 		else if (size ==  9 || size == 73)
 		{
 			if (eeprom->GetSize() != 0x0200)
-				_assert("DMA3 size not corresponding to EEPROM size");
+				met_abort("DMA3 size not corresponding to EEPROM size");
 		}
 		else
-			_assert("Unknown size for EEPROM DMA");
+			met_abort("Unknown size for EEPROM DMA");
 
 		if (eeprom->Write((uint16_t*)GetRealAddress(src), size))
 			CLOCK.SetBattery(CART_SAVE_TIME);
@@ -752,9 +752,9 @@ namespace AMeteor
 	void Memory::ReadEepromDma (uint32_t dest, uint16_t size)
 	{
 		if (m_carttype != CTYPE_EEPROM)
-			_assert("EEPROM DMA3 on non EEPROM or unknown cartridge");
+			met_abort("EEPROM DMA3 on non EEPROM or unknown cartridge");
 		if (size != 68)
-			_assert("EEPROM DMA3 read with invalid size");
+			met_abort("EEPROM DMA3 read with invalid size");
 		Eeprom* eeprom = static_cast<Eeprom*>(m_cart);
 		eeprom->Read((uint16_t*)GetRealAddress(dest));
 	}
@@ -763,7 +763,7 @@ namespace AMeteor
 	void Memory::WriteCart (uint16_t add, uint8_t val)
 	{
 		if (m_carttype == CTYPE_EEPROM512 || m_carttype == CTYPE_EEPROM8192)
-			_assert("Writing in SRAM/FLASH while using EEPROM");
+			met_abort("Writing in SRAM/FLASH while using EEPROM");
 		if (!m_cart)
 			if (add == 0x5555)
 			{

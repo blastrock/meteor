@@ -376,7 +376,7 @@ namespace AMeteor
 				TIMER3.Reload();
 				break;
 			default:
-				//_assert("Unknown IO at " << IOS_ADD << add);
+				//met_abort("Unknown IO at " << IOS_ADD << add);
 				W16(add, val);
 				break;
 		}
@@ -442,7 +442,7 @@ namespace AMeteor
 				// TODO
 				break;
 			default:
-				//_assert("Unknown IO at " << IOS_ADD << add);
+				//met_abort("Unknown IO at " << IOS_ADD << add);
 				//*(uint32_t*)(m_iomem + (add & 0xFFF)) = val;
 				Write16(add, val & 0xFFFF);
 				Write16(add+2, val >> 16);

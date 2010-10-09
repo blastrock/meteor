@@ -83,7 +83,7 @@ namespace AMeteor
 					if (FLAG_T)
 					{
 						if (R(15) & 0x1)
-							_assert("PC not 16 bit aligned : " << IOS_ADD << R(15));
+							met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
 
 						code = MEM.Read16(R(15)-2);
 						R(15) += 2;
@@ -92,7 +92,7 @@ namespace AMeteor
 					else
 					{
 						if (R(15) & 0x3)
-							_assert("PC not 32 bit aligned : " << IOS_ADD << R(15));
+							met_abort("PC not 32 bit aligned : " << IOS_ADD << R(15));
 
 						if (R(15) < 0x01000000 && !MEM.HasBios())
 						{
@@ -123,7 +123,7 @@ namespace AMeteor
 									Bios::Bios168h();
 									break;
 								default:
-									_assert("Jump to " << IOS_ADD << R(15));
+									met_abort("Jump to " << IOS_ADD << R(15));
 							}
 						}
 						else
@@ -134,7 +134,7 @@ namespace AMeteor
 						}
 					}
 					if (R(15) < 0x01000000 && FLAG_T && !MEM.HasBios())
-						_assert("Jump to " << IOS_ADD << R(15));
+						met_abort("Jump to " << IOS_ADD << R(15));
 
 					CLOCK.Commit();
 
@@ -187,10 +187,10 @@ namespace AMeteor
 
 					break;
 				case 1: // stop mode
-					_assert("Stop mode not implemented");
+					met_abort("Stop mode not implemented");
 					break;
 				default:
-					_assert("Unknown HALTCNT value : " << (int)m_haltcnt);
+					met_abort("Unknown HALTCNT value : " << (int)m_haltcnt);
 					break;
 			}
 		}

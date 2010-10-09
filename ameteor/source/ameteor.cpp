@@ -37,7 +37,7 @@ namespace AMeteor
 					ao_initialize();
 					// FIXME XXX not cool
 					if (!Graphics::Filters::InitLUTs())
-						_assert("MMX not supported");
+						met_abort("MMX not supported");
 					Audio::InitNoise();
 				}
 

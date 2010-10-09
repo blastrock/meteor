@@ -79,16 +79,16 @@ namespace AMeteor
 				switch (channum)
 				{
 					case 0:
-						_assert("prohibited !");
+						met_abort("prohibited !");
 						break;
 					case 1:
 					case 2:
 						// sound dma
 						if (chan.dest != 0x040000A0 && chan.dest != 0x040000A4)
-							_assert("Special DMA 1 or 2 with unauthorized address : "
+							met_abort("Special DMA 1 or 2 with unauthorized address : "
 									<< IOS_ADD << chan.dest);
 						if (!chan.control.b.repeat)
-							_assert("Special DMA 1 or 2 without repeat");
+							met_abort("Special DMA 1 or 2 without repeat");
 
 						// 4 words of 32 bits
 						chan.count = 4;
@@ -97,7 +97,7 @@ namespace AMeteor
 						chan.control.b.dest = 2;
 						break;
 					case 3:
-						_assert("not implemented");
+						met_abort("not implemented");
 						break;
 				}
 			}
@@ -125,7 +125,7 @@ namespace AMeteor
 		else if (chan.control.b.src == 2) // fixed
 			s_inc = 0;
 		else if (chan.control.b.src == 3)
-			_assert("prohibited");
+			met_abort("prohibited");
 
 		if (chan.control.b.dest == 1)
 			d_inc = -2;
@@ -157,9 +157,9 @@ namespace AMeteor
 		if (channum == 3 && (chan.dest >> 24) == 0x0D || (chan.src >> 24) == 0x0D)
 		{
 			if (chan.control.b.type)
-				_assert("Word copy for EEPROM DMA3");
+				met_abort("Word copy for EEPROM DMA3");
 			if (d_inc != 2 || s_inc != 2)
-				_assert("Source or destination not incremeting in EEPROM DMA3");
+				met_abort("Source or destination not incremeting in EEPROM DMA3");
 			if ((chan.dest >> 24) == 0x0D)
 				MEM.WriteEepromDma(chan.src, chan.count ? chan.count : 0x10000);
 			else if ((chan.src >> 24) == 0x0D)
@@ -172,9 +172,9 @@ namespace AMeteor
 		if (channum == 3 && (chan.dest >> 24) == 0x0D)
 		{
 			if (chan.control.b.type)
-				_assert("Word copy for EEPROM DMA3");
+				met_abort("Word copy for EEPROM DMA3");
 			if (d_inc != 2 || s_inc != 2)
-				_assert("Source or destination not incremeting in EEPROM DMA3");
+				met_abort("Source or destination not incremeting in EEPROM DMA3");
 			MEM.WriteEepromDma(chan.src, chan.count ? chan.count : 0x10000);
 			chan.src += chan.count * 2;
 			chan.dest += chan.count * 2;
@@ -250,7 +250,7 @@ namespace AMeteor
 			SOUND.SendDigitalA((uint8_t*)MEM.GetRealAddress(src));
 			src += 4*4;
 			if (d_inc != 0)
-				_assert("dinc != 0 on dma sound, should not happen");
+				met_abort("dinc != 0 on dma sound, should not happen");
 			return;
 		}
 		if (dest == 0x040000A4)
@@ -258,7 +258,7 @@ namespace AMeteor
 			SOUND.SendDigitalB((uint8_t*)MEM.GetRealAddress(src));
 			src += 4*4;
 			if (d_inc != 0)
-				_assert("dinc != 0 on dma sound, should not happen");
+				met_abort("dinc != 0 on dma sound, should not happen");
 			return;
 		}
 

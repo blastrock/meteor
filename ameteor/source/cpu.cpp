@@ -113,7 +113,7 @@ namespace AMeteor
 				std::memcpy(m_st.r + 13, m_st.und_r, sizeof(m_st.und_r));
 				break;
 			default:
-				_assert("Unknown CPU mode : " << IOS_ADD << (int)newmode);
+				met_abort("Unknown CPU mode : " << IOS_ADD << (int)newmode);
 				break;
 		}
 
@@ -169,7 +169,7 @@ namespace AMeteor
 				m_st.spsr.dw = m_st.und_spsr.dw;
 				break;
 			default:
-				_assert("Unknown CPU mode : " << IOS_ADD << (int)oldmode);
+				met_abort("Unknown CPU mode : " << IOS_ADD << (int)oldmode);
 				break;
 		}
 	}
@@ -203,7 +203,7 @@ namespace AMeteor
 				m_st.und_spsr.dw = m_st.spsr.dw;
 				break;
 			default:
-				_assert("Unknown CPU mode : " << IOS_ADD << (int)mode);
+				met_abort("Unknown CPU mode : " << IOS_ADD << (int)mode);
 				break;
 		}
 	}
@@ -302,7 +302,7 @@ namespace AMeteor
 					Bios::RLUnCompVram();
 					break;
 				default:
-					_assert("Unknown software interrupt : " << IOS_ADD << comment);
+					met_abort("Unknown software interrupt : " << IOS_ADD << comment);
 					break;
 			}
 	}
