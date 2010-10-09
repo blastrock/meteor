@@ -128,8 +128,6 @@ namespace AMeteor
 						}
 						else
 						{
-//XXX
-arm:
 							code = MEM.Read32(R(15)-4);
 							R(15) += 4;
 							a_Code();

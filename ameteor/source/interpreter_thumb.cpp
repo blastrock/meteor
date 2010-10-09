@@ -305,7 +305,7 @@ namespace AMeteor
 
 		uint8_t opcode = (code >> 6) & 0xF;
 		// TODO put a ifndef X86_ASM here around this declaration
-		uint32_t res = 0, op1, op2; // to avoid a warning
+		uint32_t res = 0; // to avoid a warning
 		uint8_t shift;
 
 		switch (opcode)
@@ -477,14 +477,17 @@ namespace AMeteor
 						:"=r"(R(Rd)), "=m"(FLAG_Z), "=m"(FLAG_N), "=m"(FLAG_C), "=m"(FLAG_V)
 						:"0"(R(Rs)));
 #else
-				op2 = R(Rs);
-				res = R(Rd) = -op2;
-				FLAG_Z = !res;
-				FLAG_N = res >> 31;
-				// we overflow only if op2 == INT_MIN
-				FLAG_V = SUBOVERFLOW(0, op2, res);
-				// we have a carry only if op2 == 0
-				FLAG_C = SUBCARRY(0, op2, res);
+				{
+					uint32_t op2;
+					op2 = R(Rs);
+					res = R(Rd) = -op2;
+					FLAG_Z = !res;
+					FLAG_N = res >> 31;
+					// we overflow only if op2 == INT_MIN
+					FLAG_V = SUBOVERFLOW(0, op2, res);
+					// we have a carry only if op2 == 0
+					FLAG_C = SUBCARRY(0, op2, res);
+				}
 #endif
 				break;
 			case 0xA: // CMP
@@ -498,6 +501,7 @@ namespace AMeteor
 						:"r"(R(Rd)), "r"(R(Rs)));
 #else
 				{
+					uint32_t op1, op2;
 					op1 = R(Rd);
 					op2 = R(Rs);
 					res = op1 - op2;
@@ -520,6 +524,7 @@ namespace AMeteor
 						:"4");
 #else
 				{
+					uint32_t op1, op2;
 					op1 = R(Rd);
 					op2 = R(Rs);
 					res = op1 + op2;

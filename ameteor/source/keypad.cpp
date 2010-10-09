@@ -52,7 +52,8 @@ namespace AMeteor
 			m_keyinput |= m_joys[id];
 	}
 
-	bool Keypad::JoyMoved (unsigned int joyid, unsigned int axis, float pos)
+	bool Keypad::JoyMoved (unsigned int MET_UNUSED(joyid),
+			unsigned int MET_UNUSED(axis), float MET_UNUSED(pos))
 	{
 		/* TODO
 		switch (axis)

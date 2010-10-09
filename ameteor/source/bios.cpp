@@ -108,8 +108,10 @@ namespace AMeteor
 		void Bios008h ()
 		{
 			// XXX
+#if defined METDEBUG && defined METDEBUGLOG
 			uint32_t stackadd = R(13) & 0xFFFFFFFC;
 			PrintStack(stackadd);
+#endif
 			// if we are here, we should be in SVC mode (0x13)
 			// store the spsr, r11, r12 and r14 on the stack
 			uint32_t baseadd = R(13) - (4*4), add = (baseadd & 0xFFFFFFFC);
@@ -203,7 +205,9 @@ namespace AMeteor
 		void Bios018h ()
 		{
 			// XXX
+#if defined METDEBUG && defined METDEBUGLOG
 			uint32_t stackadd = R(13) & 0xFFFFFFFC;
+#endif
 			// stmfd r13!,r0-r3,r12,r14
 			uint32_t baseadd = R(13) - (6*4), add = (baseadd & 0xFFFFFFFC);
 			MEM.Write32(add     , R( 0));
@@ -236,7 +240,9 @@ namespace AMeteor
 
 		void Bios130h ()
 		{
+#if defined METDEBUG && defined METDEBUGLOG
 			uint32_t stackadd = R(13) & 0xFFFFFFFC;
+#endif
 			// XXX
 			debug("Stack before IRQ end");
 			PrintStack(stackadd);

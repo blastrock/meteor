@@ -59,9 +59,10 @@ namespace AMeteor
 		return f.good();
 	}
 
-	uint8_t Eeprom::Read (uint16_t add)
+	uint8_t Eeprom::Read (uint16_t MET_UNUSED(add))
 	{
 		_assert("8 bits write to EEPROM");
+		return 0;
 	}
 
 	uint16_t Eeprom::Read ()
@@ -90,9 +91,10 @@ namespace AMeteor
 		}
 	}
 
-	bool Eeprom::Write (uint16_t add, uint8_t val)
+	bool Eeprom::Write (uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 	{
 		_assert("8 bits write to EEPROM");
+		return false;
 	}
 	//XXX
 #if 0

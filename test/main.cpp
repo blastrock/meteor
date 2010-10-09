@@ -79,7 +79,7 @@ void TestArcTan ()
 	ArcTan2(350);
 }
 
-int main (int argc, char **argv)
+int main ()
 {
 	TestArcTan();
 

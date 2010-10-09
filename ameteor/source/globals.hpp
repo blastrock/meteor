@@ -113,6 +113,10 @@
 	if (gzread(file, &var, sizeof(var)) != sizeof(var)) \
 		return false
 
+// macro to avoid getting warnings about and unused parameter on GCC
+#define MET_UNUSED(v) \
+	__attribute__((unused)) MET_UNUSED_##v
+
 namespace AMeteor
 {
 	// ROtate Right
