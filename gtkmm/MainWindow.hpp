@@ -22,6 +22,8 @@
 #include "VramWindow.hpp"
 #include "Config.hpp"
 
+#include <ameteor/graphics/renderer.hpp>
+
 #include <gtkmm/window.h>
 #include <gtkmm/checkmenuitem.h>
 #include <gtkmm/statusbar.h>
@@ -34,6 +36,8 @@ class MainWindow : public Gtk::Window
 		MainWindow ();
 
 	private :
+		AMeteor::Graphics::Renderer& m_renderer;
+
 		enum Action
 		{
 			ACT_NOTHING,

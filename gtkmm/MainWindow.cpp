@@ -31,6 +31,7 @@
 
 MainWindow::MainWindow () :
 	Gtk::Window(),
+	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
 	m_action(ACT_NOTHING),
 	m_sstate(0),
 	m_mainimage("../../data/meteor.png")
@@ -223,7 +224,7 @@ void MainWindow::on_close ()
 void MainWindow::CloseRom()
 {
 	AMeteor::Reset();
-	AMeteor::_lcd.Uninit();
+	m_renderer.Uninit();
 
 	m_viewport.hide();
 	m_mainimage.show();
@@ -241,7 +242,7 @@ void MainWindow::on_run ()
 	gtk_widget_realize(widget);
 	GdkWindow* win = widget->window;
 	XFlush(GDK_WINDOW_XDISPLAY(win));
-	AMeteor::_lcd.Init(GDK_WINDOW_XWINDOW(win));
+	m_renderer.Init(GDK_WINDOW_XWINDOW(win));
 
 	while (true)
 	{

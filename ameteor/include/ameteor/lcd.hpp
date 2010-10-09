@@ -35,20 +35,20 @@ namespace AMeteor
 		public :
 			Lcd ();
 
-			void Init(sf::WindowHandle display = 0)
-			{
-				return m_screen.Init(display);
-			}
-			void Uninit()
-			{
-				return m_screen.Uninit();
-			}
-
 			void Reset ();
 
 			const uint16_t* GetSurface () const
 			{
 				return m_screen.GetSurface();
+			}
+
+			Graphics::Screen& GetScreen()
+			{
+				return m_screen;
+			}
+			const Graphics::Screen& GetScreen() const
+			{
+				return m_screen;
 			}
 
 			void SetFrameskip (uint8_t skip)
