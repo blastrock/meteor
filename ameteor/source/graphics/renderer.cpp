@@ -199,6 +199,9 @@ namespace AMeteor
 				sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
 			}
 
+			if (!this->SetActive())
+				puts("Can't activate window !");
+
 			void* buf;
 
 			// TODO check for errors
@@ -207,9 +210,6 @@ namespace AMeteor
 			{
 				// this unlocks the mutex while waiting
 				pthread_cond_wait(&m_cond, &m_mutex);
-
-				if (!this->SetActive())
-					puts("Can't activate window !");
 
 				if (m_w && m_h)
 				{
