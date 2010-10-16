@@ -206,95 +206,37 @@ namespace AMeteor
 				bout = out = m_pPalette[0];
 				back = top = 0xF5;
 
-				// layer 0
-				// if layer is enabled and
-				if ((layersOn & 0x1) &&
-						// pixel to draw is not transparent and
-						(pBg[0] & 0x8000))
-				{
-					curprio = (prio[0] << 4);
+				// for each layer
+				for (uint8_t l = 0; l < 4; ++l)
+					// if layer is enabled and
+					if ((layersOn & (0x1 << l)) &&
+							// pixel to draw is not transparent
+							(pBg[l*WIDTH] & 0x8000))
+					{
+						curprio = ((prio[l] << 4) | l);
 
-					if (curprio < back && curprio > top)
-					{
-						bout = pBg[0];
-						back = curprio;
+						if (curprio < back && curprio > top)
+						{
+							bout = pBg[l*WIDTH];
+							back = curprio;
+						}
+						else if (
+								// priority is lower than current top pixel and
+								curprio < top &&
+								// this layer should be drawn in current window
+								(winmask & (0x1 << l)))
+						{
+							bout = out;
+							out = pBg[l*WIDTH];
+							back = top;
+							top = curprio;
+						}
 					}
-					else if (// priority is lower than current top pixel and
-							curprio < top &&
-							// this layer should be drawn in current window
-							(winmask & 0x1))
-					{
-						bout = out;
-						out = pBg[0];
-						back = top;
-						top = curprio;
-					}
-				}
-				// layer 1
-				if ((layersOn & (0x1 << 1)) &&
-						(pBg[WIDTH] & 0x8000))
-				{
-					curprio = ((prio[1] << 4) | 1);
-
-					if (curprio < back && curprio >= top)
-					{
-						bout = pBg[WIDTH];
-						back = curprio;
-					}
-					else if (curprio < top &&
-							(winmask & (0x1 << 1)))
-					{
-						bout = out;
-						out = pBg[WIDTH];
-						back = top;
-						top = curprio;
-					}
-				}
-				// layer 2
-				if ((layersOn & (0x1 << 2)) &&
-						(pBg[2*WIDTH] & 0x8000))
-				{
-					curprio = ((prio[2] << 4) | 2);
-
-					if (curprio < back && curprio >= top)
-					{
-						bout = pBg[2*WIDTH];
-						back = curprio;
-					}
-					else if (curprio < top &&
-							(winmask & (0x1 << 2)))
-					{
-						bout = out;
-						out = pBg[2*WIDTH];
-						back = top;
-						top = curprio;
-					}
-				}
-				// layer 3
-				if ((layersOn & (0x1 << 3)) &&
-						(pBg[3*WIDTH] & 0x8000))
-				{
-					curprio = ((prio[3] << 4) | 3);
-
-					if (curprio < back && curprio >= top)
-					{
-						bout = pBg[3*WIDTH];
-						back = curprio;
-					}
-					else if (curprio < top &&
-							(winmask & (0x1 << 3)))
-					{
-						bout = out;
-						out = pBg[3*WIDTH];
-						back = top;
-						top = curprio;
-					}
-				}
 
 				// now objects
 				// if objects are enabled
 				if ((layersOn & (0x1 << 4)) &&
-						// pixel to draw is not transparent and
+						// pixel to draw is not transparent
 						(*pObj & 0x8000))
 				{
 					curprio = ((*pObj >> (16 - 4)) & (0x3 << 4));
