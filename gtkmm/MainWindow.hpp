@@ -20,6 +20,7 @@
 #include "DisassemblerWindow.hpp"
 #include "PaletteWindow.hpp"
 #include "VramWindow.hpp"
+#include "AboutDialog.hpp"
 #include "Config.hpp"
 
 #include <ameteor/graphics/renderer.hpp>
@@ -57,6 +58,7 @@ class MainWindow : public Gtk::Window
 		DisassemblerWindow m_disassemblerWindow;
 		PaletteWindow m_paletteWindow;
 		VramWindow m_vramWindow;
+		AboutDialog m_aboutDialog;
 
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refDisassemblerCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;

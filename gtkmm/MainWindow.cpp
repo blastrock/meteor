@@ -186,6 +186,7 @@ MainWindow::MainWindow () :
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
+	m_aboutDialog.set_logo(m_mainimage.get_pixbuf());
 }
 
 void MainWindow::on_open ()
@@ -310,6 +311,7 @@ void MainWindow::on_vram_hide ()
 
 void MainWindow::on_menu_about ()
 {
+	m_aboutDialog.run();
 }
 
 void MainWindow::on_vblank ()
