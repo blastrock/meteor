@@ -15,16 +15,16 @@ void Configurator::InitAMeteor()
 		AMeteor::_keypad.BindKey(tmp, AMeteor::Keypad::BTN_##btn); \
 	else \
 		AMeteor::_keypad.BindKey(def, AMeteor::Keypad::BTN_##btn);
-	ASSIGN_BUTTON(A     , 119);
-	ASSIGN_BUTTON(B     , 120);
-	ASSIGN_BUTTON(L     , 113);
-	ASSIGN_BUTTON(R     , 115);
-	ASSIGN_BUTTON(START , 97);
-	ASSIGN_BUTTON(SELECT, 122);
-	ASSIGN_BUTTON(LEFT  , 65361);
-	ASSIGN_BUTTON(UP    , 65362);
-	ASSIGN_BUTTON(RIGHT , 65363);
-	ASSIGN_BUTTON(DOWN  , 65364);
+	ASSIGN_BUTTON(A     , 0x77);
+	ASSIGN_BUTTON(B     , 0x78);
+	ASSIGN_BUTTON(L     , 0x71);
+	ASSIGN_BUTTON(R     , 0x73);
+	ASSIGN_BUTTON(START , 0x61);
+	ASSIGN_BUTTON(SELECT, 0x7A);
+	ASSIGN_BUTTON(LEFT  , 0xFF51);
+	ASSIGN_BUTTON(UP    , 0xFF52);
+	ASSIGN_BUTTON(RIGHT , 0xFF53);
+	ASSIGN_BUTTON(DOWN  , 0xFF54);
 #undef ASSIGN_BUTTON
 
 #define ASSIGN_BUTTON(btn) \

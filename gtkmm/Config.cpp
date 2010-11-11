@@ -36,7 +36,7 @@ int Config::GetInt(const std::string& key) const
 	std::istringstream ss;
 	ss.str(m_conf.at(key));
 	int out;
-	ss >> out;
+	ss >> std::hex >> out;
 	if (!ss)
 		return INT_MIN;
 	return out;
