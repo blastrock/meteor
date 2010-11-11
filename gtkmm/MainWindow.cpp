@@ -24,6 +24,7 @@
 #include <gtkmm/messagedialog.h>
 
 #include "ameteor.hpp"
+#include "Configurator.hpp"
 
 #include "debug.hpp"
 
@@ -161,8 +162,9 @@ MainWindow::MainWindow () :
 	m_vramWindow.signal_hide().connect(sigc::mem_fun(*this,
 				&MainWindow::on_vram_hide));
 
-	m_config.Load();
-	m_config.InitAMeteor();
+	Configurator config;
+	config.Load();
+	config.InitAMeteor(*this);
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
@@ -181,8 +183,15 @@ void MainWindow::on_open ()
 		m_statusbar.push("ROM loaded.");
 	}*/
 		//AMeteor::_memory.LoadBios("/home/blastrock/GBA.BIOS");
+	m_openFile = "/home/blastrock/gba/g3.gba";
 		AMeteor::_memory.LoadRom("/home/blastrock/gba/g3.gba");
-		AMeteor::_memory.LoadCart("/home/blastrock/gba/g3.sav");
+	std::string file = Glib::build_filename(m_batteryPath,
+			Glib::path_get_basename(m_openFile));
+	if (file[file.size()-4] == '.')
+		file.replace(file.end()-3, file.end(), "mct");
+	else
+		file.append(".mct");
+		AMeteor::_memory.LoadCart(file.c_str());
 		//AMeteor::_memory.LoadRom("/home/blastrock/GBA.BIOS");
 		//AMeteor::_memory.LoadRom("/home/blastrock/vba_bios");
 		m_disassemblerWindow.Reload();
@@ -195,6 +204,7 @@ void MainWindow::on_close ()
 
 	AMeteor::Reset();
 	m_renderer.Uninit();
+	m_openFile.clear();
 
 	m_viewport.hide();
 	m_mainimage.show();
@@ -286,9 +296,14 @@ void MainWindow::on_quit ()
 
 void MainWindow::on_save_state (uint8_t n)
 {
-	char file[] = "ssX.mst";
-	file[2] = n+'1';
-	if (!AMeteor::SaveState(file))
+	std::string file = Glib::build_filename(m_sstatePath,
+			Glib::path_get_basename(m_openFile));
+	if (file[file.size()-4] == '.')
+		file.replace(file.end()-3, file.end(), "mst");
+	else
+		file.append(".mst");
+	file.insert(file.end()-4, 1, n+'0');
+	if (!AMeteor::SaveState(file.c_str()))
 	{
 		Gtk::MessageDialog dlg(*this, "Cannot save state !", false,
 				Gtk::MESSAGE_ERROR);
@@ -300,9 +315,14 @@ void MainWindow::on_save_state (uint8_t n)
 
 void MainWindow::on_load_state (uint8_t n)
 {
-	char file[] = "ssX.mst";
-	file[2] = n+'1';
-	if (!AMeteor::LoadState(file))
+	std::string file = Glib::build_filename(m_sstatePath,
+			Glib::path_get_basename(m_openFile));
+	if (file[file.size()-4] == '.')
+		file.replace(file.end()-3, file.end(), "mst");
+	else
+		file.append(".mst");
+	file.insert(file.end()-4, 1, n+'0');
+	if (!AMeteor::LoadState(file.c_str()))
 	{
 		Gtk::MessageDialog dlg(*this, "Cannot load state !", false,
 				Gtk::MESSAGE_ERROR);

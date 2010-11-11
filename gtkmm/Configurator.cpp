@@ -1,12 +1,14 @@
 #include "Configurator.hpp"
+#include "MainWindow.hpp"
 #include <ameteor.hpp>
+#include <string>
 
 void Configurator::Load()
 {
 	m_cfg.LoadFile("meteor.cfg");
 }
 
-void Configurator::InitAMeteor()
+void Configurator::InitAMeteor(MainWindow& window)
 {
 	int tmp;
 #define ASSIGN_BUTTON(btn, def) \
@@ -60,4 +62,15 @@ void Configurator::InitAMeteor()
 	ASSIGN_BUTTON(RIGHT );
 	ASSIGN_BUTTON(DOWN  );
 #undef ASSIGN_BUTTON
+
+	std::string str;
+	str = m_cfg.GetStr("BatteryPath");
+	if (!str.empty() && str[0] == '~')
+		str = Glib::get_home_dir() + str.substr(1);
+	window.m_batteryPath = str;
+
+	str = m_cfg.GetStr("SaveStatePath");
+	if (!str.empty() && str[0] == '~')
+		str = Glib::get_home_dir() + str.substr(1);
+	window.m_sstatePath = str;
 }

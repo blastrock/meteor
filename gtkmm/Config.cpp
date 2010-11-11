@@ -3,6 +3,8 @@
 #include <fstream>
 #include <limits.h>
 
+const std::string Config::_empty_string_;
+
 bool Config::LoadFile(const char* filename)
 {
 	std::ifstream file(filename);

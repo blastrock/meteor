@@ -8,7 +8,7 @@ class Configurator
 	public:
 		void Load();
 
-		void InitAMeteor();
+		void InitAMeteor(class MainWindow& window);
 
 	private:
 		Config m_cfg;

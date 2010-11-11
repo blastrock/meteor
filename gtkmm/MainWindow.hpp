@@ -21,7 +21,6 @@
 #include "PaletteWindow.hpp"
 #include "VramWindow.hpp"
 #include "AboutDialog.hpp"
-#include "Configurator.hpp"
 
 #include <ameteor/graphics/renderer.hpp>
 
@@ -39,8 +38,6 @@ class MainWindow : public Gtk::Window
 	private :
 		AMeteor::Graphics::Renderer& m_renderer;
 
-		Configurator m_config;
-
 		Gtk::VBox m_mainvbox;
 		Gtk::Statusbar m_statusbar;
 		Gtk::DrawingArea m_viewport;
@@ -54,6 +51,9 @@ class MainWindow : public Gtk::Window
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refDisassemblerCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refVramCheck;
+
+		std::string m_sstatePath, m_batteryPath;
+		std::string m_openFile;
 
 		bool m_running;
 
@@ -78,6 +78,8 @@ class MainWindow : public Gtk::Window
 
 		bool on_key_press_event(GdkEventKey* key);
 		bool on_key_release_event(GdkEventKey* key);
+
+		friend class Configurator;
 };
 
 #endif
