@@ -16,9 +16,7 @@
 
 #ifndef __INTERPRETER_THUMB_H__
 #define __INTERPRETER_THUMB_H__
-// XXX
-extern unsigned long i;
-extern bool strt;
+
 /*
 
 - From GBATEK -
@@ -57,8 +55,6 @@ U_|_1___1___1___0___1_|_________________________var___________|_1_|UNDEF ARM9
 #include "cpu_globals.hpp"
 #include "ameteor/memory.hpp"
 #include "ameteor.hpp"
-//XXX
-#include "ameteor/disassembler/instruction.hpp"
 
 #include "debug.hpp"
 
@@ -1126,22 +1122,6 @@ namespace AMeteor
 
 	NITHUMB(_Code)
 	{
-		//if (R(15) < 0x080026B2 || R(15) > 0x080026B6)
-		//if (R(15) == 0x08000D70)
-			//PrintStack(m_ameteor, R(13)&0xFFFFFFFC);
-		if (i >= debut && strt)
-		{
-			//STDBG << "R" << std::setbase(10) << (int)15 << " = " << IOS_ADD << R(15) << '\n';
-#ifdef DISASSEMBLE
-			debug("THUMB instruction : " << Disassembler::Instruction(R(15)-4, (uint16_t)code).ToString());
-#else
-			debug("THUMB instruction : " << IOS_ADD << code);
-#endif
-			PrintRegs();
-			//STDBG << IOS_ADD << R(15)-4 << " : " << IOS_ADD << code << " : ";
-			//debug_bits_16(code);
-		}
-
 		switch (code >> 13)
 		{
 			case 0: // 000

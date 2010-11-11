@@ -40,10 +40,8 @@
 	{ }
 #endif
 
-extern std::ofstream debug_stream;
-
-//#define STDBG std::cout
-#define STDBG debug_stream
+#define STDBG std::cout
+//#define STDBG debug_stream
 
 #if defined METDEBUG && defined METDEBUGLOG
 //XXX

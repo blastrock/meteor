@@ -95,6 +95,7 @@ namespace AMeteor
 
 		void Bios000h ()
 		{
+			debug("Bios entry point");
 			R(13) = 0x03007FE0;
 			R(15) = 0x08000004;
 			CPU.SwitchToMode(Cpu::M_IRQ);
@@ -107,11 +108,6 @@ namespace AMeteor
 
 		void Bios008h ()
 		{
-			// XXX
-#if defined METDEBUG && defined METDEBUGLOG
-			uint32_t stackadd = R(13) & 0xFFFFFFFC;
-			PrintStack(stackadd);
-#endif
 			// if we are here, we should be in SVC mode (0x13)
 			// store the spsr, r11, r12 and r14 on the stack
 			uint32_t baseadd = R(13) - (4*4), add = (baseadd & 0xFFFFFFFC);
@@ -134,11 +130,8 @@ namespace AMeteor
 			MEM.Write32(add +  4, R(14));
 			R(13) = baseadd;
 
-			// XXX
-			//R(14) = 0x168;
-			R(14) = 0x58;
+			R(14) = 0x168;
 
-			// XXX
 			debug("Software IRQ start");
 			switch (swiComment)
 			{
@@ -152,12 +145,6 @@ namespace AMeteor
 					met_abort("not implemented : " << (int)swiComment);
 					break;
 			}
-
-#if 1
-			//debug("ret : " << R(15)-4);
-			//debug_stream.close();
-			//debug_stream.open("debug_irq.log", std::ios::app);
-#endif
 		}
 
 		void Bios168h ()
@@ -173,10 +160,6 @@ namespace AMeteor
 			CPU.UpdateICpsr();
 			add = R(13) & 0xFFFFFFFC;
 
-			// XXX
-			debug("after msr");
-			PrintStack(R(13)&0xFFFFFFFC);
-
 			SPSR = MEM.Read32(add);
 
 			R(11) = MEM.Read32(add += 4);
@@ -190,24 +173,13 @@ namespace AMeteor
 			else
 				R(15) = R(14) + 4;
 
-			// XXX
 			debug("Software IRQ end");
-			PrintStack(R(13)&0xFFFFFFFC);
-
 			CPU.SwitchModeBack();
-
-#if 1
-			//debug_stream.close();
-			//debug_stream.open("debug.log", std::ios::app);
-#endif
 		}
 
 		void Bios018h ()
 		{
-			// XXX
-#if defined METDEBUG && defined METDEBUGLOG
-			uint32_t stackadd = R(13) & 0xFFFFFFFC;
-#endif
+			debug("IRQ start");
 			// stmfd r13!,r0-r3,r12,r14
 			uint32_t baseadd = R(13) - (6*4), add = (baseadd & 0xFFFFFFFC);
 			MEM.Write32(add     , R( 0));
@@ -220,32 +192,14 @@ namespace AMeteor
 			R(13) = baseadd;
 
 			// add r14,r15,0h
-			//R(14) = 0x00000138;
-			// XXX debug !
-			R(14) = 0x00000250;
+			R(14) = 0x00000130;
 
-			//R(15) = MEM.Read32(0x03FFFFFC);
 			R(15) = MEM.Read32(0x03007FFC) + 4;
-
-#if 1
-			// XXX
-			R(0) = 0x04000000;
-			debug("IRQ start");
-			debug("if : " << IOS_ADD << IO.DRead16(Io::IF));
-			PrintStack(R(13)&0xFFFFFFFC);
-			//debug_stream.close();
-			//debug_stream.open("debug_irq.log", std::ios::app);
-#endif
 		}
 
 		void Bios130h ()
 		{
-#if defined METDEBUG && defined METDEBUGLOG
-			uint32_t stackadd = R(13) & 0xFFFFFFFC;
-#endif
-			// XXX
-			debug("Stack before IRQ end");
-			PrintStack(stackadd);
+			debug("IRQ end");
 			// ldmfd r13!,r0-r3,r12,r14
 			uint32_t add = R(13) & 0xFFFFFFFC;
 			R( 0) = MEM.Read32(add     );
@@ -269,15 +223,6 @@ namespace AMeteor
 				R(15) &= 0xFFFFFFFE;
 			else
 				R(15) &= 0xFFFFFFFC;*/
-
-#if 1
-			// XXX
-			debug("IRQ end");
-			PrintStack(stackadd+6*4);
-			//debug("ret : " << R(15)-4);
-			//debug_stream.close();
-			//debug_stream.open("debug.log", std::ios::app);
-#endif
 		}
 
 		void SoftReset ()
@@ -329,31 +274,19 @@ namespace AMeteor
 
 			if (R(0))
 			{
-				// XXX
-				R(2) = intFlags;
 				if (intFlags & R(1))
 					intFlags = (intFlags & R(1)) ^ intFlags;
 				else
 					FLAG_Z = 1;
 				IO.Write16(Io::IME, 1);
-				// XXX
-				R(0) = 0;
 			}
 
 			IO.Write8(Io::HALTCNT, 0);
 
 			// return address (after IRQ)
-			//R(15) = 0x33C;
-			R(15) = 0x218;
+			R(15) = 0x33C;
 
-			// XXX
-			R(4) = 1;
-			R(3) = 0;
-			R(11) = 0x1F;
-			R(12) = 0x04000000;
-			FLAG_C = 1;
 			debug("IntrWait start");
-			PrintStack(R(13)&0xFFFFFFFC);
 		}
 
 		void Bios338h ()
@@ -380,7 +313,6 @@ namespace AMeteor
 			}
 
 			debug("IntWait end");
-			PrintStack(R(13)&0xFFFFFFFC);
 		}
 
 		void VBlankIntrWait ()
@@ -665,21 +597,14 @@ namespace AMeteor
 						src += 2;
 						blocklen = (block >> 12) + 3;
 						realaddr = dest - (block & 0x0FFF) - 1;
-						for(uint16_t j = 0; j < blocklen; ++j) {
+						for(uint16_t j = 0; j < blocklen; ++j)
+						{
 							MEM.Write8(dest++, MEM.Read8(realaddr++));
 
 							--size;
 							if(size == 0)
 							{
 								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
 								return;
 							}
 						}
@@ -692,15 +617,7 @@ namespace AMeteor
 						--size;
 						if (size == 0)
 						{
-								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
+							size = header >> 8;
 							return;
 						}
 					}
@@ -756,14 +673,6 @@ namespace AMeteor
 							if(size == 0)
 							{
 								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
 								return;
 							}
 						}
@@ -785,15 +694,7 @@ namespace AMeteor
 						--size;
 						if (size == 0)
 						{
-								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
+							size = header >> 8;
 							return;
 						}
 					}
@@ -908,14 +809,6 @@ namespace AMeteor
 						if(size == 0)
 						{
 							size = header >> 8;
-							//XXX
-		for (uint32_t i = 0; i < size; ++i)
-		{
-			debug_((int)MEM.Read8(R(1) + i) << ' ');
-			if ((i % 8) == 0)
-				debug_(std::endl);
-		}
-		debug_(std::endl);
 							return;
 						}
 					}
@@ -932,15 +825,7 @@ namespace AMeteor
 						--size;
 						if (size == 0)
 						{
-								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
+							size = header >> 8;
 							return;
 						}
 					}
@@ -991,14 +876,6 @@ namespace AMeteor
 						if(size == 0)
 						{
 							size = header >> 8;
-							//XXX
-		for (uint32_t i = 0; i < size; ++i)
-		{
-			debug_((int)MEM.Read8(R(1) + i) << ' ');
-			if ((i % 8) == 0)
-				debug_(std::endl);
-		}
-		debug_(std::endl);
 							return;
 						}
 					}
@@ -1024,15 +901,7 @@ namespace AMeteor
 						--size;
 						if (size == 0)
 						{
-								size = header >> 8;
-								//XXX
-			for (uint32_t i = 0; i < size; ++i)
-			{
-				debug_((int)MEM.Read8(R(1) + i) << ' ');
-				if ((i % 8) == 0)
-					debug_(std::endl);
-			}
-			debug_(std::endl);
+							size = header >> 8;
 							return;
 						}
 					}

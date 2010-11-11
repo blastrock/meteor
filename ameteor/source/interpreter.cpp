@@ -23,9 +23,7 @@
 #include "ameteor.hpp"
 
 #include "debug.hpp"
-// XXX
-unsigned long i;
-bool strt = true;
+
 namespace AMeteor
 {
 	Interpreter::Interpreter() :
@@ -55,28 +53,11 @@ namespace AMeteor
 			!m_st.icpsr.irq_d;
 	}
 
-	//XXX
 	void Interpreter::Run ()
 	{
 		m_run = true;
-#if defined METDEBUG && defined METDEBUGLOG
-		for (i = 0; i < fin && m_run; ++i)
-		{
-			// XXX
-			if (strt && i > debut && m_haltcnt == 255)
-			{
-				debug("if : " << std::hex << m_if);
-				debug("i : " << std::hex << std::uppercase << i);
-			}
-			if (!(i % 10000) && i < 0x13000)
-			{
-				//IO.GetRef16(Io::KEYINPUT) ^= 0x1; // toggle a
-				//IO.GetRef16(Io::KEYINPUT) ^= 0x8; // toggle start
-			}
-#else
 		while(m_run)
 		{
-#endif
 			switch (m_haltcnt)
 			{
 				case 255: // normal mode
@@ -96,13 +77,10 @@ namespace AMeteor
 
 						if (R(15) < 0x01000000 && !MEM.HasBios())
 						{
-							//XXX
 							switch (R(15))
 							{
 								case 0x004:
 									Bios::Bios000h();
-									//XXX
-									//goto arm;
 									break;
 								case 0x00C:
 									Bios::Bios008h();
@@ -110,16 +88,13 @@ namespace AMeteor
 								case 0x01C:
 									Bios::Bios018h();
 									break;
-								//case 0x134:
-								case 0x254:
+								case 0x134:
 									Bios::Bios130h();
 									break;
-								//case 0x338:
-								case 0x218:
+								case 0x33C:
 									Bios::Bios338h();
 									break;
-								//case 0x16C:
-								case 0x05C:
+								case 0x16C:
 									Bios::Bios168h();
 									break;
 								default:
@@ -195,32 +170,6 @@ namespace AMeteor
 			}
 		}
 	}
-
-#if 0
-	void Interpreter::Run ()
-	{
-		m_run = true;
-#if 1
-		while (m_run)
-#else
-		for (i = 0; i < fin && m_run; ++i)
-#endif
-		{
-			// XXX
-			if (strt && i > debut && m_haltcnt == 255)
-			{
-				debug("if : " << m_if);
-				debug("i : " << std::hex << std::uppercase << i);
-			}
-			if (!(i % 10000) && i < 0x13000)
-			{
-				//IO.GetRef16(Io::KEYINPUT) ^= 0x1; // toggle a
-				//IO.GetRef16(Io::KEYINPUT) ^= 0x8; // toggle start
-			}
-			Step ();
-		}
-	}
-#endif
 
 	bool Interpreter::SaveState (gzFile file)
 	{

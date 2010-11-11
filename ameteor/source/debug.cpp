@@ -22,11 +22,6 @@
 #include <sstream>
 #include <map>
 
-#if defined METDEBUG && defined METDEBUGLOG
-std::ofstream debug_stream("debug.log");
-#endif
-extern unsigned long i;
-
 namespace AMeteor
 {
 	// TODO make this more guidelined (like the above assert)
@@ -86,7 +81,6 @@ namespace AMeteor
 
 	void PrintStack (uint32_t stackadd)
 	{
-		if (i < debut)return;
 		uint32_t add = stackadd;
 		debug("Stack : " << IOS_ADD << add);
 		for (; add < 0x03008000; add += 4)

@@ -16,9 +16,7 @@
 
 #ifndef __INTERPRETER_ARM_H__
 #define __INTERPRETER_ARM_H__
-// XXX
-extern unsigned long i;
-extern bool strt;
+
 /*
 
 - From GBATEK -
@@ -59,8 +57,6 @@ ARM Binary Opcode Format
 #include "globals.hpp"
 #include "cpu_globals.hpp"
 #include "ameteor.hpp"
-//XXX
-#include "ameteor/disassembler/instruction.hpp"
 
 #include "debug.hpp"
 
@@ -1289,22 +1285,6 @@ namespace AMeteor
 
 	NIARM(_Code)
 	{
-		// XXX
-		//if (R(15) == 0x03000008)
-			//PrintStack(m_ameteor, R(13)&0xFFFFFFFC);
-		if (i >= debut && strt)
-		{
-#ifdef DISASSEMBLE
-			debug("ARM instruction : " << Disassembler::Instruction(R(15)-8, code).ToString());
-#else
-			debug("ARM instruction : " << IOS_ADD << code);
-#endif
-			//STDBG << "R" << std::setbase(10) << (int)15 << " = " << IOS_ADD << R(15) << '\n';
-			PrintRegs();
-			//STDBG << IOS_ADD << R(15)-8 << " : " << IOS_ADD << code << " : ";
-			//debug_bits(code);
-		}
-
 		if (!a_CheckCondition(code >> 28)) // condition failed
 			CYCLES32Seq(R(15), 1);
 		else

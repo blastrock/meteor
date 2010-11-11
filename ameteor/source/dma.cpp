@@ -21,8 +21,7 @@
 #include "ameteor.hpp"
 
 #include "debug.hpp"
-// XXX
-extern unsigned long i;
+
 namespace AMeteor
 {
 	void Dma::Reset ()
