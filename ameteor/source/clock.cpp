@@ -19,8 +19,7 @@
 #include "ameteor.hpp"
 
 #include "debug.hpp"
-// XXX
-extern unsigned long i;
+
 namespace AMeteor
 {
 	void Clock::Reset ()
@@ -39,13 +38,7 @@ namespace AMeteor
 
 		// this loop is here because a timer can trigger a dma which will take a
 		// long time, during this time the lcd must draw and the timers continue
-		// XXX
-		// 3 cycles for each instruction (debug) XXX
-#if defined METDEBUG && defined METDEBUGLOG
-		m_cycles = 3;
-#else
 		while (m_cycles >= m_first)
-#endif
 		{
 			tocommit = m_cycles;
 			m_cycles = 0;
