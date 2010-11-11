@@ -52,33 +52,26 @@ namespace AMeteor
 			m_keyinput |= m_joys[id];
 	}
 
-	bool Keypad::JoyMoved (unsigned int MET_UNUSED(joyid),
-			unsigned int MET_UNUSED(axis), float MET_UNUSED(pos))
+	void Keypad::JoyMoved (uint16_t joyid, uint16_t axis, float pos)
 	{
-		/* TODO
-		switch (axis)
+		uint32_t id = (((int)joyid) << 16) | ((pos < 0) << 15) | (axis & 0x7FFF);
+		// if pos is 0, we disable the positive and negative targets
+		if (pos == 0)
 		{
-			case 4:
-				if (pos < 0)
-					m_keyinput &= ~((uint16_t)0x020);
-				else if (pos > 0)
-					m_keyinput &= ~((uint16_t)0x010);
-				else
-					m_keyinput |= 0x030;
-				return true;
-			case 5:
-				if (pos < 0)
-					m_keyinput &= ~((uint16_t)0x040);
-				else if (pos > 0)
-					m_keyinput &= ~((uint16_t)0x080);
-				else
-					m_keyinput |= 0x0C0;
-				return true;
-			default:
-				return false;
+			if (m_axis.count(id))
+				m_keyinput |= m_axis[id];
+			if (m_axis.count(id | (1 << 15)))
+				m_keyinput |= m_axis[id | (1 << 15)];
 		}
-		*/
-		return false;
+		else
+		{
+			// we enable the corresponding button
+			if (m_axis.count(id))
+				m_keyinput &= ~((uint16_t)m_axis[id]);
+			// we disable the opposite button (we may have skipped 0)
+			if (m_axis.count(id ^ 0x8000))
+				m_keyinput |= m_axis[id ^ 0x8000];
+		}
 	}
 
 	void Keypad::VBlank ()

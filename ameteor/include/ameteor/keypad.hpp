@@ -59,14 +59,22 @@ namespace AMeteor
 			}
 			void UnbindJoy(uint16_t joyid, uint16_t button)
 			{
-				m_keys.erase(((int)joyid) << 16 | button);
+				m_joys.erase(((int)joyid) << 16 | button);
+			}
+			void BindAxis(uint16_t joyid, uint16_t axis, Button btn)
+			{
+				m_axis[((int)joyid) << 16 | axis] = (uint16_t)btn;
+			}
+			void UnbindAxis(uint16_t joyid, uint16_t axis)
+			{
+				m_axis.erase(((int)joyid) << 16 | axis);
 			}
 
 			void KeyPressed(int code);
 			void KeyReleased(int code);
 			void JoyButtonPressed (uint16_t joyid, uint16_t button);
 			void JoyButtonReleased (uint16_t joyid, uint16_t button);
-			bool JoyMoved (unsigned int joyid, unsigned int axis, float pos);
+			void JoyMoved (uint16_t joyid, uint16_t axis, float pos);
 
 			void VBlank ();
 
@@ -76,6 +84,7 @@ namespace AMeteor
 
 			std::map<int, uint16_t> m_keys;
 			std::map<int, uint16_t> m_joys;
+			std::map<int, uint16_t> m_axis;
 	};
 }
 

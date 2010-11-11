@@ -30,7 +30,7 @@ void Configurator::InitAMeteor()
 #define ASSIGN_BUTTON(btn) \
 	tmp = m_cfg.GetInt("joy_" #btn); \
 	if (tmp != INT_MIN) \
-		AMeteor::_keypad.BindJoy((tmp >> 8) & 0xFF, tmp & 0xFF, \
+		AMeteor::_keypad.BindJoy((tmp >> 16) & 0xFFFF, tmp & 0xFFFF, \
 				AMeteor::Keypad::BTN_##btn);
 	ASSIGN_BUTTON(A     );
 	ASSIGN_BUTTON(B     );
@@ -38,5 +38,26 @@ void Configurator::InitAMeteor()
 	ASSIGN_BUTTON(R     );
 	ASSIGN_BUTTON(START );
 	ASSIGN_BUTTON(SELECT);
+	ASSIGN_BUTTON(LEFT  );
+	ASSIGN_BUTTON(UP    );
+	ASSIGN_BUTTON(RIGHT );
+	ASSIGN_BUTTON(DOWN  );
+#undef ASSIGN_BUTTON
+
+#define ASSIGN_BUTTON(btn) \
+	tmp = m_cfg.GetInt("joyaxis_" #btn); \
+	if (tmp != INT_MIN) \
+		AMeteor::_keypad.BindAxis((tmp >> 16) & 0xFFFF, tmp & 0xFFFF, \
+				AMeteor::Keypad::BTN_##btn);
+	ASSIGN_BUTTON(A     );
+	ASSIGN_BUTTON(B     );
+	ASSIGN_BUTTON(L     );
+	ASSIGN_BUTTON(R     );
+	ASSIGN_BUTTON(START );
+	ASSIGN_BUTTON(SELECT);
+	ASSIGN_BUTTON(LEFT  );
+	ASSIGN_BUTTON(UP    );
+	ASSIGN_BUTTON(RIGHT );
+	ASSIGN_BUTTON(DOWN  );
 #undef ASSIGN_BUTTON
 }
