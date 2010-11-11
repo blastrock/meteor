@@ -26,4 +26,17 @@ void Configurator::InitAMeteor()
 	ASSIGN_BUTTON(RIGHT , 65363);
 	ASSIGN_BUTTON(DOWN  , 65364);
 #undef ASSIGN_BUTTON
+
+#define ASSIGN_BUTTON(btn) \
+	tmp = m_cfg.GetInt("joy_" #btn); \
+	if (tmp != INT_MIN) \
+		AMeteor::_keypad.BindJoy((tmp >> 8) & 0xFF, tmp & 0xFF, \
+				AMeteor::Keypad::BTN_##btn);
+	ASSIGN_BUTTON(A     );
+	ASSIGN_BUTTON(B     );
+	ASSIGN_BUTTON(L     );
+	ASSIGN_BUTTON(R     );
+	ASSIGN_BUTTON(START );
+	ASSIGN_BUTTON(SELECT);
+#undef ASSIGN_BUTTON
 }

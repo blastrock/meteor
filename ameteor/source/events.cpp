@@ -39,6 +39,7 @@ namespace AMeteor
 					case sf::Event::JoyButtonPressed:
 						switch (event.JoyButton.Button)
 						{
+							// XXX
 							case 7:
 								LCD.SetFrameskip(SPDUP_FRMSKIP);
 								SOUND.SetSampleskip(SPDUP_SNDSKIP);
@@ -52,6 +53,7 @@ namespace AMeteor
 					case sf::Event::JoyButtonReleased:
 						switch (event.JoyButton.Button)
 						{
+							// XXX
 							case 7:
 								LCD.SetFrameskip(0);
 								SOUND.SetSampleskip(0);
