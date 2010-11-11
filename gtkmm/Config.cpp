@@ -3,9 +3,11 @@
 #include <fstream>
 #include <limits.h>
 
-void Config::LoadFile(const char* filename)
+bool Config::LoadFile(const char* filename)
 {
 	std::ifstream file(filename);
+	if (!file)
+		return false;
 
 	char buf[256];
 	std::string str, key, val;
@@ -14,15 +16,17 @@ void Config::LoadFile(const char* filename)
 	while (file.getline(buf, 255, '\n'))
 	{
 		str = buf;
-		if (str.empty() || str[0] == '#')
+		if (str.empty() || str[0] == '#' || str[0] == ';')
 			continue;
 		pos = str.find('=');
-		if (pos == str.size())
+		if (pos == std::string::npos)
 			continue;
 		key = str.substr(0, pos);
 		val = str.substr(pos+1);
 		m_conf[key] = val;
 	}
+
+	return true;
 }
 
 int Config::GetInt(const std::string& key) const

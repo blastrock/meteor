@@ -12,7 +12,7 @@ class Config
 			m_conf.clear();
 		}
 
-		void LoadFile(const char* file);
+		bool LoadFile(const char* file);
 
 		const std::string& GetStr(const std::string& key) const
 		{

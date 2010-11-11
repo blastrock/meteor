@@ -21,7 +21,7 @@
 #include "PaletteWindow.hpp"
 #include "VramWindow.hpp"
 #include "AboutDialog.hpp"
-#include "Config.hpp"
+#include "Configurator.hpp"
 
 #include <ameteor/graphics/renderer.hpp>
 
@@ -48,7 +48,7 @@ class MainWindow : public Gtk::Window
 		};
 		Action m_action;
 		uint8_t m_sstate;
-		Config m_config;
+		Configurator m_config;
 
 		Gtk::VBox m_mainvbox;
 		Gtk::Statusbar m_statusbar;

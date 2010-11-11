@@ -165,24 +165,8 @@ MainWindow::MainWindow () :
 	AMeteor::_lcd.signal_vblank.connect(sigc::mem_fun(*this,
 				&MainWindow::on_vblank));
 
-	m_config.LoadFile("meteor.cfg");
-
-	int tmp;
-#define ASSIGN_BUTTON(btn) \
-	tmp = m_config.GetInt("keyboard_" #btn); \
-	if (tmp != INT_MIN) \
-		AMeteor::_keypad.BindKey(tmp, AMeteor::Keypad::BTN_##btn);
-	ASSIGN_BUTTON(A);
-	ASSIGN_BUTTON(B);
-	ASSIGN_BUTTON(L);
-	ASSIGN_BUTTON(R);
-	ASSIGN_BUTTON(START);
-	ASSIGN_BUTTON(SELECT);
-	ASSIGN_BUTTON(LEFT);
-	ASSIGN_BUTTON(RIGHT);
-	ASSIGN_BUTTON(UP);
-	ASSIGN_BUTTON(DOWN);
-#undef ASSIGN_BUTTON
+	m_config.Load();
+	m_config.InitAMeteor();
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
