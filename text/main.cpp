@@ -52,7 +52,8 @@ int main (int argc, char **argv)
 
 	AMeteor::_lcd.GetScreen().GetRenderer().Init();
 
-	AMeteor::_cpu.Run();
+	while (true)
+		AMeteor::_cpu.Run(-1);
 
 	return 0;
 }

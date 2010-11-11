@@ -53,10 +53,11 @@ namespace AMeteor
 			!m_st.icpsr.irq_d;
 	}
 
-	void Interpreter::Run ()
+	void Interpreter::Run (unsigned int cycles)
 	{
 		m_run = true;
-		while(m_run)
+		CLOCK.ResetCounter();
+		while(m_run && CLOCK.GetCounter() < cycles)
 		{
 			switch (m_haltcnt)
 			{
@@ -169,6 +170,7 @@ namespace AMeteor
 					break;
 			}
 		}
+		m_run = false;
 	}
 
 	bool Interpreter::SaveState (gzFile file)

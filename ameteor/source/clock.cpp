@@ -25,7 +25,7 @@ namespace AMeteor
 	void Clock::Reset ()
 	{
 		// lcd is enabled by default
-		m_cycles = m_lcd = m_sound = m_sound = 0;
+		m_first = m_count = m_cycles = m_lcd = m_sound = m_sound = 0;
 		// timers and battery are disabled by default
 		m_battery = m_timer[0] = m_timer[1] = m_timer[2] = m_timer[3] =
 			INT_MAX;
@@ -33,8 +33,9 @@ namespace AMeteor
 
 	void Clock::Commit ()
 	{
-
 		unsigned short tocommit;
+
+		m_count += m_cycles;
 
 		// this loop is here because a timer can trigger a dma which will take a
 		// long time, during this time the lcd must draw and the timers continue

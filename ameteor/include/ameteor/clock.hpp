@@ -27,13 +27,21 @@ namespace AMeteor
 	class Clock
 	{
 		public :
-			Clock () :
-				m_first(0)
+			Clock ()
 			{
 				Reset();
 			}
 
 			void Reset ();
+
+			void ResetCounter()
+			{
+				m_count = 0;
+			}
+			unsigned int GetCounter() const
+			{
+				return m_count;
+			}
 
 			void TimePass (unsigned short cycles)
 			{
@@ -92,6 +100,8 @@ namespace AMeteor
 			unsigned short m_cycles;
 			unsigned short m_first;
 			int m_lcd, m_timer[4], m_sound, m_battery;
+
+			unsigned int m_count;
 
 			void SetFirst ();
 	};

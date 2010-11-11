@@ -52,8 +52,7 @@ namespace AMeteor
 			void SendInterrupt (uint16_t interrupt);
 			void CheckInterrupt ();
 
-			void Run ();
-			inline void Step ();
+			void Run (unsigned int cycles);
 			void Stop ()
 			{
 				m_run = false;

@@ -32,9 +32,8 @@
 MainWindow::MainWindow () :
 	Gtk::Window(),
 	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
-	m_action(ACT_NOTHING),
-	m_sstate(0),
-	m_mainimage("../../data/meteor.png")
+	m_mainimage("../../data/meteor.png"),
+	m_running(false)
 {
 	this->set_title("Meteor");
 	this->set_resizable(false);
@@ -162,9 +161,6 @@ MainWindow::MainWindow () :
 	m_vramWindow.signal_hide().connect(sigc::mem_fun(*this,
 				&MainWindow::on_vram_hide));
 
-	AMeteor::_lcd.signal_vblank.connect(sigc::mem_fun(*this,
-				&MainWindow::on_vblank));
-
 	m_config.Load();
 	m_config.InitAMeteor();
 
@@ -195,19 +191,8 @@ void MainWindow::on_open ()
 
 void MainWindow::on_close ()
 {
-	if (AMeteor::_cpu.IsRunning())
-	{
-		m_action = ACT_CLOSE;
-		AMeteor::_cpu.Stop();
-	}
-	else
-	{
-		CloseRom();
-	}
-}
+	m_running = false;
 
-void MainWindow::CloseRom()
-{
 	AMeteor::Reset();
 	m_renderer.Uninit();
 
@@ -217,7 +202,7 @@ void MainWindow::CloseRom()
 
 void MainWindow::on_run ()
 {
-	if (AMeteor::_cpu.IsRunning())
+	if (m_running)
 		return;
 
 	m_mainimage.hide();
@@ -229,29 +214,14 @@ void MainWindow::on_run ()
 	XFlush(GDK_WINDOW_XDISPLAY(win));
 	m_renderer.Init(GDK_WINDOW_XWINDOW(win));
 
-	while (true)
+	m_running = true;
+	do
 	{
-		AMeteor::Run();
+		AMeteor::Run(280000);
 
-		// The emulator has been stopped
-		switch (m_action)
-		{
-			case ACT_SAVE:
-				SaveState(m_sstate);
-				break;
-			case ACT_LOAD:
-				LoadState(m_sstate);
-				break;
-			case ACT_CLOSE:
-				m_action = ACT_NOTHING;
-				CloseRom();
-				return;
-			default:
-				return; // nothing to do
-		}
-		m_action = ACT_NOTHING;
-		m_sstate = 0;
-	}
+		while (Gtk::Main::events_pending())
+			Gtk::Main::iteration();
+	} while (m_running);
 }
 
 void MainWindow::on_menu_disassembler_toggle ()
@@ -298,15 +268,9 @@ void MainWindow::on_menu_about ()
 	m_aboutDialog.run();
 }
 
-void MainWindow::on_vblank ()
-{
-	while (Gtk::Main::events_pending())
-		Gtk::Main::iteration();
-}
-
 void MainWindow::on_stop ()
 {
-	AMeteor::Stop();
+	m_running = false;
 }
 
 void MainWindow::on_reset ()
@@ -316,23 +280,11 @@ void MainWindow::on_reset ()
 
 void MainWindow::on_quit ()
 {
-	AMeteor::Stop();
+	m_running = false;
 	Gtk::Main::quit();
 }
 
 void MainWindow::on_save_state (uint8_t n)
-{
-	if (AMeteor::_cpu.IsRunning())
-	{
-		m_action = ACT_SAVE;
-		m_sstate = n;
-		AMeteor::_cpu.Stop();
-	}
-	else
-		SaveState(n);
-}
-
-void MainWindow::SaveState(uint8_t n)
 {
 	char file[] = "ssX.mst";
 	file[2] = n+'1';
@@ -347,18 +299,6 @@ void MainWindow::SaveState(uint8_t n)
 }
 
 void MainWindow::on_load_state (uint8_t n)
-{
-	if (AMeteor::_cpu.IsRunning())
-	{
-		m_action = ACT_LOAD;
-		m_sstate = n;
-		AMeteor::_cpu.Stop();
-	}
-	else
-		LoadState(n);
-}
-
-void MainWindow::LoadState(uint8_t n)
 {
 	char file[] = "ssX.mst";
 	file[2] = n+'1';

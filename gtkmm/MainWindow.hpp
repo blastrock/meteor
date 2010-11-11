@@ -39,15 +39,6 @@ class MainWindow : public Gtk::Window
 	private :
 		AMeteor::Graphics::Renderer& m_renderer;
 
-		enum Action
-		{
-			ACT_NOTHING,
-			ACT_SAVE,
-			ACT_LOAD,
-			ACT_CLOSE
-		};
-		Action m_action;
-		uint8_t m_sstate;
 		Configurator m_config;
 
 		Gtk::VBox m_mainvbox;
@@ -64,9 +55,7 @@ class MainWindow : public Gtk::Window
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refVramCheck;
 
-		void SaveState (uint8_t n);
-		void LoadState (uint8_t n);
-		void CloseRom();
+		bool m_running;
 
 		void on_open ();
 		void on_menu_disassembler_toggle ();
@@ -89,8 +78,6 @@ class MainWindow : public Gtk::Window
 
 		bool on_key_press_event(GdkEventKey* key);
 		bool on_key_release_event(GdkEventKey* key);
-
-		void on_vblank ();
 };
 
 #endif

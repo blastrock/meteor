@@ -48,9 +48,9 @@ namespace AMeteor
 	bool SaveState (const char* filename);
 	bool LoadState (const char* filename);
 
-	inline void Run ()
+	inline void Run (unsigned int cycles)
 	{
-		_cpu.Run();
+		_cpu.Run(cycles);
 	}
 
 	inline void Stop ()
