@@ -173,29 +173,26 @@ MainWindow::MainWindow () :
 
 void MainWindow::on_open ()
 {
-	/*Gtk::FileChooserDialog dialog(*this, "Meteor - Chose a ROM");
+	Gtk::FileChooserDialog dialog(*this, "Meteor - Chose a ROM");
 	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
 	if (dialog.run() == Gtk::RESPONSE_OK)
 	{
-		m_ameteor.GetMemory()->LoadRom(dialog.get_filename().c_str());
-		m_disassemblerWindow.Reload();
-		m_statusbar.push("ROM loaded.");
-	}*/
 		//AMeteor::_memory.LoadBios("/home/blastrock/GBA.BIOS");
-	m_openFile = "/home/blastrock/gba/g3.gba";
-		AMeteor::_memory.LoadRom("/home/blastrock/gba/g3.gba");
-	std::string file = Glib::build_filename(m_batteryPath,
-			Glib::path_get_basename(m_openFile));
-	if (file[file.size()-4] == '.')
-		file.replace(file.end()-3, file.end(), "mct");
-	else
-		file.append(".mct");
+		m_openFile = dialog.get_filename();
+		AMeteor::_memory.LoadRom(m_openFile.c_str());
+
+		std::string file = Glib::build_filename(m_batteryPath,
+				Glib::path_get_basename(m_openFile));
+		if (file[file.size()-4] == '.')
+			file.replace(file.end()-3, file.end(), "mct");
+		else
+			file.append(".mct");
 		AMeteor::_memory.LoadCart(file.c_str());
-		//AMeteor::_memory.LoadRom("/home/blastrock/GBA.BIOS");
-		//AMeteor::_memory.LoadRom("/home/blastrock/vba_bios");
+
 		m_disassemblerWindow.Reload();
 		m_statusbar.push("ROM loaded.");
+	}
 }
 
 void MainWindow::on_close ()
