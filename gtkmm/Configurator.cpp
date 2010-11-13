@@ -5,7 +5,12 @@
 
 void Configurator::Load()
 {
-	m_cfg.LoadFile("meteor.cfg");
+	std::vector<std::string> path;
+	path.push_back(Glib::get_home_dir());
+	path.push_back(".meteor");
+	path.push_back("meteor.cfg");
+	std::string file = Glib::build_filename(path);
+	m_cfg.LoadFile(file.c_str());
 }
 
 void Configurator::InitAMeteor(MainWindow& window)
