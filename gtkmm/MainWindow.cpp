@@ -188,7 +188,8 @@ void MainWindow::on_open ()
 			file.replace(file.end()-3, file.end(), "mct");
 		else
 			file.append(".mct");
-		AMeteor::_memory.LoadCart(file.c_str());
+		AMeteor::_memory.SetCartFile(file.c_str());
+		AMeteor::_memory.LoadCart();
 
 		m_disassemblerWindow.Reload();
 		m_statusbar.push("ROM loaded.");

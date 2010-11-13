@@ -30,7 +30,8 @@ int main (int argc, char **argv)
 		argv[1][len-2] = 'a';
 		argv[1][len-1] = 'v';
 	}
-	if (!AMeteor::_memory.LoadCart(argv[1]))
+	AMeteor::_memory.SetCartFile(argv[1]);
+	if (!AMeteor::_memory.LoadCart())
 	{
 		puts("cart load fail");
 		AMeteor::_memory.SetCartFile(argv[1]);

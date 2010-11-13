@@ -52,7 +52,10 @@ namespace AMeteor
 			}
 			// erases cartridge memory
 			void SetCartType (uint8_t type);
-			void SetCartFile (const char* filename);
+			void SetCartFile (const char* filename)
+			{
+				m_cartfile = filename;
+			}
 
 			void Reset (bool rom = true);
 			void ClearWbram ();
@@ -72,7 +75,7 @@ namespace AMeteor
 				}
 			}
 			void LoadRom (const char* filename);
-			bool LoadCart (const char* filename);
+			bool LoadCart ();
 
 			bool HasBios () const
 			{

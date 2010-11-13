@@ -102,11 +102,6 @@ namespace AMeteor
 		m_carttype = type;
 	}
 
-	void Memory::SetCartFile (const char* file)
-	{
-		m_cartfile = file;
-	}
-
 	void Memory::Reset (bool rom)
 	{
 		static const uint8_t InitMemoryTime[0xF] = {
@@ -216,10 +211,10 @@ namespace AMeteor
 	}
 
 	// TODO should manage different errors by returning ints
-	bool Memory::LoadCart (const char* filename)
+	bool Memory::LoadCart ()
 	{
 		struct stat buf;
-		if (stat(filename, &buf) == -1)
+		if (stat(m_cartfile.c_str(), &buf) == -1)
 			return false;
 		switch (buf.st_size)
 		{
@@ -239,10 +234,9 @@ namespace AMeteor
 				SetCartType(CTYPE_FLASH128);
 				break;
 		}
-		std::ifstream f(filename);
+		std::ifstream f(m_cartfile.c_str());
 		if (!m_cart->Load(f))
 			return false;
-		m_cartfile = filename;
 		return true;
 	}
 
