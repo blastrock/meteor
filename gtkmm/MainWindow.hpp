@@ -52,7 +52,7 @@ class MainWindow : public Gtk::Window
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refVramCheck;
 
-		std::string m_sstatePath, m_batteryPath;
+		std::string m_sstatePath, m_batteryPath, m_romPath;
 		std::string m_openFile;
 
 		bool m_running;

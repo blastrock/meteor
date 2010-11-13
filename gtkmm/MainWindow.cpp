@@ -185,9 +185,9 @@ void MainWindow::on_open ()
 	Gtk::FileChooserDialog dialog(*this, "Meteor - Choose a ROM");
 	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+	dialog.set_current_folder(m_romPath);
 	if (dialog.run() == Gtk::RESPONSE_OK)
 	{
-		//AMeteor::_memory.LoadBios("/home/blastrock/GBA.BIOS");
 		m_openFile = dialog.get_filename();
 		AMeteor::_memory.LoadRom(m_openFile.c_str());
 
