@@ -17,11 +17,6 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
-// DEBUG XXX
-// 1500000
-#define debut 0x0
-#define fin 300000000
-
 #include <algorithm>
 #include <stdint.h>
 
