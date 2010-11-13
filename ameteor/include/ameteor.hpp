@@ -43,7 +43,23 @@ namespace AMeteor
 	extern Timer _timer2;
 	extern Timer _timer3;
 
-	void Reset ();
+	const uint32_t UNIT_CLOCK  = 0x0001;
+	const uint32_t UNIT_IO     = 0x0002;
+	const uint32_t UNIT_CPU    = 0x0004;
+	const uint32_t UNIT_MEMORY = 0x0008;
+	const uint32_t UNIT_DMA    = 0x0010;
+	const uint32_t UNIT_LCD    = 0x0020;
+	const uint32_t UNIT_SOUND  = 0x0040;
+	const uint32_t UNIT_KEYPAD = 0x0080;
+	const uint32_t UNIT_TIMER0 = 0x0100;
+	const uint32_t UNIT_TIMER1 = 0x0200;
+	const uint32_t UNIT_TIMER2 = 0x0400;
+	const uint32_t UNIT_TIMER3 = 0x0800;
+	const uint32_t UNIT_MEMORY_ROM = 0x1000;
+	const uint32_t UNIT_MEMORY_BIOS = 0x2000;
+	const uint32_t UNIT_ALL = 0x3FFF;
+
+	void Reset (uint32_t units);
 
 	bool SaveState (const char* filename);
 	bool LoadState (const char* filename);

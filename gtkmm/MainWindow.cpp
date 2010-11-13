@@ -200,7 +200,7 @@ void MainWindow::on_close ()
 {
 	m_running = false;
 
-	AMeteor::Reset();
+	AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
 	m_renderer.Uninit();
 	m_openFile.clear();
 
@@ -283,7 +283,8 @@ void MainWindow::on_stop ()
 
 void MainWindow::on_reset ()
 {
-	AMeteor::Reset();
+	AMeteor::Reset(AMeteor::UNIT_ALL ^
+			(AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
 }
 
 void MainWindow::on_quit ()

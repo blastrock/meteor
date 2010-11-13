@@ -57,7 +57,7 @@ namespace AMeteor
 				m_cartfile = filename;
 			}
 
-			void Reset (bool rom = true);
+			void Reset (uint32_t params = ~0);
 			void ClearWbram ();
 			void ClearWcram ();
 			void ClearPalette ();

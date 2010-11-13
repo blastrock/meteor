@@ -73,20 +73,25 @@ namespace AMeteor
 	Timer _timer1(1, &_timer2);
 	Timer _timer0(0, &_timer1);
 
-	void Reset ()
+	void Reset (uint32_t units)
 	{
-		_clock.Reset();
-		_io.Reset();
-		_cpu.Reset();
-		_memory.Reset();
-		_dma.Reset();
-		_lcd.Reset();
-		_sound.Reset();
-		_keypad.Reset();
-		_timer0.Reset();
-		_timer1.Reset();
-		_timer2.Reset();
-		_timer3.Reset();
+#define RESET(u, e) \
+	if (units & UNIT_##e) \
+		_##u.Reset();
+		RESET(clock, CLOCK);
+		RESET(io, IO);
+		RESET(cpu, CPU);
+		RESET(dma, DMA);
+		RESET(lcd, LCD);
+		RESET(sound, SOUND);
+		RESET(keypad, KEYPAD);
+		RESET(timer0, TIMER0);
+		RESET(timer1, TIMER1);
+		RESET(timer2, TIMER2);
+		RESET(timer3, TIMER3);
+#undef RESET
+		if (units & UNIT_MEMORY)
+			_memory.Reset(units);
 	}
 
 	bool SaveState (const char* filename)

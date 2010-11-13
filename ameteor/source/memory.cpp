@@ -102,7 +102,7 @@ namespace AMeteor
 		m_carttype = type;
 	}
 
-	void Memory::Reset (bool rom)
+	void Memory::Reset (uint32_t params)
 	{
 		static const uint8_t InitMemoryTime[0xF] = {
 			1, // 00 - BIOS
@@ -128,7 +128,7 @@ namespace AMeteor
 			9  // 0C-0D - ROM, Wait2
 		};
 
-		if (m_brom)
+		if (m_brom && (params & UNIT_MEMORY_BIOS))
 		{
 			delete [] m_brom;
 			m_brom = NULL;
@@ -140,7 +140,7 @@ namespace AMeteor
 		std::memset(m_pram , 0, 0x00000400);
 		std::memset(m_vram , 0, 0x00018000);
 		std::memset(m_oram , 0, 0x00000400);
-		if (rom)
+		if (params & UNIT_MEMORY_ROM)
 			std::memset(m_rom  , 0, 0x02000000);
 		SetCartType(CTYPE_UNKNOWN);
 		m_cartfile.clear();
@@ -461,7 +461,7 @@ namespace AMeteor
 
 	bool Memory::LoadState (gzFile file)
 	{
-		Reset(false);
+		Reset(0);
 #define READ(var) \
 	if (gzread(file, var, sizeof(var)) != sizeof(var)) \
 		return false
