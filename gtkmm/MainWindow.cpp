@@ -244,14 +244,18 @@ void MainWindow::on_run ()
 	if (m_running)
 		return;
 
-	m_mainimage.hide();
-	m_viewport.show();
+	// not yet initialized
+	if (!m_viewport.is_visible())
+	{
+		m_mainimage.hide();
+		m_viewport.show();
 
-	GtkWidget* widget = GTK_WIDGET(m_viewport.gobj());
-	gtk_widget_realize(widget);
-	GdkWindow* win = widget->window;
-	XFlush(GDK_WINDOW_XDISPLAY(win));
-	m_renderer.Init(GDK_WINDOW_XWINDOW(win));
+		GtkWidget* widget = GTK_WIDGET(m_viewport.gobj());
+		gtk_widget_realize(widget);
+		GdkWindow* win = widget->window;
+		XFlush(GDK_WINDOW_XDISPLAY(win));
+		m_renderer.Init(GDK_WINDOW_XWINDOW(win));
+	}
 
 	m_running = true;
 	do
