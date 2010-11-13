@@ -43,16 +43,25 @@ MainWindow::MainWindow () :
 	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
 				Gtk::Stock::OPEN, sigc::mem_fun(*this,
 					&MainWindow::on_open)));
+	Gtk::Image* img = manage(new Gtk::Image(Gtk::Stock::OPEN,
+				Gtk::ICON_SIZE_MENU));
+	menu_file->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
+				"Open _BIOS", *img, sigc::mem_fun(*this, &MainWindow::on_open_bios)));
 	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
 				Gtk::Stock::CLOSE, sigc::mem_fun(*this,
 					&MainWindow::on_close)));
+	img = manage(new Gtk::Image(Gtk::Stock::CLOSE,
+				Gtk::ICON_SIZE_MENU));
+	menu_file->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
+				"Close B_IOS", *img, sigc::mem_fun(*this,
+					&MainWindow::on_close_bios)));
 	menu_file->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
 	menu_file->items().push_back(Gtk::Menu_Helpers::StockMenuElem(
 				Gtk::Stock::QUIT, sigc::mem_fun(*this,
 					&MainWindow::on_quit)));
 
 	Gtk::Menu* menu_emulator = manage(new Gtk::Menu);
-	Gtk::Image* img = manage(new Gtk::Image(Gtk::Stock::MEDIA_PLAY,
+	img = manage(new Gtk::Image(Gtk::Stock::MEDIA_PLAY,
 				Gtk::ICON_SIZE_MENU));
 	menu_emulator->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
 				"R_un", Gtk::AccelKey('u', Gdk::CONTROL_MASK), *img,
@@ -173,7 +182,7 @@ MainWindow::MainWindow () :
 
 void MainWindow::on_open ()
 {
-	Gtk::FileChooserDialog dialog(*this, "Meteor - Chose a ROM");
+	Gtk::FileChooserDialog dialog(*this, "Meteor - Choose a ROM");
 	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
 	if (dialog.run() == Gtk::RESPONSE_OK)
@@ -196,6 +205,20 @@ void MainWindow::on_open ()
 	}
 }
 
+void MainWindow::on_open_bios ()
+{
+	Gtk::FileChooserDialog dialog(*this, "Meteor - Choose a BIOS");
+	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+	if (dialog.run() == Gtk::RESPONSE_OK)
+	{
+		AMeteor::_memory.LoadBios(dialog.get_filename().c_str());
+
+		m_disassemblerWindow.Reload();
+		m_statusbar.push("BIOS loaded.");
+	}
+}
+
 void MainWindow::on_close ()
 {
 	m_running = false;
@@ -206,6 +229,14 @@ void MainWindow::on_close ()
 
 	m_viewport.hide();
 	m_mainimage.show();
+}
+
+void MainWindow::on_close_bios ()
+{
+	if (m_running)
+		return;
+
+	AMeteor::Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
 }
 
 void MainWindow::on_run ()

@@ -58,6 +58,7 @@ class MainWindow : public Gtk::Window
 		bool m_running;
 
 		void on_open ();
+		void on_open_bios ();
 		void on_menu_disassembler_toggle ();
 		void on_menu_palette_toggle ();
 		void on_menu_vram_toggle ();
@@ -69,6 +70,7 @@ class MainWindow : public Gtk::Window
 		void on_stop ();
 		void on_reset ();
 		void on_close ();
+		void on_close_bios ();
 
 		void on_save_state (uint8_t n);
 		void on_load_state (uint8_t n);
