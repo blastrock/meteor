@@ -6,9 +6,10 @@ link_directories(
 	${AMeteor_LIBRARY_DIRS}
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
+set(CMAKE_CXX_FLAGS_RELEASE
+	"${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions -fno-rtti")
 
-add_library(ameteor
+set(AMeteor_SRC
 	audio/dsound.cpp
 	audio/sound1.cpp
 	audio/sound2.cpp
@@ -24,7 +25,6 @@ add_library(ameteor
 	disassembler/arguments.cpp
 	disassembler/instruction.cpp
 	graphics/filters/hq4x.cpp
-	graphics/filters/hq4x64.asm
 	graphics/bglayer.cpp
 	graphics/object.cpp
 	graphics/objects.cpp
@@ -50,6 +50,14 @@ add_library(ameteor
 	sram.cpp
 	timer.cpp
 )
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+	set(AMeteor_SRC ${AMeteor_SRC} graphics/filters/hq4x64.asm)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i.86")
+	set(AMeteor_SRC ${AMeteor_SRC} graphics/filters/hq4x32.asm)
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+
+add_library(ameteor ${AMeteor_SRC})
 
 target_link_libraries(ameteor
 	${AMeteor_LIBRARIES}

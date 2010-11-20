@@ -25,8 +25,6 @@ if(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LIBRA
 	message(FATAL_ERROR "You must have SFML to compile this")
 endif(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LIBRARY)
 
-set(CMAKE_ASM-INTEL_FLAGS "-f elf64")
-
 set(AMeteor_INCLUDE_DIRS
 	${Meteor_SOURCE_DIR}/ameteor/include
 	${LIBAO_INCLUDE_DIRS}
@@ -53,15 +51,38 @@ set(AMeteor_LIBRARIES
 	${SFML-SYSTEM_LIBRARY}
 )
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -g")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -pg")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse3 -march=athlon64 -fomit-frame-pointer")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-add_definitions(-DNDEBUG)
-add_definitions(-DX86_ASM=1)
-#add_definitions(-DMETDEBUG)
-#add_definitions(-DMETDEBUGLOG)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-rtti")
+if(CMAKE_BUILD_TYPE STREQUAL "")
+	set(CMAKE_BUILD_TYPE "Release")
+endif(CMAKE_BUILD_TYPE STREQUAL "")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_definitions(-DMETDEBUG)
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+option(DISABLE_ASM "Force asm optimizations off")
+
+if(NOT DISABLE_ASM AND
+		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
+	message(STATUS "Enabling ASM optimisations")
+	add_definitions(-DX86_ASM=1)
+endif(NOT DISABLE_ASM AND
+		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+	set(CMAKE_ASM-INTEL_FLAGS "-f elf64")
+else(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+	set(CMAKE_ASM-INTEL_FLAGS "-f elf32")
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+
+set(CMAKE_ASM-INTEL_FLAGS_DEBUG -g)
+
+set(CXXFLAGS CACHE STRING "String to append to CXXFLAGS")
+set(LDFLAGS CACHE STRING "String to append to LDFLAGS")
+
+set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
+set(CMAKE_LD_FLAGS "${LDFLAGS}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-aliasing=3 -Wmissing-noreturn -pedantic -ansi -pipe")
 
