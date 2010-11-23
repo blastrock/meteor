@@ -40,10 +40,10 @@ namespace AMeteor
 						switch (event.JoyButton.Button)
 						{
 							// XXX
-							case 7:
-								LCD.SetFrameskip(SPDUP_FRMSKIP);
-								SOUND.SetSampleskip(SPDUP_SNDSKIP);
-								break;
+							//case 7:
+							//	LCD.SetFrameskip(SPDUP_FRMSKIP);
+							//	SOUND.SetSampleskip(SPDUP_SNDSKIP);
+							//	break;
 							default:
 								KEYPAD.JoyButtonPressed(event.JoyButton.JoystickId,
 										event.JoyButton.Button);
@@ -54,10 +54,10 @@ namespace AMeteor
 						switch (event.JoyButton.Button)
 						{
 							// XXX
-							case 7:
-								LCD.SetFrameskip(0);
-								SOUND.SetSampleskip(0);
-								break;
+							//case 7:
+							//	LCD.SetFrameskip(0);
+							//	SOUND.SetSampleskip(0);
+							//	break;
 							default:
 								KEYPAD.JoyButtonReleased(event.JoyButton.JoystickId,
 										event.JoyButton.Button);
