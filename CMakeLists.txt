@@ -89,5 +89,3 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-
 add_subdirectory(ameteor)
 add_subdirectory(gtkmm)
 add_subdirectory(text)
-add_subdirectory(test)
-add_subdirectory(textdisassembler)
