@@ -36,12 +36,7 @@
 		return mem + (add - low); \
 	}
 
-// XXX
-#if 0
-#define debugm met_abort
-#else
 #define debugm debug
-#endif
 
 namespace AMeteor
 {
@@ -188,34 +183,33 @@ namespace AMeteor
 		CLOCK.DisableBattery();
 	}
 
-	void Memory::LoadBios (const char* filename)
+	bool Memory::LoadBios (const char* filename)
 	{
-		// XXX should not assert but return false
 		std::ifstream file(filename);
 		if (!m_brom)
 			m_brom = new uint8_t[0x00004000];
 		memset(m_brom, 0, 0x00004000);
 		file.read((char*)m_brom, 0x00004000);
 		if (!file.good())
-			met_abort("Error while reading file");
+			return false;
+		return true;
 	}
 
-	void Memory::LoadRom (const char* filename)
+	bool Memory::LoadRom (const char* filename)
 	{
-		// XXX should not assert but return false
 		std::ifstream file(filename);
 		std::memset(m_rom, 0, 0x02000000);
 		file.read((char*)m_rom, 0x02000000);
 		if (!file.good() && !file.eof())
-			met_abort("Error while reading file");
+			return false;
+		return true;
 	}
 
-	// TODO should manage different errors by returning ints
-	bool Memory::LoadCart ()
+	Memory::CartError Memory::LoadCart ()
 	{
 		struct stat buf;
 		if (stat(m_cartfile.c_str(), &buf) == -1)
-			return false;
+			return errno == ENOENT ? CERR_NOT_FOUND : CERR_FAIL;
 		switch (buf.st_size)
 		{
 			case 0x0200:
@@ -236,8 +230,8 @@ namespace AMeteor
 		}
 		std::ifstream f(m_cartfile.c_str());
 		if (!m_cart->Load(f))
-			return false;
-		return true;
+			return CERR_FAIL;
+		return CERR_NO_ERROR;
 	}
 
 #if 0
@@ -560,8 +554,7 @@ namespace AMeteor
 				if (R(15) < 0x01000000)
 					return *(uint32_t*)(m_brom+(add & 0x3FFC));
 				else
-					// TODO a better bios protection thant this one (read8 and read16
-					// too)
+					// TODO a better bios protection than this one (read8 and read16 too)
 					// this value corresponds to MOVS r15, r14
 					return 0xE1B0F00E;
 			case 0x04:
@@ -651,8 +644,7 @@ namespace AMeteor
 			case 0x0B:
 			case 0x0C:
 			case 0x0D:
-				//XXX
-				//debugm("Writing on read only memory");
+				debugm("Writing on read only memory");
 				break;
 			case 0x0E:
 				met_abort("Writing 16 bytes in SRAM/Flash");

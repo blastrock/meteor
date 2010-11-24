@@ -189,7 +189,13 @@ void MainWindow::on_open ()
 	if (dialog.run() == Gtk::RESPONSE_OK)
 	{
 		m_openFile = dialog.get_filename();
-		AMeteor::_memory.LoadRom(m_openFile.c_str());
+		if (!AMeteor::_memory.LoadRom(m_openFile.c_str()))
+		{
+			Gtk::MessageDialog dlg(*this, "Failed to load ROM", false,
+					Gtk::MESSAGE_ERROR);
+			dlg.run();
+			return;
+		}
 
 		std::string file = Glib::build_filename(m_batteryPath,
 				Glib::path_get_basename(m_openFile));
@@ -198,7 +204,9 @@ void MainWindow::on_open ()
 		else
 			file.append(".mct");
 		AMeteor::_memory.SetCartFile(file.c_str());
-		AMeteor::_memory.LoadCart();
+		if (AMeteor::_memory.LoadCart() == AMeteor::Memory::CERR_FAIL)
+			Gtk::MessageDialog(*this, "Failed to load battery", false,
+					Gtk::MESSAGE_WARNING).run();
 
 		m_disassemblerWindow.Reload();
 		m_statusbar.push("ROM loaded.");
@@ -212,10 +220,14 @@ void MainWindow::on_open_bios ()
 	dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
 	if (dialog.run() == Gtk::RESPONSE_OK)
 	{
-		AMeteor::_memory.LoadBios(dialog.get_filename().c_str());
-
-		m_disassemblerWindow.Reload();
-		m_statusbar.push("BIOS loaded.");
+		if (!AMeteor::_memory.LoadBios(dialog.get_filename().c_str()))
+			Gtk::MessageDialog(*this, "Failed to load BIOS", false,
+					Gtk::MESSAGE_ERROR).run();
+		else
+		{
+			m_disassemblerWindow.Reload();
+			m_statusbar.push("BIOS loaded.");
+		}
 	}
 }
 

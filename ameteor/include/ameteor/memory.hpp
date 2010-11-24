@@ -42,6 +42,12 @@ namespace AMeteor
 				CTYPE_FLASH128,
 				CTYPE_SRAM
 			};
+			enum CartError
+			{
+				CERR_NO_ERROR,
+				CERR_NOT_FOUND,
+				CERR_FAIL
+			};
 
 			Memory ();
 			~Memory ();
@@ -65,7 +71,7 @@ namespace AMeteor
 			void ClearOam ();
 			void SoftReset ();
 
-			void LoadBios (const char* filename);
+			bool LoadBios (const char* filename);
 			void UnloadBios ()
 			{
 				if (m_brom)
@@ -74,8 +80,8 @@ namespace AMeteor
 					m_brom = NULL;
 				}
 			}
-			void LoadRom (const char* filename);
-			bool LoadCart ();
+			bool LoadRom (const char* filename);
+			CartError LoadCart ();
 
 			bool HasBios () const
 			{
