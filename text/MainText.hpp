@@ -14,22 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "MainText.hpp"
-#include <iostream>
+#ifndef __MAIN_TEXT_H__
+#define __MAIN_TEXT_H__
 
-int main (int argc, char **argv)
+#include <ameteor/graphics/renderer.hpp>
+
+class MainText
 {
-	if (argc != 2)
-	{
-		std::cout << "Usage : " << argv[0] << " <rom>" << std::endl;
-		return 1;
-	}
+	public :
+		MainText ();
 
-	MainText text;
+		void Open(const std::string& file);
+		void OpenBios(const std::string& file);
+		void Run();
+		void Stop();
+		void Reset();
+		void Close();
+		void CloseBios();
 
-	text.Open(argv[1]);
+		void SaveState(uint8_t n);
+		void LoadState(uint8_t n);
 
-	text.Run();
+	private :
+		AMeteor::Graphics::Renderer& m_renderer;
 
-	return 0;
-}
+		std::string m_sstatePath, m_batteryPath, m_romPath;
+		std::string m_openFile;
+
+		bool m_running;
+};
+
+#endif
