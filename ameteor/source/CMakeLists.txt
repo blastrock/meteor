@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
 	"${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions -fno-rtti")
 
 set(AMeteor_SRC
+	cfg/config.cpp
 	audio/dsound.cpp
 	audio/sound1.cpp
 	audio/sound2.cpp

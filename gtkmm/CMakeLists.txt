@@ -12,8 +12,7 @@ link_directories(
 )
 
 add_executable(meteor
-	Config.cpp
-	Configurator.cpp
+	configurator.cpp
 
 	AboutDialog.cpp
 	DisassemblerTreeView.cpp

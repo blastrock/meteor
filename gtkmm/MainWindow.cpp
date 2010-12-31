@@ -23,8 +23,8 @@
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/messagedialog.h>
 
-#include "ameteor.hpp"
-#include "Configurator.hpp"
+#include <ameteor.hpp>
+#include "configurator.hpp"
 
 #include "debug.hpp"
 
@@ -173,7 +173,10 @@ MainWindow::MainWindow () :
 
 	Configurator config;
 	config.Load();
-	config.InitAMeteor(*this);
+	config.InitAMeteor();
+	m_batteryPath = config.GetBatteryPath();
+	m_sstatePath = config.GetSStatePath();
+	m_romPath = config.GetRomPath();
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);

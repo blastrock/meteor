@@ -80,8 +80,6 @@ class MainWindow : public Gtk::Window
 
 		bool on_key_press_event(GdkEventKey* key);
 		bool on_key_release_event(GdkEventKey* key);
-
-		friend class Configurator;
 };
 
 #endif

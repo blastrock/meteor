@@ -9,6 +9,7 @@ enable_language(ASM-INTEL)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBAO REQUIRED ao)
 pkg_check_modules(LIBSIGC++ REQUIRED sigc++-2.0)
+pkg_check_modules(GLIBMM REQUIRED glibmm-2.4)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
 find_library(SFML-GRAPHICS_LIBRARY
@@ -30,12 +31,14 @@ set(AMeteor_INCLUDE_DIRS
 	${LIBAO_INCLUDE_DIRS}
 	${LIBSIGC++_INCLUDE_DIRS}
 	${ZLIB_INCLUDE_DIR}
+	${GLIBMM_INCLUDE_DIRS}
 )
 
 set(AMeteor_LIBRARY_DIRS
 	${Meteor_SOURCE_DIR}/ameteor/source
 	${LIBAO_LIBRARY_DIRS}
 	${LIBSIGC++_LIBRARY_DIRS}
+	${GLIBMM_LIBRARY_DIRS}
 )
 
 set(AMeteor_LIBRARIES
@@ -49,6 +52,7 @@ set(AMeteor_LIBRARIES
 	${SFML-GRAPHICS_LIBRARY}
 	${SFML-WINDOW_LIBRARY}
 	${SFML-SYSTEM_LIBRARY}
+	${GLIBMM_LIBRARIES}
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "")
