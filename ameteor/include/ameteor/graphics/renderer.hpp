@@ -1,5 +1,5 @@
 // Meteor - A Nintendo Gameboy Advance emulator
-// Copyright (C) 2009 Philippe Daouadi
+// Copyright (C) 2009-2011 Philippe Daouadi
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
