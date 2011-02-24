@@ -33,13 +33,15 @@ void Configurator::InitAMeteor()
 	m_cfg.InitAMeteor();
 
 	std::string str;
-#define SET_PATH(name, var) \
+#define SET_PATH(name, var, def) \
 	str = m_cfg.GetStr(name); \
-	if (!str.empty() && str[0] == '~') \
+	if (str.empty()) \
+		str = Glib::get_home_dir() + def; \
+	else if (str[0] == '~') \
 		str = Glib::get_home_dir() + str.substr(1); \
 	m_##var = str;
-	SET_PATH("BatteryPath", batteryPath);
-	SET_PATH("SaveStatePath", sstatePath);
-	SET_PATH("RomPath", romPath);
+	SET_PATH("BatteryPath", batteryPath, "/.meteor/battery");
+	SET_PATH("SaveStatePath", sstatePath, "/.meteor/savestate");
+	SET_PATH("RomPath", romPath, "");
 #undef SET_PATH
 }
