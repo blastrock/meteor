@@ -1,10 +1,34 @@
-keyboard_A=119
-keyboard_B=120
-keyboard_L=113
-keyboard_R=115
-keyboard_START=97
-keyboard_SELECT=122
-keyboard_LEFT=65361
-keyboard_UP=65362
-keyboard_RIGHT=65363
-keyboard_DOWN=65364
+; hexadecimal
+keyboard_A=77
+keyboard_B=78
+keyboard_L=71
+keyboard_R=73
+keyboard_START=61
+keyboard_SELECT=7A
+keyboard_LEFT=FF51
+keyboard_UP=FF52
+keyboard_RIGHT=FF53
+keyboard_DOWN=FF54
+
+; syntax :
+; joy id (16) | joy button (16)
+joy_A=0000000E
+joy_B=0000000F
+joy_L=0000000A
+joy_R=0000000B
+joy_START=00000003
+joy_SELECT=00000000
+joy_UP=00000004
+joy_DOWN=00000006
+joy_LEFT=00000007
+joy_RIGHT=00000005
+; syntax :
+; joy id (16) | axis negativeness (1) | axis (15)
+;joyaxis_UP=00008001
+;joyaxis_DOWN=00000001
+;joyaxis_LEFT=00008000
+;joyaxis_RIGHT=00000000
+
+BatteryPath=~/.meteor/battery
+SaveStatePath=~/.meteor/savestate
+RomPath=~

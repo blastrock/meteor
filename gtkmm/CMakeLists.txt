@@ -29,3 +29,12 @@ target_link_libraries(meteor
 	${AMeteor_LIBRARIES}
 	${GTKMM_LIBRARIES}
 )
+
+install(TARGETS meteor DESTINATION bin)
+
+install(
+	FILES
+		${PROJECT_SOURCE_DIR}/data/meteor.cfg.example
+		${PROJECT_SOURCE_DIR}/data/meteor.png
+	DESTINATION share/meteor
+)

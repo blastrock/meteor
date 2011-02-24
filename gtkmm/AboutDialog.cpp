@@ -16,12 +16,14 @@
 
 #include "AboutDialog.hpp"
 
+#include "../config.h"
+
 AboutDialog::AboutDialog() :
 	Gtk::AboutDialog()
 {
 	this->set_name("Meteor");
 	this->set_program_name("Meteor");
-	this->set_version("0.1");
+	this->set_version(METEOR_VERSION);
 	this->set_license(
 "This program is free software: you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"

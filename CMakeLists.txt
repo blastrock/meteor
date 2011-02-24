@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 project(Meteor)
 
+set(METEOR_VERSION_MAJOR 0)
+set(METEOR_VERSION_MINOR 9)
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 enable_language(CXX)
@@ -85,6 +88,10 @@ set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
 set(CMAKE_LD_FLAGS "${LDFLAGS}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-aliasing=3 -Wmissing-noreturn -pedantic -ansi -pipe")
+
+set(PREFIX_SHARE "${CMAKE_INSTALL_PREFIX}/share/meteor")
+
+configure_file(config.h.in config.h)
 
 add_subdirectory(ameteor)
 add_subdirectory(gtkmm)

@@ -30,10 +30,12 @@
 
 #include <gdk/gdkx.h>
 
+#include "../config.h"
+
 MainWindow::MainWindow () :
 	Gtk::Window(),
 	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
-	m_mainimage("../../data/meteor.png"),
+	m_mainimage(PREFIX_SHARE "/meteor.png"),
 	m_running(false)
 {
 	this->set_title("Meteor");
