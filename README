@@ -1,0 +1,41 @@
+                      ___  ___     _
+                      |  \/  |    | |
+                      | .  . | ___| |_ ___  ___  _ __
+                      | |\/| |/ _ \ __/ _ \/ _ \| '__|
+                      | |  | |  __/ ||  __/ (_) | |
+                      \_|  |_/\___|\__\___|\___/|_|
+                      ________________________________
+
+Meteor is a Nintendo Gameboy Advance emulator. It runs only on Linux (yet) and
+can emulate a lot of games.
+
+Installation
+────────────
+
+To build Meteor, you need the following dependencies :
+- CMake
+- Gtkmm
+- sigc++ (installed with gtkmm)
+- libao
+- SFML
+- zlib
+- OpenGL
+
+Type the following commands to build Meteor :
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ make install
+
+You may need root privileges for the last command. You can change the
+installation prefix by typing :
+cmake -DCMAKE_INSTALL_PREFIX=<prefix> ..
+
+Uninstall
+─────────
+
+In the build directory type :
+$ xargs rm < install_manifest.txt
+
+You may need root privileges to do this.
