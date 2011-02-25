@@ -44,6 +44,8 @@ class Configurator : public AMeteor::Cfg::Config
 		std::string m_batteryPath;
 		std::string m_sstatePath;
 		std::string m_romPath;
+
+		void MakePath(const std::string& path);
 };
 
 #endif
