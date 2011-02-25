@@ -46,7 +46,10 @@ void Configurator::Init()
 #define SET_PATH(name, var, def) \
 	str = this->GetStr(name); \
 	if (str.empty()) \
+	{ \
+		this->SetStr(name, std::string("~") + def); \
 		str = Glib::get_home_dir() + def; \
+	} \
 	else if (str[0] == '~') \
 		str = Glib::get_home_dir() + str.substr(1); \
 	m_##var = str;

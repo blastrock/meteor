@@ -30,7 +30,10 @@ static char const * const Labels[] = {
 	"Up",
 	"Down",
 	"Left",
-	"Right"
+	"Right",
+	"Save state path",
+	"Battery path",
+	"Rom path"
 };
 
 PadConfigDialog::PadConfigDialog(Gtk::Window& parent, Configurator& conf) :
@@ -51,6 +54,16 @@ PadConfigDialog::PadConfigDialog(Gtk::Window& parent, Configurator& conf) :
 
 	}
 
+	for (unsigned char c = 0; c < NB_ETR; ++c)
+	{
+		mainTable->attach(*manage(new Gtk::Label(Labels[c+NB_BTN])),
+				0, 1, c+NB_BTN, c+NB_BTN+1,
+				Gtk::FILL | Gtk::EXPAND, (Gtk::AttachOptions)0);
+		mainTable->attach(m_entries[c],
+				1, 2, c+NB_BTN, c+NB_BTN+1,
+				Gtk::FILL | Gtk::EXPAND, (Gtk::AttachOptions)0);
+	}
+
 	Gtk::VBox* vbox = this->get_vbox();
 	vbox->pack_start(*mainTable);
 
@@ -65,10 +78,12 @@ void PadConfigDialog::on_show()
 	m_newConf = m_conf;
 
 	for (unsigned char c = 0; c < NB_BTN; ++c)
-	{
 		m_buttons[c].set_label(gdk_keyval_name(m_conf.GetInt(
 						"keyboard_" + Glib::ustring(Labels[c]).uppercase())));
-	}
+
+	m_entries[ETR_BATTERY].set_text(m_conf.GetStr("BatteryPath"));
+	m_entries[ETR_SSTATE].set_text(m_conf.GetStr("SaveStatePath"));
+	m_entries[ETR_ROMS].set_text(m_conf.GetStr("RomPath"));
 
 	Gtk::Dialog::on_show();
 }
@@ -76,7 +91,12 @@ void PadConfigDialog::on_show()
 void PadConfigDialog::on_response(int resp)
 {
 	if (resp == Gtk::RESPONSE_OK)
+	{
+		m_conf.SetStr("BatteryPath", m_entries[ETR_BATTERY].get_text());
+		m_conf.SetStr("SaveStatePath", m_entries[ETR_SSTATE].get_text());
+		m_conf.SetStr("RomPath", m_entries[ETR_ROMS].get_text());
 		m_conf = m_newConf;
+	}
 
 	Gtk::Dialog::on_response(resp);
 

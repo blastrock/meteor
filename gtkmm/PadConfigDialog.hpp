@@ -50,9 +50,9 @@ class PadConfigDialog : public Gtk::Dialog
 		Gtk::ToggleButton m_buttons[NB_BTN];
 		enum Entries
 		{
-			ETR_A,
-			ETR_B,
-			ETR_L,
+			ETR_BATTERY,
+			ETR_SSTATE,
+			ETR_ROMS,
 			NB_ETR
 		};
 		Gtk::Entry m_entries[NB_ETR];
