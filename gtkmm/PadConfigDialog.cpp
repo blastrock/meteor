@@ -92,10 +92,10 @@ void PadConfigDialog::on_response(int resp)
 {
 	if (resp == Gtk::RESPONSE_OK)
 	{
+		m_conf = m_newConf;
 		m_conf.SetStr("BatteryPath", m_entries[ETR_BATTERY].get_text());
 		m_conf.SetStr("SaveStatePath", m_entries[ETR_SSTATE].get_text());
 		m_conf.SetStr("RomPath", m_entries[ETR_ROMS].get_text());
-		m_conf = m_newConf;
 	}
 
 	Gtk::Dialog::on_response(resp);
