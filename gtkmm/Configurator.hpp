@@ -14,18 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __ABOUT_DIALOG_H__
-#define __ABOUT_DIALOG_H__
+#ifndef __CONFIGURATOR_HPP__
+#define __CONFIGURATOR_HPP__
 
-#include <gtkmm/aboutdialog.h>
+#include <ameteor/cfg/config.hpp>
 
-class AboutDialog : public Gtk::AboutDialog
+class Configurator : public AMeteor::Cfg::Config
 {
-	public :
-		AboutDialog();
+	public:
+		bool Load();
+		bool Save();
 
-	protected :
-		virtual void on_response(int resp);
+		void Init();
+
+		const std::string& GetBatteryPath() const
+		{
+			return m_batteryPath;
+		}
+		const std::string& GetSStatePath() const
+		{
+			return m_sstatePath;
+		}
+		const std::string& GetRomPath() const
+		{
+			return m_romPath;
+		}
+
+	private:
+		std::string m_batteryPath;
+		std::string m_sstatePath;
+		std::string m_romPath;
 };
 
 #endif

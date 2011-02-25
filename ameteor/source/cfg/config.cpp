@@ -50,6 +50,23 @@ namespace AMeteor
 			return true;
 		}
 
+		bool Config::SaveFile(const char* filename) const
+		{
+			std::ofstream file(filename);
+			if (!file)
+				return false;
+
+			for (Config_t::const_iterator iter = m_conf.begin();
+					iter != m_conf.end(); ++iter)
+			{
+				file << iter->first << '=' << iter->second << '\n';
+				if (!file)
+					return false;
+			}
+
+			return true;
+		}
+
 		int Config::GetInt(const std::string& key) const
 		{
 			if (!m_conf.count(key))
@@ -63,15 +80,27 @@ namespace AMeteor
 			return out;
 		}
 
+		void Config::SetInt(const std::string& key, int val)
+		{
+			std::ostringstream ss;
+			ss << std::hex << val;
+			m_conf[key] = ss.str();
+		}
+
 		void Config::InitAMeteor()
 		{
+			AMeteor::_keypad.ResetBindings();
+
 			int tmp;
 #define ASSIGN_BUTTON(btn, def) \
 	tmp = GetInt("keyboard_" #btn); \
 	if (tmp != INT_MIN) \
 		AMeteor::_keypad.BindKey(tmp, AMeteor::Keypad::BTN_##btn); \
 	else \
-		AMeteor::_keypad.BindKey(def, AMeteor::Keypad::BTN_##btn);
+	{ \
+		SetInt("keyboard_" #btn, def); \
+		AMeteor::_keypad.BindKey(def, AMeteor::Keypad::BTN_##btn); \
+	}
 			ASSIGN_BUTTON(A     , 0x77);
 			ASSIGN_BUTTON(B     , 0x78);
 			ASSIGN_BUTTON(L     , 0x71);

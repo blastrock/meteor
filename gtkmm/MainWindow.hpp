@@ -21,6 +21,7 @@
 #include "PaletteWindow.hpp"
 #include "VramWindow.hpp"
 #include "AboutDialog.hpp"
+#include "PadConfigDialog.hpp"
 
 #include <ameteor/graphics/renderer.hpp>
 
@@ -37,6 +38,7 @@ class MainWindow : public Gtk::Window
 
 	private :
 		AMeteor::Graphics::Renderer& m_renderer;
+		Configurator m_config;
 
 		Gtk::VBox m_mainvbox;
 		Gtk::Statusbar m_statusbar;
@@ -47,6 +49,7 @@ class MainWindow : public Gtk::Window
 		PaletteWindow m_paletteWindow;
 		VramWindow m_vramWindow;
 		AboutDialog m_aboutDialog;
+		PadConfigDialog m_padConfigDialog;
 
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refDisassemblerCheck;
 		Glib::RefPtr<Gtk::CheckMenuItem> m_refPaletteCheck;
@@ -69,6 +72,7 @@ class MainWindow : public Gtk::Window
 		void on_run ();
 		void on_stop ();
 		void on_reset ();
+		void on_config_pad();
 		void on_close ();
 		void on_close_bios ();
 

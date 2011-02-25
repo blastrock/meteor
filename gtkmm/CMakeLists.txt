@@ -12,7 +12,7 @@ link_directories(
 )
 
 add_executable(meteor
-	configurator.cpp
+	Configurator.cpp
 
 	AboutDialog.cpp
 	DisassemblerTreeView.cpp
@@ -20,6 +20,7 @@ add_executable(meteor
 	PaletteWindow.cpp
 	VramArea.cpp
 	VramWindow.cpp
+	PadConfigDialog.cpp
 
 	MainWindow.cpp
 	main.cpp

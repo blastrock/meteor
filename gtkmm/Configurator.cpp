@@ -14,27 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "configurator.hpp"
+#include "Configurator.hpp"
 #include <string>
 #include <glibmm/miscutils.h>
 
-void Configurator::Load()
+bool Configurator::Load()
 {
 	std::vector<std::string> path;
 	path.push_back(Glib::get_home_dir());
 	path.push_back(".meteor");
 	path.push_back("meteor.cfg");
 	std::string file = Glib::build_filename(path);
-	m_cfg.LoadFile(file.c_str());
+	return this->LoadFile(file.c_str());
 }
 
-void Configurator::InitAMeteor()
+bool Configurator::Save()
 {
-	m_cfg.InitAMeteor();
+	std::vector<std::string> path;
+	path.push_back(Glib::get_home_dir());
+	path.push_back(".meteor");
+	path.push_back("meteor.cfg");
+	std::string file = Glib::build_filename(path);
+	return this->SaveFile(file.c_str());
+}
+
+void Configurator::Init()
+{
+	this->InitAMeteor();
 
 	std::string str;
 #define SET_PATH(name, var, def) \
-	str = m_cfg.GetStr(name); \
+	str = this->GetStr(name); \
 	if (str.empty()) \
 		str = Glib::get_home_dir() + def; \
 	else if (str[0] == '~') \

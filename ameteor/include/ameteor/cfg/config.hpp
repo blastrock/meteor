@@ -33,6 +33,7 @@ namespace AMeteor
 				}
 
 				bool LoadFile(const char* file);
+				bool SaveFile(const char* file) const;
 
 				const std::string& GetStr(const std::string& key) const
 				{
@@ -41,14 +42,21 @@ namespace AMeteor
 					else
 						return _empty_string_;
 				}
+				void SetStr(const std::string& key, const std::string& val)
+				{
+					m_conf[key] = val;
+				}
 
 				int GetInt(const std::string& key) const;
+				void SetInt(const std::string& key, int val);
 
 				void InitAMeteor();
 
 			private:
+				typedef std::map<std::string, std::string> Config_t;
+
 				static const std::string _empty_string_;
-				std::map<std::string, std::string> m_conf;
+				Config_t m_conf;
 		};
 	}
 }

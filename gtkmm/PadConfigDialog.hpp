@@ -14,37 +14,53 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CONFIGURATOR_HPP__
-#define __CONFIGURATOR_HPP__
+#ifndef __PAD_CONFIG_DIALOG_H__
+#define __PAD_CONFIG_DIALOG_H__
 
-#include <ameteor/cfg/config.hpp>
+#include "Configurator.hpp"
 
-class Configurator
+#include <gtkmm/dialog.h>
+#include <gtkmm/togglebutton.h>
+#include <gtkmm/entry.h>
+
+class PadConfigDialog : public Gtk::Dialog
 {
 	public:
-		void Load();
-
-		void InitAMeteor();
-
-		const std::string& GetBatteryPath() const
-		{
-			return m_batteryPath;
-		}
-		const std::string& GetSStatePath() const
-		{
-			return m_sstatePath;
-		}
-		const std::string& GetRomPath() const
-		{
-			return m_romPath;
-		}
+		PadConfigDialog(Gtk::Window& parent, Configurator& conf);
 
 	private:
-		AMeteor::Cfg::Config m_cfg;
+		Configurator& m_conf;
+		Configurator m_newConf;
+		char m_binding;
 
-		std::string m_batteryPath;
-		std::string m_sstatePath;
-		std::string m_romPath;
+		enum Buttons
+		{
+			BTN_A,
+			BTN_B,
+			BTN_L,
+			BTN_R,
+			BTN_START,
+			BTN_SELECT,
+			BTN_UP,
+			BTN_DOWN,
+			BTN_LEFT,
+			BTN_RIGHT,
+			NB_BTN
+		};
+		Gtk::ToggleButton m_buttons[NB_BTN];
+		enum Entries
+		{
+			ETR_A,
+			ETR_B,
+			ETR_L,
+			NB_ETR
+		};
+		Gtk::Entry m_entries[NB_ETR];
+
+		void on_show();
+		void on_response(int resp);
+		void on_bind(unsigned char btn);
+		bool on_key_press_event(GdkEventKey* ev);
 };
 
 #endif

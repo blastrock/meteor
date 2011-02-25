@@ -70,6 +70,13 @@ namespace AMeteor
 				m_axis.erase(((int)joyid) << 16 | axis);
 			}
 
+			void ResetBindings()
+			{
+				m_keys.clear();
+				m_joys.clear();
+				m_axis.clear();
+			}
+
 			void KeyPressed(int code);
 			void KeyReleased(int code);
 			void JoyButtonPressed (uint16_t joyid, uint16_t button);

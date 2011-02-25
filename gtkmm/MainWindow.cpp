@@ -24,7 +24,7 @@
 #include <gtkmm/messagedialog.h>
 
 #include <ameteor.hpp>
-#include "configurator.hpp"
+#include "Configurator.hpp"
 
 #include "debug.hpp"
 
@@ -36,6 +36,7 @@ MainWindow::MainWindow () :
 	Gtk::Window(),
 	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
 	m_mainimage(PREFIX_SHARE "/meteor.png"),
+	m_padConfigDialog(*this, m_config),
 	m_running(false)
 {
 	this->set_title("Meteor");
@@ -78,6 +79,12 @@ MainWindow::MainWindow () :
 	menu_emulator->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
 				"_Reset", Gtk::AccelKey('r', Gdk::CONTROL_MASK), *img,
 				sigc::mem_fun(*this, &MainWindow::on_reset)));
+	menu_emulator->items().push_back(Gtk::Menu_Helpers::SeparatorElem());
+	img = manage(new Gtk::Image(Gtk::Stock::PREFERENCES,
+				Gtk::ICON_SIZE_MENU));
+	menu_emulator->items().push_back(Gtk::Menu_Helpers::ImageMenuElem(
+				"_Configure pad", *img,
+				sigc::mem_fun(*this, &MainWindow::on_config_pad)));
 
 	Gtk::Menu* menu_sstate = manage(new Gtk::Menu);
 	Gtk::Menu* menu_lstate = manage(new Gtk::Menu);
@@ -173,12 +180,11 @@ MainWindow::MainWindow () :
 	m_vramWindow.signal_hide().connect(sigc::mem_fun(*this,
 				&MainWindow::on_vram_hide));
 
-	Configurator config;
-	config.Load();
-	config.InitAMeteor();
-	m_batteryPath = config.GetBatteryPath();
-	m_sstatePath = config.GetSStatePath();
-	m_romPath = config.GetRomPath();
+	m_config.Load();
+	m_config.Init();
+	m_batteryPath = m_config.GetBatteryPath();
+	m_sstatePath = m_config.GetSStatePath();
+	m_romPath = m_config.GetRomPath();
 
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
@@ -337,6 +343,18 @@ void MainWindow::on_reset ()
 {
 	AMeteor::Reset(AMeteor::UNIT_ALL ^
 			(AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
+}
+
+void MainWindow::on_config_pad()
+{
+	if (m_padConfigDialog.run() == Gtk::RESPONSE_OK)
+	{
+		m_config.Init();
+		m_batteryPath = m_config.GetBatteryPath();
+		m_sstatePath = m_config.GetSStatePath();
+		m_romPath = m_config.GetRomPath();
+		m_config.Save();
+	}
 }
 
 void MainWindow::on_quit ()
