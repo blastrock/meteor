@@ -44,5 +44,6 @@ AboutDialog::AboutDialog() :
 
 void AboutDialog::on_response(int resp)
 {
+	(void)resp;
 	this->hide();
 }

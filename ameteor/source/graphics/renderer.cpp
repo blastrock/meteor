@@ -164,7 +164,7 @@ namespace AMeteor
 				glDeleteBuffers(1, &m_pbo);
 				glDeleteTextures(1, &m_texture);
 				glDeleteBuffers(1, &m_vbo);
-				m_vbo = m_texture = m_vbo = 0;
+				m_vbo = m_texture = m_pbo = 0;
 				this->Close();
 			}
 		}
