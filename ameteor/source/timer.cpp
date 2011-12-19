@@ -63,9 +63,11 @@ namespace AMeteor
 		else
 		{
 			uint16_t cnt = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
-			if (m_control.b.start && (cnt && (0x1 << 7))
+			//if (m_control.b.start && (cnt && (0x1 << 7))
+			if (m_control.b.start && (cnt & (0x1 << 7))
 					&& m_control.b.prescaler != (cnt & 0x3))
 				met_abort("Prescaler changed while timer " << (int)m_num << " was up");
+
 			m_control.w = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
 
 			if (!m_control.b.start)

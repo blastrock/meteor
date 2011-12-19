@@ -142,7 +142,7 @@ namespace AMeteor
 				{
 					case 0x10: // erase entire chip
 						if (add == 0x5555)
-							memset(m_data, 0xFF, sizeof(m_data));
+							memset(m_data, 0xFF, m_size);
 						m_state = NORMAL;
 						break;
 					case 0x30: // erase sector
