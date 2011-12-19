@@ -18,6 +18,7 @@
 #include "ameteor/cpu.hpp"
 #include "ameteor/memory.hpp"
 #include "ameteor/bios.hpp"
+#include "ameteor/disassembler/instruction.hpp"
 #include "globals.hpp"
 #include "cpu_globals.hpp"
 #include "ameteor.hpp"
@@ -68,6 +69,7 @@ namespace AMeteor
 							met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
 
 						code = MEM.Read16(R(15)-2);
+						//std::cerr << IOS_ADD << R(15) << ' ' << Disassembler::Instruction(R(15), (uint16_t)code).ToString() << std::endl;
 						R(15) += 2;
 						t_Code();
 					}
@@ -105,6 +107,7 @@ namespace AMeteor
 						else
 						{
 							code = MEM.Read32(R(15)-4);
+							//std::cerr << IOS_ADD << R(15) << ' ' << Disassembler::Instruction(R(15), (uint32_t)code).ToString() << std::endl;
 							R(15) += 4;
 							a_Code();
 						}

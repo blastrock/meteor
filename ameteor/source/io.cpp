@@ -100,18 +100,45 @@ namespace AMeteor
 	uint8_t Io::Read8 (uint32_t add)
 	{
 		//debug ("IO Read8 at " << IOS_ADD << add << " of " << IOS_ADD << (int)*(uint8_t*)(m_iomem + (add & 0xFFF)));
+		if ((add & 0xFF0) == 0x100)
+			switch (add & 0xF)
+			{
+				case 0x0:
+				case 0x4:
+				case 0x8:
+				case 0xC:
+					met_abort("Misaligned reading of timers");
+			}
 		return m_iomem[add & 0xFFF];
 	}
 
 	uint16_t Io::Read16 (uint32_t add)
 	{
 		//debug ("IO Read16 at " << IOS_ADD << add << " of " << IOS_ADD << *(uint16_t*)(m_iomem + (add & 0xFFF)));
+		// special case, reading timers
+		if ((add & 0xFF0) == 0x100)
+			switch (add & 0xF)
+			{
+				case 0x0: return TIMER0.GetCount();
+				case 0x4: return TIMER1.GetCount();
+				case 0x8: return TIMER2.GetCount();
+				case 0xC: return TIMER3.GetCount();
+			}
 		return *(uint16_t*)(m_iomem + (add & 0xFFF));
 	}
 
 	uint32_t Io::Read32 (uint32_t add)
 	{
 		//debug ("IO Read32 at " << IOS_ADD << add << " of " << IOS_ADD << *(uint32_t*)(m_iomem + (add & 0xFFF)));
+		// special case, reading timers
+		if ((add & 0xFF0) == 0x100)
+			switch (add & 0xF)
+			{
+				case 0x0: return TIMER0.GetCount();
+				case 0x4: return TIMER1.GetCount();
+				case 0x8: return TIMER2.GetCount();
+				case 0xC: return TIMER3.GetCount();
+			}
 		return *(uint32_t*)(m_iomem + (add & 0xFFF));
 	}
 
