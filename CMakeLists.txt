@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(Meteor)
 
-set(METEOR_VERSION_MAJOR 0)
-set(METEOR_VERSION_MINOR 9)
+set(METEOR_VERSION_MAJOR 1)
+set(METEOR_VERSION_MINOR 0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -67,7 +67,7 @@ option(DISABLE_ASM "Force asm optimizations off")
 if(NOT DISABLE_ASM AND
 		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
 		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
-	message(STATUS "Enabling ASM optimisations")
+	message(STATUS "Enabling asm optimizations")
 	add_definitions(-DX86_ASM=1)
 endif(NOT DISABLE_ASM AND
 		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
