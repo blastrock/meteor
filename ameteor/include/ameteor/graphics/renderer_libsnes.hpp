@@ -8,14 +8,32 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-#ifdef LIBSNES_BUILD
-#include "renderer_libsnes.hpp"
-#else
-#include "renderer_gl.hpp"
+#ifndef __GRAPHICS_RENDERER_LIBSNES_H__
+#define __GRAPHICS_RENDERER_LIBSNES_H__
+
+#include <stdint.h>
+
+namespace AMeteor
+{
+	namespace Graphics
+	{
+		class Renderer
+		{
+			public:
+				Renderer(const uint16_t* surface);
+
+				void VBlank();
+
+			private :
+				const uint16_t* m_base;
+		};
+	}
+}
+
 #endif

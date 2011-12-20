@@ -29,7 +29,7 @@ set(AMeteor_SRC
 	graphics/bglayer.cpp
 	graphics/object.cpp
 	graphics/objects.cpp
-	graphics/renderer.cpp
+	graphics/renderer_gl.cpp
 	graphics/screen.cpp
 	ameteor.cpp
 	bios.cpp

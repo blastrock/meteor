@@ -25,7 +25,9 @@ namespace AMeteor
 {
 	class CartMem
 	{
-		public :
+		public:
+			virtual ~CartMem() {}
+
 			virtual void Reset () = 0;
 
 			virtual bool Load (std::istream& stream) = 0;

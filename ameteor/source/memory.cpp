@@ -431,11 +431,13 @@ namespace AMeteor
 		WRITE(m_memtime);
 		WRITE(m_memtimeseq);
 #undef WRITE
+		// do we have custom bios
 		bool b = m_brom;
 		GZ_WRITE(b);
 #define WRITE(var, size) \
 	if (!gzwrite(file, var, size)) \
 		return false
+		// write bios
 		if (b)
 			WRITE(m_brom, 0x00004000);
 		WRITE(m_wbram, 0x00040000);
