@@ -174,8 +174,7 @@ namespace AMeteor
 				met_abort("Word copy for EEPROM DMA3");
 			if (d_inc != 2 || s_inc != 2)
 				met_abort("Source or destination not incremeting in EEPROM DMA3");
-			//MEM.WriteEepromDma(chan.src, chan.count ? chan.count : 0x10000);
-			MEM.WriteEepromDma(chan.src, chan.count ? chan.count : 0);
+			MEM.WriteEepromDma(chan.src, chan.count);
 			chan.src += chan.count * 2;
 			chan.dest += chan.count * 2;
 		}
