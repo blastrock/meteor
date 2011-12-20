@@ -253,27 +253,25 @@ namespace AMeteor
 	}
 #endif
 
-	bool Eeprom::SaveState (gzFile file)
+	bool Eeprom::SaveState (std::ostream& stream)
 	{
 		//XXX TODO
-		GZ_WRITE(m_size);
-		GZ_WRITE(m_state);
-		GZ_WRITE(m_add);
+		SS_WRITE_VAR(m_size);
+		SS_WRITE_VAR(m_state);
+		SS_WRITE_VAR(m_add);
 
-		if (!gzwrite(file, m_data, m_size))
-			return false;
+		SS_WRITE_DATA(m_data, m_size);
 
 		return true;
 	}
 
-	bool Eeprom::LoadState (gzFile file)
+	bool Eeprom::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_size);
-		GZ_READ(m_state);
-		GZ_READ(m_add);
+		SS_READ_VAR(m_size);
+		SS_READ_VAR(m_state);
+		SS_READ_VAR(m_add);
 
-		if (gzread(file, m_data, m_size) != (signed)m_size)
-			return false;
+		SS_READ_DATA(m_data, m_size);
 
 		return true;
 	}

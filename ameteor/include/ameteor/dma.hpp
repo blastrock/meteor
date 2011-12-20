@@ -18,7 +18,8 @@
 #define __DMA_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -59,8 +60,8 @@ namespace AMeteor
 				Check(3, reason);
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			struct Channel

@@ -19,7 +19,8 @@
 
 #include <fstream>
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -37,8 +38,8 @@ namespace AMeteor
 			// returns true if memory has been updated
 			virtual bool Write (uint16_t add, uint8_t val) = 0;
 
-			virtual bool SaveState (gzFile file) = 0;
-			virtual bool LoadState (gzFile file) = 0;
+			virtual bool SaveState (std::ostream& stream) = 0;
+			virtual bool LoadState (std::istream& stream) = 0;
 	};
 }
 

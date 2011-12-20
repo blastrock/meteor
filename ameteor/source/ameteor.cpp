@@ -15,15 +15,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor.hpp"
-#include "gzhelper.hpp"
 #include "graphics/filters/hq4x.hpp"
 #include "debug.hpp"
+#include "globals.hpp"
 #include <cstring>
+#include <sstream>
+#include <zlib.h>
 
 #include <ao/ao.h>
 
-#define SS_MAGIC_STRING "AMeteor SaveState"
-#define SS_MS_SIZE sizeof(SS_MAGIC_STRING)
+// TODO add version
+#define SS_MAGIC_STRING ("AMeteor SaveState")
+#define SS_MS_SIZE (sizeof(SS_MAGIC_STRING)-1)
 
 namespace AMeteor
 {
@@ -99,14 +102,60 @@ namespace AMeteor
 		if (_cpu.IsRunning())
 			return false;
 
-		GzHelper file(gzopen(filename, "wb"));
-		if (!file)
-			return false;
-		if (!gzwrite(file, SS_MAGIC_STRING, sizeof(SS_MAGIC_STRING)-1))
+		std::ostringstream ss;
+
+		if (!SaveState(ss))
 			return false;
 
+		gzFile file = gzopen(filename, "wb");
+		if (!file)
+			return false;
+
+		std::string buf = ss.str();
+		if (!gzwrite(file, buf.c_str(), buf.length()))
+			return false;
+
+		if (gzclose(file) != Z_OK)
+			return false;
+
+		return true;
+	}
+
+	bool LoadState (const char* filename)
+	{
+		if (_cpu.IsRunning())
+			return false;
+
+		std::istringstream ss;
+		{
+			gzFile file = gzopen(filename, "rb");
+			if (!file)
+				return false;
+
+			// 1Mo
+			std::vector<uint8_t> buf(0x100000);
+			int nread = gzread(file, &buf[0], 0x100000);
+			if (nread == -1)
+				return false;
+
+			if (gzclose(file) != Z_OK)
+				return false;
+
+			ss.str(std::string((char*)&buf[0], nread));
+		}
+
+		return LoadState(ss);
+	}
+
+	bool SaveState (std::ostream& stream)
+	{
+		if (_cpu.IsRunning())
+			return false;
+
+		SS_WRITE_DATA(SS_MAGIC_STRING, SS_MS_SIZE);
+
 #define SAVE(dev) \
-	if (!dev.SaveState(file)) \
+	if (!dev.SaveState(stream)) \
 		return false
 		SAVE(_clock);
 		SAVE(_io);
@@ -125,25 +174,21 @@ namespace AMeteor
 		return true;
 	}
 
-	bool LoadState (const char* filename)
+	bool LoadState (std::istream& stream)
 	{
 		if (_cpu.IsRunning())
 			return false;
 
-		GzHelper file(gzopen(filename, "rb"));
-		if (!file)
-			return false;
-
 		{
-			char buf[SS_MS_SIZE-1];
-			if (gzread(file, buf, SS_MS_SIZE-1) != SS_MS_SIZE-1)
-				return false;
-			if (std::strncmp(buf, SS_MAGIC_STRING, SS_MS_SIZE-1))
+			char buf[SS_MS_SIZE];
+			SS_READ_DATA(buf, SS_MS_SIZE);
+			if (std::memcmp(buf, SS_MAGIC_STRING, SS_MS_SIZE))
 				return false;
 		}
 
+
 #define LOAD(dev) \
-	if (!dev.LoadState(file)) \
+	if (!dev.LoadState(stream)) \
 		return false
 		LOAD(_clock);
 		LOAD(_io);
@@ -161,7 +206,7 @@ namespace AMeteor
 
 		uint8_t xxx;
 		// if there is garbage at end of file
-		if (gzread(file, &xxx, 1) != 0)
+		if (stream.read((char*)&xxx, 1))
 			return false;
 
 		return true;

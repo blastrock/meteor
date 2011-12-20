@@ -64,6 +64,9 @@ namespace AMeteor
 	bool SaveState (const char* filename);
 	bool LoadState (const char* filename);
 
+	bool SaveState (std::ostream& stream);
+	bool LoadState (std::istream& stream);
+
 	inline void Run (unsigned int cycles)
 	{
 		_cpu.Run(cycles);

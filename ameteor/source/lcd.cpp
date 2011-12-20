@@ -117,17 +117,17 @@ namespace AMeteor
 		}
 	}
 
-	bool Lcd::SaveState (gzFile file __attribute__((unused)))
+	bool Lcd::SaveState (std::ostream& stream)
 	{
-		if (!m_screen.SaveState(file))
+		if (!m_screen.SaveState(stream))
 			return false;
 
 		return true;
 	}
 
-	bool Lcd::LoadState (gzFile file __attribute__((unused)))
+	bool Lcd::LoadState (std::istream& stream)
 	{
-		if (!m_screen.LoadState(file))
+		if (!m_screen.LoadState(stream))
 			return false;
 
 		UpdateDispCnt (IO.DRead16(Io::DISPCNT));

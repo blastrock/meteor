@@ -95,30 +95,28 @@ namespace AMeteor
 	}
 #undef SETFIRST
 
-	bool Clock::SaveState (gzFile file)
+	bool Clock::SaveState (std::ostream& stream)
 	{
-		GZ_WRITE(m_cycles);
-		GZ_WRITE(m_first);
-		GZ_WRITE(m_lcd);
-		GZ_WRITE(m_sound);
-		GZ_WRITE(m_battery);
+		SS_WRITE_VAR(m_cycles);
+		SS_WRITE_VAR(m_first);
+		SS_WRITE_VAR(m_lcd);
+		SS_WRITE_VAR(m_sound);
+		SS_WRITE_VAR(m_battery);
 
-		if (!gzwrite(file, m_timer, sizeof(m_timer)))
-			return false;
+		SS_WRITE_ARRAY(m_timer);
 
 		return true;
 	}
 
-	bool Clock::LoadState (gzFile file)
+	bool Clock::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_cycles);
-		GZ_READ(m_first);
-		GZ_READ(m_lcd);
-		GZ_READ(m_sound);
-		GZ_READ(m_battery);
+		SS_READ_VAR(m_cycles);
+		SS_READ_VAR(m_first);
+		SS_READ_VAR(m_lcd);
+		SS_READ_VAR(m_sound);
+		SS_READ_VAR(m_battery);
 
-		if (gzread(file, m_timer, sizeof(m_timer)) != sizeof(m_timer))
-			return false;
+		SS_READ_ARRAY(m_timer);
 
 		return true;
 	}

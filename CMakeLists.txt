@@ -54,12 +54,19 @@ set(AMeteor_LIBRARIES
 	${SFML-SYSTEM_LIBRARY}
 )
 
+set(CXXFLAGS CACHE STRING "String to append to CXXFLAGS")
+set(LDFLAGS CACHE STRING "String to append to LDFLAGS")
+
+set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
+set(CMAKE_LD_FLAGS "${LDFLAGS}")
+
 if(CMAKE_BUILD_TYPE STREQUAL "")
 	set(CMAKE_BUILD_TYPE "Release")
 endif(CMAKE_BUILD_TYPE STREQUAL "")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions(-DMETDEBUG)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 option(DISABLE_ASM "Force asm optimizations off")
@@ -72,12 +79,6 @@ if(NOT DISABLE_ASM AND
 endif(NOT DISABLE_ASM AND
 		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
 		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
-
-set(CXXFLAGS CACHE STRING "String to append to CXXFLAGS")
-set(LDFLAGS CACHE STRING "String to append to LDFLAGS")
-
-set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
-set(CMAKE_LD_FLAGS "${LDFLAGS}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-aliasing=3 -Wmissing-noreturn -pedantic -ansi -pipe")
 

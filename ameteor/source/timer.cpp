@@ -126,20 +126,20 @@ namespace AMeteor
 		}
 	}
 
-	bool Timer::SaveState (gzFile file)
+	bool Timer::SaveState (std::ostream& stream)
 	{
-		GZ_WRITE(m_reload);
-		GZ_WRITE(m_count);
-		GZ_WRITE(m_control);
+		SS_WRITE_VAR(m_reload);
+		SS_WRITE_VAR(m_count);
+		SS_WRITE_VAR(m_control);
 
 		return true;
 	}
 
-	bool Timer::LoadState (gzFile file)
+	bool Timer::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_reload);
-		GZ_READ(m_count);
-		GZ_READ(m_control);
+		SS_READ_VAR(m_reload);
+		SS_READ_VAR(m_count);
+		SS_READ_VAR(m_control);
 
 		return true;
 	}

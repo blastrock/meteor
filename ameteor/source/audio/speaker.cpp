@@ -159,10 +159,10 @@ namespace AMeteor
 			return sample;
 		}
 
-		bool Speaker::SaveState (gzFile file)
+		bool Speaker::SaveState (std::ostream& stream)
 		{
 #define WRITE(var) \
-	if (!var.SaveState(file)) \
+	if (!var.SaveState(stream)) \
 		return false
 			WRITE(m_sound1);
 			WRITE(m_sound2);
@@ -174,10 +174,10 @@ namespace AMeteor
 			return true;
 		}
 
-		bool Speaker::LoadState (gzFile file)
+		bool Speaker::LoadState (std::istream& stream)
 		{
 #define READ(var) \
-	if (!var.LoadState(file)) \
+	if (!var.LoadState(stream)) \
 		return false
 			READ(m_sound1);
 			READ(m_sound2);

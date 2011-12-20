@@ -24,7 +24,8 @@
 #include "graphics/screen.hpp"
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 #include <sigc++/sigc++.h>
 
@@ -111,8 +112,8 @@ namespace AMeteor
 				m_screen.OamWrite32(add);
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 			void EventResize (unsigned int w, unsigned int h)
 			{

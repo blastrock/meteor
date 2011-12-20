@@ -17,6 +17,7 @@
 #include "ameteor/sram.hpp"
 #include <cstring>
 #include <fstream>
+#include "globals.hpp"
 
 namespace AMeteor
 {
@@ -49,18 +50,16 @@ namespace AMeteor
 		return f.good();
 	}
 
-	bool Sram::SaveState (gzFile file)
+	bool Sram::SaveState (std::ostream& stream)
 	{
-		if (!gzwrite(file, m_data, SIZE))
-			return false;
+		SS_WRITE_DATA(m_data, SIZE);
 
 		return true;
 	}
 
-	bool Sram::LoadState (gzFile file)
+	bool Sram::LoadState (std::istream& stream)
 	{
-		if (gzread(file, m_data, SIZE) != (signed)SIZE)
-			return false;
+		SS_READ_DATA(m_data, SIZE);
 
 		return true;
 	}

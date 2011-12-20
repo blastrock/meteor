@@ -477,18 +477,16 @@ namespace AMeteor
 		}
 	}
 
-	bool Io::SaveState (gzFile file)
+	bool Io::SaveState (std::ostream& stream)
 	{
-		if (!gzwrite(file, m_iomem, IO_SIZE))
-			return false;
+		SS_WRITE_DATA(m_iomem, IO_SIZE);
 
 		return true;
 	}
 
-	bool Io::LoadState (gzFile file)
+	bool Io::LoadState (std::istream& stream)
 	{
-		if (gzread(file, m_iomem, IO_SIZE) != IO_SIZE)
-			return false;
+		SS_READ_DATA(m_iomem, IO_SIZE);
 
 		return true;
 	}

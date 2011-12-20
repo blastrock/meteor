@@ -23,7 +23,8 @@
 
 #include <stdint.h>
 #include <string>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -96,8 +97,8 @@ namespace AMeteor
 
 			uint8_t* GetRealAddress(uint32_t add, uint8_t size = 0);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 			// TODO make const members
 			uint8_t Read8 (uint32_t add);

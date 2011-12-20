@@ -384,22 +384,22 @@ namespace AMeteor
 			}
 		}
 
-		bool Screen::SaveState (gzFile file)
+		bool Screen::SaveState (std::ostream& stream)
 		{
-			GZ_WRITE(m_refX2);
-			GZ_WRITE(m_refY2);
-			GZ_WRITE(m_refX3);
-			GZ_WRITE(m_refY3);
+			SS_WRITE_VAR(m_refX2);
+			SS_WRITE_VAR(m_refY2);
+			SS_WRITE_VAR(m_refX3);
+			SS_WRITE_VAR(m_refY3);
 
 			return true;
 		}
 
-		bool Screen::LoadState (gzFile file)
+		bool Screen::LoadState (std::istream& stream)
 		{
-			GZ_READ(m_refX2);
-			GZ_READ(m_refY2);
-			GZ_READ(m_refX3);
-			GZ_READ(m_refY3);
+			SS_READ_VAR(m_refX2);
+			SS_READ_VAR(m_refY2);
+			SS_READ_VAR(m_refX3);
+			SS_READ_VAR(m_refY3);
 
 			return true;
 		}

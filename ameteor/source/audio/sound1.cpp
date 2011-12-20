@@ -171,30 +171,30 @@ namespace AMeteor
 			}
 		}
 
-		bool Sound1::SaveState (gzFile file)
+		bool Sound1::SaveState (std::ostream& stream)
 		{
-			GZ_WRITE(m_on);
-			GZ_WRITE(m_posP);
-			GZ_WRITE(m_posS);
-			GZ_WRITE(m_posE);
-			GZ_WRITE(m_sample);
-			GZ_WRITE(m_envelope);
-			GZ_WRITE(m_length);
-			GZ_WRITE(m_timed);
+			SS_WRITE_VAR(m_on);
+			SS_WRITE_VAR(m_posP);
+			SS_WRITE_VAR(m_posS);
+			SS_WRITE_VAR(m_posE);
+			SS_WRITE_VAR(m_sample);
+			SS_WRITE_VAR(m_envelope);
+			SS_WRITE_VAR(m_length);
+			SS_WRITE_VAR(m_timed);
 
 			return true;
 		}
 
-		bool Sound1::LoadState (gzFile file)
+		bool Sound1::LoadState (std::istream& stream)
 		{
-			GZ_READ(m_on);
-			GZ_READ(m_posP);
-			GZ_READ(m_posS);
-			GZ_READ(m_posE);
-			GZ_READ(m_sample);
-			GZ_READ(m_envelope);
-			GZ_READ(m_length);
-			GZ_READ(m_timed);
+			SS_READ_VAR(m_on);
+			SS_READ_VAR(m_posP);
+			SS_READ_VAR(m_posS);
+			SS_READ_VAR(m_posE);
+			SS_READ_VAR(m_sample);
+			SS_READ_VAR(m_envelope);
+			SS_READ_VAR(m_length);
+			SS_READ_VAR(m_timed);
 
 			return true;
 		}

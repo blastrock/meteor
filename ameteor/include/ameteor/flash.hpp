@@ -19,7 +19,8 @@
 
 #include "cartmem.hpp"
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -37,8 +38,8 @@ namespace AMeteor
 			uint8_t Read (uint16_t add);
 			bool Write (uint16_t add, uint8_t val);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			uint8_t m_device_id;

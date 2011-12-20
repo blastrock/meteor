@@ -20,7 +20,8 @@
 #include "audio/speaker.hpp"
 #include "clock.hpp"
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -48,8 +49,8 @@ namespace AMeteor
 			inline void SendDigitalA (uint8_t* buffer);
 			inline void SendDigitalB (uint8_t* buffer);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			Audio::Speaker m_speaker;

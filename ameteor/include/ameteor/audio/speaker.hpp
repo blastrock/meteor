@@ -19,7 +19,8 @@
 
 #include <stdint.h>
 #include <ao/ao.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 #include "sound1.hpp"
 #include "sound2.hpp"
 #include "sound4.hpp"
@@ -68,8 +69,8 @@ namespace AMeteor
 
 				void SoundTick ();
 
-				bool SaveState (gzFile file);
-				bool LoadState (gzFile file);
+				bool SaveState (std::ostream& stream);
+				bool LoadState (std::istream& stream);
 
 			private :
 				Sound1 m_sound1;

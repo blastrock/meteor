@@ -164,22 +164,20 @@ namespace AMeteor
 		return false;
 	}
 
-	bool Flash::SaveState (gzFile file)
+	bool Flash::SaveState (std::ostream& stream)
 	{
-		GZ_WRITE(m_state);
+		SS_WRITE_VAR(m_state);
 
-		if (!gzwrite(file, m_data, m_size))
-			return false;
+		SS_WRITE_DATA(m_data, m_size);
 
 		return true;
 	}
 
-	bool Flash::LoadState (gzFile file)
+	bool Flash::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_state);
+		SS_READ_VAR(m_state);
 
-		if (gzread(file, m_data, m_size) != (signed)m_size)
-			return false;
+		SS_READ_DATA(m_data, m_size);
 
 		return true;
 	}
