@@ -33,13 +33,7 @@ namespace AMeteor
 		else
 			m_size = 0x0200;
 
-		m_data = new uint8_t[m_size];
-		std::memset(m_data, 0, m_size);
-	}
-
-	Eeprom::~Eeprom ()
-	{
-		delete [] m_data;
+		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
 	}
 
 	void Eeprom::Reset ()

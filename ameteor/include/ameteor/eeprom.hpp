@@ -28,7 +28,6 @@ namespace AMeteor
 	{
 		public :
 			Eeprom (bool big);
-			~Eeprom ();
 
 			void Reset ();
 
@@ -71,8 +70,6 @@ namespace AMeteor
 				WRITE_END*/
 			};
 
-			uint16_t m_size;
-			uint8_t* m_data;
 			uint8_t m_state;
 			uint16_t m_add;
 			uint8_t m_pos;

@@ -29,7 +29,6 @@ namespace AMeteor
 	{
 		public :
 			Sram ();
-			~Sram ();
 
 			void Reset ();
 
@@ -51,8 +50,6 @@ namespace AMeteor
 
 		private :
 			static const uint16_t SIZE = 0x8000;
-
-			uint8_t* m_data;
 	};
 }
 

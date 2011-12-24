@@ -22,15 +22,11 @@
 namespace AMeteor
 {
 	Sram::Sram () :
-		CartMem(),
-		m_data(new uint8_t[SIZE])
+		CartMem()
 	{
-		std::memset(m_data, 0, SIZE);
-	}
+		m_size = SIZE;
 
-	Sram::~Sram ()
-	{
-		delete [] m_data;
+		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
 	}
 
 	void Sram::Reset ()

@@ -28,7 +28,6 @@ namespace AMeteor
 	{
 		public :
 			Flash (bool big);
-			~Flash ();
 
 			void Reset ();
 
@@ -44,7 +43,6 @@ namespace AMeteor
 		private :
 			uint8_t m_device_id;
 			uint8_t m_manufacturer_id;
-			uint32_t m_size;
 
 			enum State
 			{
@@ -58,7 +56,6 @@ namespace AMeteor
 				WRITE
 			};
 
-			uint8_t* m_data;
 			State m_state;
 	};
 }

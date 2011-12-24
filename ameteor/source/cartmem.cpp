@@ -14,40 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CART_MEM_H__
-#define __CART_MEM_H__
-
-#include <fstream>
-#include <stdint.h>
-#include <istream>
-#include <ostream>
+#include "ameteor/cartmem.hpp"
+#include "globals.hpp"
 
 namespace AMeteor
 {
-	class CartMem
+	CartMem::CartMem() :
+		m_data(new uint8_t[MAX_SIZE+4])
 	{
-		public:
-			static const unsigned int MAX_SIZE = 0x20000;
+	}
 
-			CartMem();
-			virtual ~CartMem();
+	CartMem::~CartMem()
+	{
+		delete [] m_data;
+	}
 
-			virtual void Reset () = 0;
+	bool CartMem::SaveState (std::ostream& stream)
+	{
+		stream.write((char*)m_data, MAX_SIZE);
+		SS_WRITE_VAR(m_size);
 
-			virtual bool Load (std::istream& stream) = 0;
-			virtual bool Save (std::ostream& stream) = 0;
+		return true;
+	}
 
-			virtual uint8_t Read (uint16_t add) = 0;
-			// returns true if memory has been updated
-			virtual bool Write (uint16_t add, uint8_t val) = 0;
+	bool CartMem::LoadState (std::istream& stream)
+	{
+		stream.read((char*)m_data, MAX_SIZE);
+		SS_READ_VAR(m_size);
 
-			virtual bool SaveState (std::ostream& stream);
-			virtual bool LoadState (std::istream& stream);
-
-		protected:
-			uint8_t* m_data;
-			uint32_t m_size;
-	};
+		return true;
+	}
 }
-
-#endif

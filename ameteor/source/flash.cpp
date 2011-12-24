@@ -38,13 +38,7 @@ namespace AMeteor
 			m_size = 64*1024;
 		}
 
-		m_data = new uint8_t[m_size];
-		std::memset(m_data, 0, m_size);
-	}
-
-	Flash::~Flash ()
-	{
-		delete [] m_data;
+		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
 	}
 
 	void Flash::Reset ()

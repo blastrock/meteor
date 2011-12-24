@@ -31,6 +31,7 @@ set(AMeteor_SRC
 	graphics/screen.cpp
 	ameteor.cpp
 	bios.cpp
+	cartmem.cpp
 	clock.cpp
 	cpu.cpp
 	debug.cpp
