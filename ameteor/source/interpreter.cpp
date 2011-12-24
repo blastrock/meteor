@@ -176,20 +176,17 @@ namespace AMeteor
 		m_run = false;
 	}
 
-	bool Interpreter::SaveState (gzFile file)
+	bool Interpreter::SaveState (std::ostream& stream)
 	{
-		if (!gzwrite(file, &m_interrupt_, sizeof(m_interrupt_)))
-			return false;
+		SS_WRITE_VAR(m_interrupt_);
 
-		return Cpu::SaveState(file);
+		return Cpu::SaveState(stream);
 	}
 
-	bool Interpreter::LoadState (gzFile file)
+	bool Interpreter::LoadState (std::istream& stream)
 	{
-		if (gzread(file, &m_interrupt_, sizeof(m_interrupt_))
-				!= sizeof(m_interrupt_))
-			return false;
+		SS_READ_VAR(m_interrupt_);
 
-		return Cpu::LoadState(file);
+		return Cpu::LoadState(stream);
 	}
 }

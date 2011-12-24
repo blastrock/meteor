@@ -19,13 +19,19 @@
 
 #include <fstream>
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
 	class CartMem
 	{
-		public :
+		public:
+			static const unsigned int MAX_SIZE = 0x20000;
+
+			CartMem();
+			virtual ~CartMem();
+
 			virtual void Reset () = 0;
 
 			virtual bool Load (std::istream& stream) = 0;
@@ -35,9 +41,17 @@ namespace AMeteor
 			// returns true if memory has been updated
 			virtual bool Write (uint16_t add, uint8_t val) = 0;
 
-			virtual bool SaveState (gzFile file) = 0;
-			virtual bool LoadState (gzFile file) = 0;
+			virtual bool SaveState (std::ostream& stream);
+			virtual bool LoadState (std::istream& stream);
+
+		protected:
+			uint8_t* m_data;
+			uint32_t m_size;
 	};
+
+#ifdef __LIBSNES__
+	extern uint8_t CartMemData[CartMem::MAX_SIZE+4];
+#endif
 }
 
 #endif

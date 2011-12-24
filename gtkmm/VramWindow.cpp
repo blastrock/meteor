@@ -96,7 +96,7 @@ VramWindow::VramWindow () :
 					&VramWindow::on_radio_changed), &m_baseObj));
 	m_palette.signal_value_changed().connect(sigc::mem_fun(*this,
 				&VramWindow::on_refresh));
-	m_vblank_conn = AMeteor::_lcd.signal_vblank.connect(sigc::mem_fun(*this,
+	m_vblank_conn = AMeteor::_lcd.sig_vblank.connect(sigc::mem_fun(*this,
 				&VramWindow::on_vblank));
 }
 

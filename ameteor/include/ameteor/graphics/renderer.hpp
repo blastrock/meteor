@@ -17,48 +17,34 @@
 #ifndef __GRAPHICS_RENDERER_H__
 #define __GRAPHICS_RENDERER_H__
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <stdint.h>
+#include <sigc++/slot.h>
 
 namespace AMeteor
 {
 	namespace Graphics
 	{
-		class Renderer : public sf::RenderWindow
+		class Renderer
 		{
 			public:
+				typedef sigc::slot<void, const uint16_t*> FrameSlot;
+
 				Renderer(const uint16_t* surface);
-				~Renderer();
 
-				void Init(sf::WindowHandle display = 0);
-				void Uninit();
-				void VBlank ();
+				inline void SetFrameSlot(const FrameSlot& slot);
 
-				void EventResize (unsigned int w, unsigned int h);
+				void VBlank();
 
 			private :
 				const uint16_t* m_base;
-				volatile uint16_t* m_tbase;
-				volatile unsigned int m_w, m_h;
 
-				pthread_t m_thread;
-				pthread_mutex_t m_mutex;
-				pthread_cond_t m_cond;
-				volatile bool m_quit;
-
-				GLuint m_pbo;
-				GLuint m_texture;
-				GLuint m_vbo;
-
-				void InitGl();
-				void UninitGl();
-				void StartThread();
-				void StopThread();
-
-				static void* EntryPoint (void* ptr);
-				void MainLoop ();
+				sigc::slot<void, const uint16_t*> m_sig_frame;
 		};
+
+		void Renderer::SetFrameSlot(const FrameSlot& slot)
+		{
+			m_sig_frame = slot;
+		}
 	}
 }
 

@@ -20,6 +20,8 @@
 #include "cartmem.hpp"
 #include <stdint.h>
 #include <fstream>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -27,7 +29,6 @@ namespace AMeteor
 	{
 		public :
 			Sram ();
-			~Sram ();
 
 			void Reset ();
 
@@ -44,13 +45,11 @@ namespace AMeteor
 				return true;
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			static const uint16_t SIZE = 0x8000;
-
-			uint8_t* m_data;
 	};
 }
 

@@ -18,7 +18,8 @@
 #define __CPU_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -118,8 +119,8 @@ namespace AMeteor
 				return m_st.spsr;
 			}
 
-			virtual bool SaveState (gzFile file);
-			virtual bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		protected :
 			struct CPUState

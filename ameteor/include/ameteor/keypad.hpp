@@ -77,6 +77,8 @@ namespace AMeteor
 				m_axis.clear();
 			}
 
+			inline void SetPadState(uint16_t keys);
+
 			void KeyPressed(int code);
 			void KeyReleased(int code);
 			void JoyButtonPressed (uint16_t joyid, uint16_t button);
@@ -93,6 +95,11 @@ namespace AMeteor
 			std::map<int, uint16_t> m_joys;
 			std::map<int, uint16_t> m_axis;
 	};
+
+	void Keypad::SetPadState(uint16_t keys)
+	{
+		m_keyinput = keys;
+	}
 }
 
 #endif

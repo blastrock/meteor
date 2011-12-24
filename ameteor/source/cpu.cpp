@@ -307,16 +307,16 @@ namespace AMeteor
 			}
 	}
 
-	bool Cpu::SaveState (gzFile file)
+	bool Cpu::SaveState (std::ostream& stream)
 	{
-		GZ_WRITE(m_st);
+		SS_WRITE_VAR(m_st);
 
 		return true;
 	}
 
-	bool Cpu::LoadState (gzFile file)
+	bool Cpu::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_st);
+		SS_READ_VAR(m_st);
 
 		CheckInterrupt();
 

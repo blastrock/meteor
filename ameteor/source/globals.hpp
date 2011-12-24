@@ -101,11 +101,23 @@
 	 (POS(a) & NEG(b) & NEG(c)))
 
 // Save states macros
-#define GZ_WRITE(var) \
-	if (!gzwrite(file, &var, sizeof(var))) \
+#define SS_WRITE_VAR(var) \
+	if (!stream.write((char*)&var, sizeof(var))) \
 		return false
-#define GZ_READ(var) \
-	if (gzread(file, &var, sizeof(var)) != sizeof(var)) \
+#define SS_WRITE_ARRAY(var) \
+	if (!stream.write((char*)var, sizeof(var))) \
+		return false
+#define SS_WRITE_DATA(var, size) \
+	if (!stream.write((char*)var, size)) \
+		return false
+#define SS_READ_VAR(var) \
+	if (!stream.read((char*)&var, sizeof(var))) \
+		return false
+#define SS_READ_ARRAY(var) \
+	if (!stream.read((char*)var, sizeof(var))) \
+		return false
+#define SS_READ_DATA(var, size) \
+	if (!stream.read((char*)var, size)) \
 		return false
 
 // macro to avoid getting warnings about and unused parameter on GCC

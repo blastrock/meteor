@@ -1,12 +1,12 @@
 find_package(GTK2 2.24 REQUIRED COMPONENTS gtk gtkmm)
 
 include_directories(
-	${AMeteor_INCLUDE_DIRS}
+	${MyM_INCLUDE_DIRS}
 	${GTK2_INCLUDE_DIRS}
 )
 
 link_directories(
-	${AMeteor_LIBRARY_DIRS}
+	${MyM_LIBRARY_DIRS}
 )
 
 add_executable(meteor
@@ -25,7 +25,7 @@ add_executable(meteor
 )
 
 target_link_libraries(meteor
-	${AMeteor_LIBRARIES}
+	${MyM_LIBRARIES}
 	${GTK2_LIBRARIES}
 )
 

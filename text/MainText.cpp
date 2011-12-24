@@ -23,12 +23,17 @@
 #include <stdexcept>
 
 MainText::MainText () :
-	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
+	m_events(m_window.GetWindow()),
 	m_running(false)
 {
 	Configurator config;
 	config.Load();
 	config.InitAMeteor();
+
+	m_window.InitAMeteor();
+	m_audio.InitAMeteor();
+	m_events.InitAMeteor();
+
 	m_batteryPath = config.GetBatteryPath();
 	m_sstatePath = config.GetSStatePath();
 	m_romPath = config.GetRomPath();
@@ -66,7 +71,7 @@ void MainText::Close()
 	m_running = false;
 
 	AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
-	m_renderer.Uninit();
+	m_window.Uninit();
 	m_openFile.clear();
 }
 
@@ -83,7 +88,8 @@ void MainText::Run()
 	if (m_running)
 		return;
 
-	m_renderer.Init();
+	m_window.Init();
+	m_audio.Init();
 
 	m_running = true;
 	do

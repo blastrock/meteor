@@ -152,32 +152,32 @@ namespace AMeteor
 				m_sample = 0;
 		}
 
-		bool Sound4::SaveState (gzFile file)
+		bool Sound4::SaveState (std::ostream& stream)
 		{
-			GZ_WRITE(m_on);
-			GZ_WRITE(m_posP);
-			GZ_WRITE(m_posE);
-			GZ_WRITE(m_posN);
-			GZ_WRITE(m_sample);
-			GZ_WRITE(m_envelope);
-			GZ_WRITE(m_length);
-			GZ_WRITE(m_timed);
-			GZ_WRITE(m_div);
+			SS_WRITE_VAR(m_on);
+			SS_WRITE_VAR(m_posP);
+			SS_WRITE_VAR(m_posE);
+			SS_WRITE_VAR(m_posN);
+			SS_WRITE_VAR(m_sample);
+			SS_WRITE_VAR(m_envelope);
+			SS_WRITE_VAR(m_length);
+			SS_WRITE_VAR(m_timed);
+			SS_WRITE_VAR(m_div);
 
 			return true;
 		}
 
-		bool Sound4::LoadState (gzFile file)
+		bool Sound4::LoadState (std::istream& stream)
 		{
-			GZ_READ(m_on);
-			GZ_READ(m_posP);
-			GZ_READ(m_posE);
-			GZ_READ(m_posN);
-			GZ_READ(m_sample);
-			GZ_READ(m_envelope);
-			GZ_READ(m_length);
-			GZ_READ(m_timed);
-			GZ_READ(m_div);
+			SS_READ_VAR(m_on);
+			SS_READ_VAR(m_posP);
+			SS_READ_VAR(m_posE);
+			SS_READ_VAR(m_posN);
+			SS_READ_VAR(m_sample);
+			SS_READ_VAR(m_envelope);
+			SS_READ_VAR(m_length);
+			SS_READ_VAR(m_timed);
+			SS_READ_VAR(m_div);
 
 			return true;
 		}

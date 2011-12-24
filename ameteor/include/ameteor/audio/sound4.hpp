@@ -18,7 +18,8 @@
 #define __AUDIO_SOUND_4_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -52,8 +53,8 @@ namespace AMeteor
 					return m_on;
 				}
 
-				bool SaveState (gzFile file);
-				bool LoadState (gzFile file);
+				bool SaveState (std::ostream& stream);
+				bool LoadState (std::istream& stream);
 
 			private :
 				uint16_t &m_cntl, &m_cnth;

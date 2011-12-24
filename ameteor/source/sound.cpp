@@ -87,31 +87,23 @@ namespace AMeteor
 		m_speaker.NextSampleB ();
 	}
 
-	bool Sound::SaveState (gzFile file)
+	bool Sound::SaveState (std::ostream& stream)
 	{
-#define WRITE(var) \
-	if (!gzwrite(file, &var, sizeof(var))) \
-		return false
-		WRITE(m_fATimer);
-		WRITE(m_fBTimer);
-#undef WRITE
+		SS_WRITE_VAR(m_fATimer);
+		SS_WRITE_VAR(m_fBTimer);
 
-		if (!m_speaker.SaveState(file))
+		if (!m_speaker.SaveState(stream))
 			return false;
 
 		return true;
 	}
 
-	bool Sound::LoadState (gzFile file)
+	bool Sound::LoadState (std::istream& stream)
 	{
-#define READ(var) \
-	if (gzread(file, &var, sizeof(var)) != sizeof(var)) \
-		return false
-		READ(m_fATimer);
-		READ(m_fBTimer);
-#undef READ
+		SS_READ_VAR(m_fATimer);
+		SS_READ_VAR(m_fBTimer);
 
-		if (!m_speaker.LoadState(file))
+		if (!m_speaker.LoadState(stream))
 			return false;
 
 		return true;

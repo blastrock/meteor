@@ -20,7 +20,8 @@
 #include "clock.hpp"
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -46,8 +47,8 @@ namespace AMeteor
 
 			uint16_t GetCount () const;
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			union Control

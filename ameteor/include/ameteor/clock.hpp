@@ -20,7 +20,8 @@
 #include <stdint.h>
 #include <climits>
 #include <vector>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -90,8 +91,8 @@ namespace AMeteor
 				// no need to SetFirst since battery will be disabled only in TimeEvent
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			// XXX freq

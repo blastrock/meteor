@@ -18,7 +18,8 @@
 #define __AUDIO_D_SOUND_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -63,8 +64,8 @@ namespace AMeteor
 					return m_size;
 				};
 
-				bool SaveState (gzFile file);
-				bool LoadState (gzFile file);
+				bool SaveState (std::ostream& stream);
+				bool LoadState (std::istream& stream);
 
 			private :
 				int8_t m_buffer[BUFFER_SIZE];

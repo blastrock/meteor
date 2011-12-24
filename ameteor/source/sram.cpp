@@ -17,19 +17,16 @@
 #include "ameteor/sram.hpp"
 #include <cstring>
 #include <fstream>
+#include "globals.hpp"
 
 namespace AMeteor
 {
 	Sram::Sram () :
-		CartMem(),
-		m_data(new uint8_t[SIZE])
+		CartMem()
 	{
-		std::memset(m_data, 0, SIZE);
-	}
+		m_size = SIZE;
 
-	Sram::~Sram ()
-	{
-		delete [] m_data;
+		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
 	}
 
 	void Sram::Reset ()
@@ -49,18 +46,16 @@ namespace AMeteor
 		return f.good();
 	}
 
-	bool Sram::SaveState (gzFile file)
+	bool Sram::SaveState (std::ostream& stream)
 	{
-		if (!gzwrite(file, m_data, SIZE))
-			return false;
+		SS_WRITE_DATA(m_data, SIZE);
 
 		return true;
 	}
 
-	bool Sram::LoadState (gzFile file)
+	bool Sram::LoadState (std::istream& stream)
 	{
-		if (gzread(file, m_data, SIZE) != (signed)SIZE)
-			return false;
+		SS_READ_DATA(m_data, SIZE);
 
 		return true;
 	}

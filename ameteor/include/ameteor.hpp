@@ -26,7 +26,6 @@
 #include "ameteor/timer.hpp"
 #include "ameteor/sound.hpp"
 #include "ameteor/keypad.hpp"
-#include "ameteor/events.hpp"
 
 namespace AMeteor
 {
@@ -63,6 +62,9 @@ namespace AMeteor
 
 	bool SaveState (const char* filename);
 	bool LoadState (const char* filename);
+
+	bool SaveState (std::ostream& stream);
+	bool LoadState (std::istream& stream);
 
 	inline void Run (unsigned int cycles)
 	{

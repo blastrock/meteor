@@ -17,7 +17,10 @@
 #ifndef __MAIN_TEXT_H__
 #define __MAIN_TEXT_H__
 
-#include <ameteor/graphics/renderer.hpp>
+#include <string>
+#include <mym/window.hpp>
+#include <mym/audio.hpp>
+#include <mym/events.hpp>
 
 class MainText
 {
@@ -36,7 +39,9 @@ class MainText
 		void LoadState(uint8_t n);
 
 	private :
-		AMeteor::Graphics::Renderer& m_renderer;
+		mym::Window m_window;
+		mym::Audio m_audio;
+		mym::Events m_events;
 
 		std::string m_sstatePath, m_batteryPath, m_romPath;
 		std::string m_openFile;

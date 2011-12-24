@@ -19,7 +19,8 @@
 
 #include "cartmem.hpp"
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -27,7 +28,6 @@ namespace AMeteor
 	{
 		public :
 			Eeprom (bool big);
-			~Eeprom ();
 
 			void Reset ();
 
@@ -51,8 +51,8 @@ namespace AMeteor
 			void Read (uint16_t* pOut);
 #endif
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			enum State
@@ -70,8 +70,6 @@ namespace AMeteor
 				WRITE_END*/
 			};
 
-			uint16_t m_size;
-			uint8_t* m_data;
 			uint8_t m_state;
 			uint16_t m_add;
 			uint8_t m_pos;

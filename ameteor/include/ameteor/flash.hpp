@@ -19,7 +19,8 @@
 
 #include "cartmem.hpp"
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -27,7 +28,6 @@ namespace AMeteor
 	{
 		public :
 			Flash (bool big);
-			~Flash ();
 
 			void Reset ();
 
@@ -37,13 +37,12 @@ namespace AMeteor
 			uint8_t Read (uint16_t add);
 			bool Write (uint16_t add, uint8_t val);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			uint8_t m_device_id;
 			uint8_t m_manufacturer_id;
-			uint32_t m_size;
 
 			enum State
 			{
@@ -57,7 +56,6 @@ namespace AMeteor
 				WRITE
 			};
 
-			uint8_t* m_data;
 			State m_state;
 	};
 }

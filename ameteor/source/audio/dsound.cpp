@@ -57,26 +57,24 @@ namespace AMeteor
 			++m_size;
 		}
 
-		bool DSound::SaveState (gzFile file)
+		bool DSound::SaveState (std::ostream& stream)
 		{
-			GZ_WRITE(m_rpos);
-			GZ_WRITE(m_wpos);
-			GZ_WRITE(m_size);
+			SS_WRITE_VAR(m_rpos);
+			SS_WRITE_VAR(m_wpos);
+			SS_WRITE_VAR(m_size);
 
-			if (!gzwrite(file, m_buffer, sizeof(m_buffer)))
-				return false;
+			SS_WRITE_ARRAY(m_buffer);
 
 			return true;
 		}
 
-		bool DSound::LoadState (gzFile file)
+		bool DSound::LoadState (std::istream& stream)
 		{
-			GZ_READ(m_rpos);
-			GZ_READ(m_wpos);
-			GZ_READ(m_size);
+			SS_READ_VAR(m_rpos);
+			SS_READ_VAR(m_wpos);
+			SS_READ_VAR(m_size);
 
-			if (gzread(file, m_buffer, sizeof(m_buffer)) != sizeof(m_buffer))
-				return false;
+			SS_READ_ARRAY(m_buffer);
 
 			return true;
 		}

@@ -18,8 +18,9 @@
 #define __AUDIO_SPEAKER_H__
 
 #include <stdint.h>
-#include <ao/ao.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
+#include <sigc++/slot.h>
 #include "sound1.hpp"
 #include "sound2.hpp"
 #include "sound4.hpp"
@@ -32,8 +33,7 @@ namespace AMeteor
 		class Speaker
 		{
 			public :
-				// XXX freq
-				static const uint16_t SNDSKIP_TOTAL = 4410;
+				typedef sigc::slot<void, const int16_t*, uint32_t> FrameSlot;
 
 				Speaker (uint16_t& cnt1l, uint16_t& cnt1h, uint16_t& cnt1x,
 						uint16_t& cnt2l, uint16_t& cnt2h,
@@ -41,7 +41,7 @@ namespace AMeteor
 						uint16_t& cntl, uint16_t& cnth, uint16_t& cntx, uint16_t& bias);
 				~Speaker ();
 
-				inline void SetSampleskip (uint16_t skip);
+				inline void SetFrameSlot (const FrameSlot& slot);
 
 				void Reset ();
 
@@ -68,8 +68,8 @@ namespace AMeteor
 
 				void SoundTick ();
 
-				bool SaveState (gzFile file);
-				bool LoadState (gzFile file);
+				bool SaveState (std::ostream& stream);
+				bool LoadState (std::istream& stream);
 
 			private :
 				Sound1 m_sound1;
@@ -78,17 +78,14 @@ namespace AMeteor
 				DSound m_dsa, m_dsb;
 				uint16_t &m_cntl, &m_cnth, &m_cntx, &m_bias;
 
-				ao_device* m_device;
-
-				uint16_t m_sampleskip, m_cursample;
+				FrameSlot m_sig_frame;
 
 				int16_t MixSample (uint16_t cntl, uint8_t cnth);
 		};
 
-		inline void Speaker::SetSampleskip (uint16_t skip)
+		inline void Speaker::SetFrameSlot (const FrameSlot& slot)
 		{
-			m_sampleskip = skip;
-			m_cursample = 0;
+			m_sig_frame = slot;
 		}
 
 		inline void Speaker::ResetSound1 ()

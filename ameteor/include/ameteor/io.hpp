@@ -18,7 +18,8 @@
 #define __IO_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -204,8 +205,8 @@ namespace AMeteor
 				return *(uint32_t*)(m_iomem+add);
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			uint8_t* m_iomem;

@@ -22,6 +22,8 @@
 #include "renderer.hpp"
 
 #include <stdint.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -116,13 +118,8 @@ namespace AMeteor
 					m_objs.OamWrite32 (add);
 				}
 
-				bool SaveState (gzFile file);
-				bool LoadState (gzFile file);
-
-				void EventResize (unsigned int w, unsigned int h)
-				{
-					m_renderer.EventResize(w, h);
-				}
+				bool SaveState (std::ostream& stream);
+				bool LoadState (std::istream& stream);
 
 			private :
 				Io& m_io;

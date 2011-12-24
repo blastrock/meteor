@@ -14,19 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __EVENTS_H__
-#define __EVENTS_H__
+#ifndef __HQ4X_H__
+#define __HQ4X_H__
 
-namespace sf
+namespace mym
 {
-	class Window;
-}
-
-namespace AMeteor
-{
-	namespace Events
+	namespace Filters
 	{
-		void CheckEvents(sf::Window& win);
+		extern "C" void hq4x(unsigned char* pIn, unsigned char* pOut,
+				int Xres, int Yres, int BpL);
+
+		int InitLUTs ();
 	}
 }
 

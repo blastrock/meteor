@@ -75,10 +75,8 @@ namespace AMeteor
 
 					KEYPAD.VBlank();
 
-					// we send the vblank signal, the renderer should have connnected
-					// this signal to swap the buffers at this moment, and apply eventual
-					// filters
-					signal_vblank.emit();
+					// we send the vblank signal
+					sig_vblank.emit();
 				}
 				// NOTE : v-blank finishes on line 227, not 0
 				// FIXME on vba, it finishes on 0
@@ -117,17 +115,17 @@ namespace AMeteor
 		}
 	}
 
-	bool Lcd::SaveState (gzFile file __attribute__((unused)))
+	bool Lcd::SaveState (std::ostream& stream)
 	{
-		if (!m_screen.SaveState(file))
+		if (!m_screen.SaveState(stream))
 			return false;
 
 		return true;
 	}
 
-	bool Lcd::LoadState (gzFile file __attribute__((unused)))
+	bool Lcd::LoadState (std::istream& stream)
 	{
-		if (!m_screen.LoadState(file))
+		if (!m_screen.LoadState(stream))
 			return false;
 
 		UpdateDispCnt (IO.DRead16(Io::DISPCNT));

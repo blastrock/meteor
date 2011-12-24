@@ -289,20 +289,18 @@ namespace AMeteor
 			LCD.OamWrite(basedest, dest);
 	}
 
-	bool Dma::SaveState (gzFile file)
+	bool Dma::SaveState (std::ostream& stream)
 	{
-		if (!gzwrite(file, m_chans, sizeof(m_chans)))
-			return false;
+		SS_WRITE_ARRAY(m_chans);
 		// no need to save or load m_graphic since we shouldn't save or load during
 		// a dma
 
 		return true;
 	}
 
-	bool Dma::LoadState (gzFile file)
+	bool Dma::LoadState (std::istream& stream)
 	{
-		if (gzread(file, m_chans, sizeof(m_chans)) != sizeof(m_chans))
-			return false;
+		SS_READ_ARRAY(m_chans);
 
 		return true;
 	}

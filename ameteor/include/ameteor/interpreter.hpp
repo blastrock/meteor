@@ -18,7 +18,8 @@
 #define __INTERPRETER_H__
 
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 #include "cpu.hpp"
 
 #define ARM(name) \
@@ -62,8 +63,8 @@ namespace AMeteor
 				return m_run;
 			}
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		protected :
 			void SetInterrupt (bool interrupt)

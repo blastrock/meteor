@@ -17,7 +17,7 @@
 #ifndef __CONFIGURATOR_HPP__
 #define __CONFIGURATOR_HPP__
 
-#include <ameteor/cfg/config.hpp>
+#include <mym/config.hpp>
 
 class Configurator
 {
@@ -40,7 +40,7 @@ class Configurator
 		}
 
 	private:
-		AMeteor::Cfg::Config m_cfg;
+		mym::Config m_cfg;
 
 		std::string m_batteryPath;
 		std::string m_sstatePath;

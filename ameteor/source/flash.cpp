@@ -38,13 +38,7 @@ namespace AMeteor
 			m_size = 64*1024;
 		}
 
-		m_data = new uint8_t[m_size];
-		std::memset(m_data, 0, m_size);
-	}
-
-	Flash::~Flash ()
-	{
-		delete [] m_data;
+		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
 	}
 
 	void Flash::Reset ()
@@ -164,22 +158,20 @@ namespace AMeteor
 		return false;
 	}
 
-	bool Flash::SaveState (gzFile file)
+	bool Flash::SaveState (std::ostream& stream)
 	{
-		GZ_WRITE(m_state);
+		SS_WRITE_VAR(m_state);
 
-		if (!gzwrite(file, m_data, m_size))
-			return false;
+		SS_WRITE_DATA(m_data, m_size);
 
 		return true;
 	}
 
-	bool Flash::LoadState (gzFile file)
+	bool Flash::LoadState (std::istream& stream)
 	{
-		GZ_READ(m_state);
+		SS_READ_VAR(m_state);
 
-		if (gzread(file, m_data, m_size) != (signed)m_size)
-			return false;
+		SS_READ_DATA(m_data, m_size);
 
 		return true;
 	}

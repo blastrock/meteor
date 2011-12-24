@@ -23,7 +23,8 @@
 
 #include <stdint.h>
 #include <string>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -57,6 +58,7 @@ namespace AMeteor
 				return m_carttype;
 			}
 			// erases cartridge memory
+			void SetCartTypeFromSize (uint32_t size);
 			void SetCartType (uint8_t type);
 			void SetCartFile (const char* filename)
 			{
@@ -81,7 +83,11 @@ namespace AMeteor
 				}
 			}
 			bool LoadRom (const char* filename);
+			void LoadRom (const uint8_t* data, uint32_t size);
 			CartError LoadCart ();
+#ifdef __LIBSNES__
+			bool LoadCartInferred ();
+#endif
 
 			bool HasBios () const
 			{
@@ -96,8 +102,8 @@ namespace AMeteor
 
 			uint8_t* GetRealAddress(uint32_t add, uint8_t size = 0);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 			// TODO make const members
 			uint8_t Read8 (uint32_t add);

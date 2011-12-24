@@ -20,7 +20,8 @@
 #include "audio/speaker.hpp"
 #include "clock.hpp"
 #include <stdint.h>
-#include <zlib.h>
+#include <istream>
+#include <ostream>
 
 namespace AMeteor
 {
@@ -29,9 +30,9 @@ namespace AMeteor
 		public :
 			Sound ();
 
-			inline void SetSampleskip (uint16_t skip);
-
 			void Reset ();
+
+			inline Audio::Speaker& GetSpeaker();
 
 			void UpdateCntH1 (uint8_t val);
 
@@ -48,8 +49,8 @@ namespace AMeteor
 			inline void SendDigitalA (uint8_t* buffer);
 			inline void SendDigitalB (uint8_t* buffer);
 
-			bool SaveState (gzFile file);
-			bool LoadState (gzFile file);
+			bool SaveState (std::ostream& stream);
+			bool LoadState (std::istream& stream);
 
 		private :
 			Audio::Speaker m_speaker;
@@ -67,9 +68,9 @@ namespace AMeteor
 			friend void Clock::Commit ();
 	};
 
-	inline void Sound::SetSampleskip (uint16_t skip)
+	inline Audio::Speaker& Sound::GetSpeaker()
 	{
-		m_speaker.SetSampleskip(skip);
+		return m_speaker;
 	}
 
 	inline void Sound::ResetSound1 ()

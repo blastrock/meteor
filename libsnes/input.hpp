@@ -1,5 +1,6 @@
 // Meteor - A Nintendo Gameboy Advance emulator
 // Copyright (C) 2009-2011 Philippe Daouadi
+// Copyright (C) 2011 Hans-Kristian Arntzen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,42 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GZ_HELPER_H__
-#define __GZ_HELPER_H__
+#ifndef INPUT_HPP
+#define INPUT_HPP
 
-namespace AMeteor
+class Input
 {
-	class GzHelper
-	{
-		public :
-			GzHelper (gzFile file) :
-				m_file(file)
-			{
-			}
+	public:
+		void InitAMeteor();
 
-			~GzHelper ()
-			{
-				if (m_file)
-					gzclose(m_file);
-			}
-
-			operator bool()
-			{
-				return m_file;
-			}
-
-			operator gzFile()
-			{
-				return m_file;
-			}
-
-		private :
-			GzHelper (const GzHelper& helper __attribute__((unused)))
-			{
-			}
-
-			gzFile m_file;
-	};
-}
+		void CheckEvents();
+};
 
 #endif
