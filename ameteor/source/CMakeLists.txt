@@ -25,11 +25,9 @@ set(AMeteor_SRC
 	disassembler/arguimmediate.cpp
 	disassembler/arguments.cpp
 	disassembler/instruction.cpp
-	graphics/filters/hq4x.cpp
 	graphics/bglayer.cpp
 	graphics/object.cpp
 	graphics/objects.cpp
-	graphics/renderer_gl.cpp
 	graphics/screen.cpp
 	ameteor.cpp
 	bios.cpp
@@ -38,7 +36,6 @@ set(AMeteor_SRC
 	debug.cpp
 	dma.cpp
 	eeprom.cpp
-	events.cpp
 	flash.cpp
 	interpreter.cpp
 	interpreter_arm.cpp
@@ -51,12 +48,6 @@ set(AMeteor_SRC
 	sram.cpp
 	timer.cpp
 )
-
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-	set(AMeteor_SRC ${AMeteor_SRC} graphics/filters/hq4x64.asm)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i.86")
-	set(AMeteor_SRC ${AMeteor_SRC} graphics/filters/hq4x32.asm)
-endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
 
 add_library(ameteor ${AMeteor_SRC})
 

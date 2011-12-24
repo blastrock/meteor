@@ -14,8 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifdef LIBSNES_BUILD
-#include "renderer_libsnes.hpp"
-#else
-#include "renderer_gl.hpp"
+#ifndef __GRAPHICS_RENDERER_H__
+#define __GRAPHICS_RENDERER_H__
+
+#include <stdint.h>
+#include <sigc++/slot.h>
+
+namespace AMeteor
+{
+	namespace Graphics
+	{
+		class Renderer
+		{
+			public:
+				typedef sigc::slot<void, const uint16_t*> FrameSlot;
+
+				Renderer(const uint16_t* surface);
+
+				inline void SetFrameSlot(const FrameSlot& slot);
+
+				void VBlank();
+
+			private :
+				const uint16_t* m_base;
+
+				sigc::slot<void, const uint16_t*> m_sig_frame;
+		};
+
+		void Renderer::SetFrameSlot(const FrameSlot& slot)
+		{
+			m_sig_frame = slot;
+		}
+	}
+}
+
 #endif

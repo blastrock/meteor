@@ -8,18 +8,14 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/graphics/renderer.hpp"
 #include "ameteor.hpp"
-#include "libsnes.hpp"
-#include <stdio.h>
-
-extern snes_video_refresh_t psnes_refresh;
 
 namespace AMeteor
 {
@@ -27,23 +23,13 @@ namespace AMeteor
 	{
 		Renderer::Renderer (const uint16_t* surface) :
 			m_base(surface)
-		{}
+		{
+		}
 
 		void Renderer::VBlank ()
 		{
-			uint16_t buf[240 * 160];
-			for (unsigned i = 0; i < 240 * 160; i++)
-			{
-				uint16_t col = m_base[i];
-				uint16_t b = (col >> 10) & 0x1f;
-				uint16_t g = (col >> 5) & 0x1f;
-				uint16_t r = (col >> 0) & 0x1f;
-				buf[i] = (r << 10) | (g << 5) | (b << 0);
-			}
-
-			// FIXME should not be needed
-			AMeteor::Stop();
-			psnes_refresh(buf, 240, 160);
+			if (m_sig_frame)
+				m_sig_frame(m_base);
 		}
 	}
 }

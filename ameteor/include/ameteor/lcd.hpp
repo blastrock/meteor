@@ -115,11 +115,6 @@ namespace AMeteor
 			bool SaveState (std::ostream& stream);
 			bool LoadState (std::istream& stream);
 
-			void EventResize (unsigned int w, unsigned int h)
-			{
-				m_screen.EventResize(w, h);
-			}
-
 			sigc::signal<void> signal_vblank;
 
 		private :

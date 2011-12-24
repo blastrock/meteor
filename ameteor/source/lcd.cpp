@@ -75,9 +75,7 @@ namespace AMeteor
 
 					KEYPAD.VBlank();
 
-					// we send the vblank signal, the renderer should have connnected
-					// this signal to swap the buffers at this moment, and apply eventual
-					// filters
+					// we send the vblank signal
 					signal_vblank.emit();
 				}
 				// NOTE : v-blank finishes on line 227, not 0

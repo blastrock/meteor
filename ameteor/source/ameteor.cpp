@@ -15,12 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor.hpp"
-#include "graphics/filters/hq4x.hpp"
 #include "debug.hpp"
 #include "globals.hpp"
 #include <cstring>
 #include <sstream>
-#include <zlib.h>
 
 #include <ao/ao.h>
 
@@ -37,16 +35,7 @@ namespace AMeteor
 			public :
 				AMeteor ()
 				{
-					ao_initialize();
-					// FIXME XXX not cool
-					if (!Graphics::Filters::InitLUTs())
-						met_abort("MMX not supported");
 					Audio::InitNoise();
-				}
-
-				~AMeteor ()
-				{
-					ao_shutdown();
 				}
 		} __ameteor;
 	}
@@ -107,15 +96,17 @@ namespace AMeteor
 		if (!SaveState(ss))
 			return false;
 
-		gzFile file = gzopen(filename, "wb");
+		std::ofstream file(filename);
+
 		if (!file)
 			return false;
 
 		std::string buf = ss.str();
-		if (!gzwrite(file, buf.c_str(), buf.length()))
+		if (!file.write(buf.c_str(), buf.length()))
 			return false;
 
-		if (gzclose(file) != Z_OK)
+		file.close();
+		if (!file)
 			return false;
 
 		return true;
@@ -128,17 +119,18 @@ namespace AMeteor
 
 		std::istringstream ss;
 		{
-			gzFile file = gzopen(filename, "rb");
+			std::ifstream file(filename);
 			if (!file)
 				return false;
 
 			// 1Mo
 			std::vector<uint8_t> buf(0x100000);
-			int nread = gzread(file, &buf[0], 0x100000);
-			if (nread == -1)
+			if (!file.read((char*)&buf[0], 0x100000))
 				return false;
+			int nread = file.gcount();
 
-			if (gzclose(file) != Z_OK)
+			file.close();
+			if (!file)
 				return false;
 
 			ss.str(std::string((char*)&buf[0], nread));

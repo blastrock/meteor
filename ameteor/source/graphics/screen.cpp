@@ -59,14 +59,10 @@ namespace AMeteor
 				// we skip this frame
 				// VBlank
 				if (line == 159)
-				{
-					m_curframe = (m_curframe + 1) % FRMSKIP_TOTAL;
 					// we don't update screen since we haven't drawn anything on it, it
 					// would show up a buffer with the previous image or maybe only
 					// garbage (we use double buffering)
-					// but we check if there were events
-					Events::CheckEvents(m_renderer);
-				}
+					m_curframe = (m_curframe + 1) % FRMSKIP_TOTAL;
 				return;
 			}
 
@@ -334,7 +330,6 @@ namespace AMeteor
 			{
 				m_curframe = (m_curframe + 1) % FRMSKIP_TOTAL;
 				m_renderer.VBlank();
-				Events::CheckEvents(m_renderer);
 			}
 		}
 

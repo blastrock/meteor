@@ -121,11 +121,6 @@ namespace AMeteor
 				bool SaveState (std::ostream& stream);
 				bool LoadState (std::istream& stream);
 
-				void EventResize (unsigned int w, unsigned int h)
-				{
-					m_renderer.EventResize(w, h);
-				}
-
 			private :
 				Io& m_io;
 

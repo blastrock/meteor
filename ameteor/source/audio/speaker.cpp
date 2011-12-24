@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/audio/speaker.hpp"
-#include <cstring>
+#include "../debug.hpp"
 
 namespace AMeteor
 {
@@ -34,25 +34,10 @@ namespace AMeteor
 			m_cntx(cntx),
 			m_bias(bias)
 		{
-			ao_sample_format format;
-			std::memset(&format, 0, sizeof(format));
-			format.bits = 16;
-			format.channels = 2;
-			// XXX freq
-			format.rate = 44100;
-			format.byte_format = AO_FMT_NATIVE;
-
-			m_device = ao_open_live(ao_default_driver_id(), &format, NULL);
-			if (m_device == NULL)
-			{
-				puts("Cannot open sound device");
-				abort();
-			}
 		}
 
 		Speaker::~Speaker ()
 		{
-			ao_close(m_device);
 		}
 
 		void Speaker::Reset ()
@@ -62,7 +47,6 @@ namespace AMeteor
 			m_sound4.Reset();
 			m_dsa.Reset();
 			m_dsb.Reset();
-			m_cursample = m_sampleskip = 0;
 		}
 
 		void Speaker::SoundTick ()
@@ -89,18 +73,12 @@ namespace AMeteor
 					m_cntx &= 0xFFF7;
 			}
 
-			m_cursample = (m_cursample + 1) % SNDSKIP_TOTAL;
+			// left
+			f[0] = MixSample (m_cntl >> 4, m_cnth >> 9);
+			// right
+			f[1] = MixSample (m_cntl, m_cnth >> 8);
 
-			if (m_cursample >= m_sampleskip)
-			{
-				// left
-				f[0] = MixSample (m_cntl >> 4, m_cnth >> 9);
-				// right
-				f[1] = MixSample (m_cntl, m_cnth >> 8);
-				// XXX
-				//f[0] = f[1] = 0;
-				ao_play(m_device, (char*)f, 4);
-			}
+			m_sig_frame((uint8_t*)f, 4);
 		}
 
 		int16_t Speaker::MixSample (uint16_t cntl, uint8_t cnth)
@@ -128,8 +106,7 @@ namespace AMeteor
 					case 2: // 100%
 						break;
 					case 3: // Prohibited
-						puts("Invalid SOUNDCNT_H sound # 1-4 volume");
-						abort();
+						met_abort("Invalid SOUNDCNT_H sound # 1-4 volume");
 						break;
 				}
 

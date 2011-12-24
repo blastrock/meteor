@@ -26,7 +26,6 @@
 #include "ameteor/timer.hpp"
 #include "ameteor/sound.hpp"
 #include "ameteor/keypad.hpp"
-#include "ameteor/events.hpp"
 
 namespace AMeteor
 {

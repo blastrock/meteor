@@ -30,8 +30,6 @@ namespace AMeteor
 		public :
 			Sound ();
 
-			inline void SetSampleskip (uint16_t skip);
-
 			void Reset ();
 
 			void UpdateCntH1 (uint8_t val);
@@ -67,11 +65,6 @@ namespace AMeteor
 
 			friend void Clock::Commit ();
 	};
-
-	inline void Sound::SetSampleskip (uint16_t skip)
-	{
-		m_speaker.SetSampleskip(skip);
-	}
 
 	inline void Sound::ResetSound1 ()
 	{
