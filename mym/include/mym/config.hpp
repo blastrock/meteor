@@ -14,51 +14,48 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
+#ifndef __MYM_CONFIG_HPP__
+#define __MYM_CONFIG_HPP__
 
 #include <map>
 #include <string>
 
-namespace AMeteor
+namespace mym
 {
-	namespace Cfg
+	class Config
 	{
-		class Config
-		{
-			public:
-				void Clear()
-				{
-					m_conf.clear();
-				}
+		public:
+			void Clear()
+			{
+				m_conf.clear();
+			}
 
-				bool LoadFile(const char* file);
-				bool SaveFile(const char* file) const;
+			bool LoadFile(const char* file);
+			bool SaveFile(const char* file) const;
 
-				const std::string& GetStr(const std::string& key) const
-				{
-					if (m_conf.count(key))
-						return m_conf.at(key);
-					else
-						return _empty_string_;
-				}
-				void SetStr(const std::string& key, const std::string& val)
-				{
-					m_conf[key] = val;
-				}
+			const std::string& GetStr(const std::string& key) const
+			{
+				if (m_conf.count(key))
+					return m_conf.at(key);
+				else
+					return _empty_string_;
+			}
+			void SetStr(const std::string& key, const std::string& val)
+			{
+				m_conf[key] = val;
+			}
 
-				int GetInt(const std::string& key) const;
-				void SetInt(const std::string& key, int val);
+			int GetInt(const std::string& key) const;
+			void SetInt(const std::string& key, int val);
 
-				void InitAMeteor();
+			void InitAMeteor();
 
-			private:
-				typedef std::map<std::string, std::string> Config_t;
+		private:
+			typedef std::map<std::string, std::string> Config_t;
 
-				static const std::string _empty_string_;
-				Config_t m_conf;
-		};
-	}
+			static const std::string _empty_string_;
+			Config_t m_conf;
+	};
 }
 
 #endif

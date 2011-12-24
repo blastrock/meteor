@@ -13,6 +13,7 @@ set(mym_SRC
 	filters/hq4x.cpp
 
 	audio.cpp
+	config.cpp
 	events.cpp
 	window.cpp
 )
