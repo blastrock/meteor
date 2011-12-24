@@ -81,6 +81,7 @@ SOURCES := \
 	$(SRCDIR)/sram.cpp \
 	$(SRCDIR)/timer.cpp \
 	video.cpp \
+	audio.cpp \
 	libsnes.cpp
 
 OBJ := $(SOURCES:.cpp=.o)

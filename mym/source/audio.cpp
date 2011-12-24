@@ -60,9 +60,9 @@ namespace mym
 			ao_close(m_device);
 	}
 
-	void Audio::PlayFrames(const uint8_t* data, uint32_t size)
+	void Audio::PlayFrames(const int16_t* data, uint32_t count)
 	{
 		// ugly :(
-		ao_play(m_device, const_cast<char*>((const char*)data), size);
+		ao_play(m_device, const_cast<char*>((const char*)data), count*2);
 	}
 }

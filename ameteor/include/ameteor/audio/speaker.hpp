@@ -33,7 +33,7 @@ namespace AMeteor
 		class Speaker
 		{
 			public :
-				typedef sigc::slot<void, const uint8_t*, uint32_t> FrameSlot;
+				typedef sigc::slot<void, const int16_t*, uint32_t> FrameSlot;
 
 				Speaker (uint16_t& cnt1l, uint16_t& cnt1h, uint16_t& cnt1x,
 						uint16_t& cnt2l, uint16_t& cnt2h,

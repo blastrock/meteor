@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#ifndef LIBSNES_VIDEO_HPP
+#define LIBSNES_VIDEO_HPP
+
 #include <stdint.h>
 
 class Video
@@ -27,3 +30,5 @@ class Video
 	private:
 		uint16_t conv_buf[240*160];
 };
+
+#endif

@@ -14,31 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __MYM_AUDIO_HPP__
-#define __MYM_AUDIO_HPP__
+#include "audio.hpp"
+#include "libsnes.hpp"
+#include "ameteor.hpp"
+#include <assert.h>
 
-#include <stdint.h>
-#include <ao/ao.h>
+extern snes_audio_sample_t psnes_sample;
 
-namespace mym
+void Audio::InitAMeteor()
 {
-	class Audio
-	{
-		public :
-			Audio();
-			~Audio();
-
-			void InitAMeteor();
-			void Init();
-			void Uninit();
-
-			void PlayFrames(const int16_t* data, uint32_t count);
-
-			//inline void SetSampleskip (uint16_t skip);
-
-		private :
-			ao_device* m_device;
-	};
+	AMeteor::_sound.GetSpeaker().SetFrameSlot(
+			sigc::mem_fun(*this, &Audio::PlayFrames));
 }
 
-#endif
+void Audio::PlayFrames(const int16_t* data, uint32_t count)
+{
+	assert(count == 2);
+
+	psnes_sample(data[0], data[1]);
+}
