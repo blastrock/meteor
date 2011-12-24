@@ -32,6 +32,8 @@ namespace AMeteor
 
 			void Reset ();
 
+			inline Audio::Speaker& GetSpeaker();
+
 			void UpdateCntH1 (uint8_t val);
 
 			inline void ResetSound1 ();
@@ -65,6 +67,11 @@ namespace AMeteor
 
 			friend void Clock::Commit ();
 	};
+
+	inline Audio::Speaker& Sound::GetSpeaker()
+	{
+		return m_speaker;
+	}
 
 	inline void Sound::ResetSound1 ()
 	{

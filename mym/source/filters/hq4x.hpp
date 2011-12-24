@@ -14,39 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __MAIN_TEXT_H__
-#define __MAIN_TEXT_H__
+#ifndef __HQ4X_H__
+#define __HQ4X_H__
 
-#include <string>
-#include <mym/window.hpp>
-#include <mym/audio.hpp>
-#include <mym/events.hpp>
-
-class MainText
+namespace mym
 {
-	public :
-		MainText ();
+	namespace Filters
+	{
+		extern "C" void hq4x(unsigned char* pIn, unsigned char* pOut,
+				int Xres, int Yres, int BpL);
 
-		void Open(const std::string& file);
-		void OpenBios(const std::string& file);
-		void Run();
-		void Stop();
-		void Reset();
-		void Close();
-		void CloseBios();
-
-		void SaveState(uint8_t n);
-		void LoadState(uint8_t n);
-
-	private :
-		mym::Window m_window;
-		mym::Audio m_audio;
-		mym::Events m_events;
-
-		std::string m_sstatePath, m_batteryPath, m_romPath;
-		std::string m_openFile;
-
-		bool m_running;
-};
+		int InitLUTs ();
+	}
+}
 
 #endif

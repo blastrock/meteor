@@ -115,7 +115,7 @@ namespace AMeteor
 			bool SaveState (std::ostream& stream);
 			bool LoadState (std::istream& stream);
 
-			sigc::signal<void> signal_vblank;
+			sigc::signal<void> sig_vblank;
 
 		private :
 			Graphics::Screen m_screen;

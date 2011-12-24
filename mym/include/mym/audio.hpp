@@ -14,39 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __MAIN_TEXT_H__
-#define __MAIN_TEXT_H__
+#ifndef __MYM_AUDIO_HPP__
+#define __MYM_AUDIO_HPP__
 
-#include <string>
-#include <mym/window.hpp>
-#include <mym/audio.hpp>
-#include <mym/events.hpp>
+#include <stdint.h>
+#include <ao/ao.h>
 
-class MainText
+namespace mym
 {
-	public :
-		MainText ();
+	class Audio
+	{
+		public :
+			Audio();
+			~Audio();
 
-		void Open(const std::string& file);
-		void OpenBios(const std::string& file);
-		void Run();
-		void Stop();
-		void Reset();
-		void Close();
-		void CloseBios();
+			void InitAMeteor();
+			void Init();
+			void Close();
 
-		void SaveState(uint8_t n);
-		void LoadState(uint8_t n);
+			void PlayFrames(const uint8_t* data, uint32_t size);
 
-	private :
-		mym::Window m_window;
-		mym::Audio m_audio;
-		mym::Events m_events;
+			//inline void SetSampleskip (uint16_t skip);
 
-		std::string m_sstatePath, m_batteryPath, m_romPath;
-		std::string m_openFile;
-
-		bool m_running;
-};
+		private :
+			ao_device* m_device;
+	};
+}
 
 #endif

@@ -12,7 +12,6 @@ enable_language(ASM_NASM)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBAO REQUIRED ao)
 pkg_check_modules(LIBSIGC++ REQUIRED sigc++-2.0)
-find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
 find_library(SFML-GRAPHICS_LIBRARY
 	NAMES sfml-graphics
@@ -41,6 +40,31 @@ set(AMeteor_LIBRARY_DIRS
 set(AMeteor_LIBRARIES
 	ameteor
 	${LIBSIGC++_LIBRARIES}
+)
+
+set(MyM_INCLUDE_DIRS
+	${Meteor_SOURCE_DIR}/mym/include
+	${AMeteor_INCLUDE_DIRS}
+	${LIBAO_INCLUDE_DIRS}
+)
+
+set(MyM_LIBRARY_DIRS
+	${Meteor_SOURCE_DIR}/mym/source
+	${AMeteor_LIBRARY_DIRS}
+	${LIBAO_LIBRARY_DIRS}
+)
+
+set(MyM_LIBRARIES
+	mym
+	${AMeteor_LIBRARIES}
+	GL
+	GLU
+	GLEW
+	${LIBAO_LIBRARIES}
+	${SFML-SYSTEM_LIBRARY}
+	${SFML-WINDOW_LIBRARY}
+	${SFML-GRAPHICS_LIBRARY}
+	${CMAKE_THREAD_LIBS_INIT}
 )
 
 set(CXXFLAGS CACHE STRING "String to append to CXXFLAGS")
@@ -76,5 +100,6 @@ set(PREFIX_SHARE "${CMAKE_INSTALL_PREFIX}/share/meteor")
 configure_file(config.h.in config.h)
 
 add_subdirectory(ameteor)
+add_subdirectory(mym)
 add_subdirectory(gtkmm)
 add_subdirectory(text)

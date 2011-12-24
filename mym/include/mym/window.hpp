@@ -14,51 +14,59 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GRAPHICS_RENDERER_GL_H__
-#define __GRAPHICS_RENDERER_GL_H__
+#ifndef __MYM_WINDOW_H__
+#define __MYM_WINDOW_H__
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-namespace AMeteor
+namespace mym
 {
-	namespace Graphics
+	class Window
 	{
-		class Renderer : public sf::RenderWindow
-		{
-			public:
-				Renderer(const uint16_t* surface);
-				~Renderer();
+		public:
+			Window();
+			~Window();
 
-				void Init(sf::WindowHandle display = 0);
-				void Uninit();
-				void VBlank ();
+			inline sf::Window& GetWindow();
 
-				void EventResize (unsigned int w, unsigned int h);
+			void InitAMeteor();
+			void Init(sf::WindowHandle display = 0);
+			void Uninit();
 
-			private :
-				const uint16_t* m_base;
-				volatile uint16_t* m_tbase;
-				volatile unsigned int m_w, m_h;
+			void ShowFrame(const uint16_t* frame);
 
-				pthread_t m_thread;
-				pthread_mutex_t m_mutex;
-				pthread_cond_t m_cond;
-				volatile bool m_quit;
+			void EventResize (unsigned int w, unsigned int h);
 
-				GLuint m_pbo;
-				GLuint m_texture;
-				GLuint m_vbo;
+		private :
+			const uint16_t* m_base;
+			volatile uint16_t* m_tbase;
+			volatile unsigned int m_w, m_h;
 
-				void InitGl();
-				void UninitGl();
-				void StartThread();
-				void StopThread();
+			pthread_t m_thread;
+			pthread_mutex_t m_mutex;
+			pthread_cond_t m_cond;
+			volatile bool m_quit;
 
-				static void* EntryPoint (void* ptr);
-				void MainLoop ();
-		};
+			sf::RenderWindow m_window;
+
+			GLuint m_pbo;
+			GLuint m_texture;
+			GLuint m_vbo;
+
+			void InitGl();
+			void UninitGl();
+			void StartThread();
+			void StopThread();
+
+			static void* EntryPoint (void* ptr);
+			void MainLoop ();
+	};
+
+	inline sf::Window& Window::GetWindow()
+	{
+		return m_window;
 	}
 }
 
