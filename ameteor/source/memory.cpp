@@ -230,7 +230,7 @@ namespace AMeteor
 		std::ifstream file(filename);
 		std::memset(m_rom, 0, 0x02000000);
 		file.read((char*)m_rom, 0x02000000);
-		if (file.fail())
+		if (file.bad())
 			return false;
 		return true;
 	}
