@@ -17,12 +17,15 @@
 
 
 #include "libsnes.hpp"
+#include "video.hpp"
 #include "ameteor.hpp"
 #include "ameteor/cartmem.hpp"
 #include <sstream>
 #include <stdio.h>
 #include <cstring>
 #include <assert.h>
+
+Video video;
 
 const char* snes_library_id(void) { return "Meteor GBA"; }
 
@@ -69,6 +72,7 @@ void snes_run(void)
 	if (first_run)
 	{
 		AMeteor::_memory.LoadCartInferred();
+		video.InitAMeteor();
 		first_run = false;
 	}
 
