@@ -1,10 +1,30 @@
+// Meteor - A Nintendo Gameboy Advance emulator
+// Copyright (C) 2009-2011 Philippe Daouadi
+// Copyright (C) 2011 Hans-Kristian Arntzen
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "libsnes.hpp"
 #include "ameteor.hpp"
 #include "ameteor/cartmem.hpp"
+#include <sstream>
 #include <stdio.h>
+#include <cstring>
 #include <assert.h>
 
-const char* snes_library_id(void) { return "Meteor/libsnes"; }
+const char* snes_library_id(void) { return "Meteor GBA"; }
 
 unsigned snes_library_revision_major(void) { return 1; }
 unsigned snes_library_revision_minor(void) { return 3; }
@@ -27,26 +47,25 @@ void snes_set_cartridge_basename(const char *) {}
 
 void snes_init(void)
 {
-	assert(psnes_environment);
+	if (psnes_environment)
+	{
+		unsigned pitch = 240 * 2;
+		psnes_environment(SNES_ENVIRONMENT_SET_PITCH, &pitch);
+		snes_geometry geom = { 240, 160, 240, 160 };
+		psnes_environment(SNES_ENVIRONMENT_SET_GEOMETRY, &geom);
 
-	unsigned pitch = 240 * 2;
-	psnes_environment(SNES_ENVIRONMENT_SET_PITCH, &pitch);
-	snes_geometry geom = { 240, 160, 240, 160 };
-	psnes_environment(SNES_ENVIRONMENT_SET_GEOMETRY, &geom);
-
-	snes_system_timing timing = { 16777216.0 / 280896.0, 44100.0 };
-	psnes_environment(SNES_ENVIRONMENT_SET_TIMING, &timing);
-
-	AMeteor::CartMem::ClearMemory();
+		snes_system_timing timing = { 16777216.0 / 280896.0, 44100.0 };
+		psnes_environment(SNES_ENVIRONMENT_SET_TIMING, &timing);
+	}
 }
 
 void snes_power(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS); }
 void snes_reset(void) { snes_power(); }
 void snes_term(void) { snes_power(); }
 
-static bool first_run = true;
 void snes_run(void)
 {
+	static bool first_run = true;
 	if (first_run)
 	{
 		AMeteor::_memory.LoadCartInferred();
@@ -60,15 +79,9 @@ void snes_run(void)
 static unsigned serialize_size;
 unsigned snes_serialize_size(void)
 {
-	if (first_run)
-	{
-		AMeteor::_memory.LoadCartInferred();
-		first_run = false;
-	}
-
-	AMeteor::omemstream stream(0);
+	std::ostringstream stream;
 	AMeteor::SaveState(stream);
-	serialize_size = stream.size();
+	serialize_size = stream.str().size();
 	return serialize_size;
 }
 
@@ -80,9 +93,12 @@ bool snes_serialize(uint8_t *data, unsigned size)
 	if (size != serialize_size)
 		return false;
 
-	AMeteor::omemstream stream(data);
+	std::ostringstream stream;
 	AMeteor::SaveState(stream);
-	assert(size == stream.size());
+
+	std::string s = stream.str();
+	assert(size == s.size());
+	std::memcpy(data, s.data(), size);
 
 	return true;
 }
@@ -95,7 +111,8 @@ bool snes_unserialize(const uint8_t *data, unsigned size)
 	if (size != serialize_size)
 		return false;
 
-	AMeteor::imemstream stream(data);
+	std::istringstream stream;
+	stream.str(std::string((char*)data, size));
 	AMeteor::LoadState(stream);
 
 	return true;
@@ -105,27 +122,23 @@ void snes_cheat_reset(void) {}
 void snes_cheat_set(unsigned, bool, const char *) {}
 
 bool snes_load_cartridge_normal(
-		const char *, const uint8_t *data, unsigned size
-		)
+		const char *, const uint8_t *data, unsigned size)
 {
-	if (!AMeteor::_memory.LoadRom(data, size))
-		return false;
+	AMeteor::_memory.LoadRom(data, size);
 
 	return true;
 }
 
 bool snes_load_cartridge_bsx_slotted(
 		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned
-		)
+		const char *, const uint8_t *, unsigned)
 {
 	return false;
 }
 
 bool snes_load_cartridge_bsx(
 		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned
-		)
+		const char *, const uint8_t *, unsigned)
 {
 	return false;
 }
@@ -133,30 +146,28 @@ bool snes_load_cartridge_bsx(
 bool snes_load_cartridge_sufami_turbo(
 		const char *, const uint8_t *, unsigned,
 		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned
-		)
+		const char *, const uint8_t *, unsigned)
 {
 	return false;
 }
 
 bool snes_load_cartridge_super_game_boy(
 		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned
-		)
+		const char *, const uint8_t *, unsigned)
 {
 	return false;
 }
 
 void snes_unload_cartridge(void) {}
 
-bool snes_get_region(void) { return false; }
+bool snes_get_region(void) { return SNES_REGION_NTSC; }
 
 uint8_t* snes_get_memory_data(unsigned id)
 {
 	if (id != SNES_MEMORY_CARTRIDGE_RAM)
 		return 0;
 
-	return AMeteor::CartMem::MemoryBuffer();
+	return AMeteor::CartMemData;
 }
 
 unsigned snes_get_memory_size(unsigned id)
@@ -164,21 +175,5 @@ unsigned snes_get_memory_size(unsigned id)
 	if (id != SNES_MEMORY_CARTRIDGE_RAM)
 		return 0;
 
-	switch (AMeteor::_memory.GetCartType())
-	{
-		case AMeteor::Memory::CTYPE_UNKNOWN:
-		case AMeteor::Memory::CTYPE_FLASH128:
-			return 0x20000;
-		case AMeteor::Memory::CTYPE_EEPROM512:
-			return 512;
-		case AMeteor::Memory::CTYPE_EEPROM8192:
-			return 8192;
-		case AMeteor::Memory::CTYPE_FLASH64:
-			return 0x10000;
-		case AMeteor::Memory::CTYPE_SRAM:
-			return 0x8000;
-
-		default:
-			return 0;
-	}
+	return AMeteor::CartMem::MAX_SIZE+4;
 }

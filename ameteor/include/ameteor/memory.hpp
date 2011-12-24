@@ -58,6 +58,7 @@ namespace AMeteor
 				return m_carttype;
 			}
 			// erases cartridge memory
+			void SetCartTypeFromSize (uint32_t size);
 			void SetCartType (uint8_t type);
 			void SetCartFile (const char* filename)
 			{
@@ -82,7 +83,11 @@ namespace AMeteor
 				}
 			}
 			bool LoadRom (const char* filename);
+			void LoadRom (const uint8_t* data, uint32_t size);
 			CartError LoadCart ();
+#ifdef __LIBSNES__
+			bool LoadCartInferred ();
+#endif
 
 			bool HasBios () const
 			{

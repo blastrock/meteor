@@ -26,6 +26,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -70,6 +71,31 @@ namespace AMeteor
 			delete m_cart;
 	}
 
+	void Memory::SetCartTypeFromSize (uint32_t size)
+	{
+		switch (size)
+		{
+			case 0x0200:
+				SetCartType(CTYPE_EEPROM512);
+				break;
+			case 0x2000:
+				SetCartType(CTYPE_EEPROM8192);
+				break;
+			case 0x8000:
+				SetCartType(CTYPE_SRAM);
+				break;
+			case 0x10000:
+				SetCartType(CTYPE_FLASH64);
+				break;
+			case 0x20000:
+				SetCartType(CTYPE_FLASH128);
+				break;
+			default:
+				met_abort("Unknown cartridge memory size");
+				break;
+		}
+	}
+
 	void Memory::SetCartType (uint8_t type)
 	{
 		if (m_cart)
@@ -93,6 +119,9 @@ namespace AMeteor
 				break;
 			case CTYPE_SRAM:
 				m_cart = new Sram();
+				break;
+			default:
+				met_abort("Unknown cartridge memory type");
 				break;
 		}
 		m_carttype = type;
@@ -191,7 +220,7 @@ namespace AMeteor
 			m_brom = new uint8_t[0x00004000];
 		memset(m_brom, 0, 0x00004000);
 		file.read((char*)m_brom, 0x00004000);
-		if (!file.good())
+		if (file.fail())
 			return false;
 		return true;
 	}
@@ -201,9 +230,16 @@ namespace AMeteor
 		std::ifstream file(filename);
 		std::memset(m_rom, 0, 0x02000000);
 		file.read((char*)m_rom, 0x02000000);
-		if (!file.good() && !file.eof())
+		if (file.fail())
 			return false;
 		return true;
+	}
+
+	void Memory::LoadRom (const uint8_t* data, uint32_t size)
+	{
+		uint32_t until = std::min(size, 0x02000000u);
+		std::memcpy(m_rom, data, until);
+		std::memset(m_rom+until, 0, 0x02000000-until);
 	}
 
 	Memory::CartError Memory::LoadCart ()
@@ -211,29 +247,27 @@ namespace AMeteor
 		struct stat buf;
 		if (stat(m_cartfile.c_str(), &buf) == -1)
 			return errno == ENOENT ? CERR_NOT_FOUND : CERR_FAIL;
-		switch (buf.st_size)
-		{
-			case 0x0200:
-				SetCartType(CTYPE_EEPROM512);
-				break;
-			case 0x2000:
-				SetCartType(CTYPE_EEPROM8192);
-				break;
-			case 0x8000:
-				SetCartType(CTYPE_SRAM);
-				break;
-			case 0x10000:
-				SetCartType(CTYPE_FLASH64);
-				break;
-			case 0x20000:
-				SetCartType(CTYPE_FLASH128);
-				break;
-		}
+		SetCartTypeFromSize(buf.st_size);
 		std::ifstream f(m_cartfile.c_str());
 		if (!m_cart->Load(f))
 			return CERR_FAIL;
 		return CERR_NO_ERROR;
 	}
+
+#ifdef __LIBSNES__
+	bool Memory::LoadCartInferred ()
+	{
+		uint32_t size = *(uint32_t*)(CartMemData+CartMem::MAX_SIZE);
+		if (!size)
+			return false;
+		SetCartTypeFromSize(size);
+		std::istringstream ss;
+		ss.str(std::string((char*)CartMemData, CartMem::MAX_SIZE));
+		if (!m_cart->Load(ss))
+			return false;
+		return true;
+	}
+#endif
 
 #if 0
 	uint8_t* Memory::GetRealAddress (uint32_t add, uint8_t size)

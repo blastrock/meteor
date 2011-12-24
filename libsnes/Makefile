@@ -1,107 +1,102 @@
 ifeq ($(platform),)
-	platform = unix
-	ifeq ($(shell uname -a),)
-	platform = win
+platform = unix
+ifeq ($(shell uname -a),)
+   platform = win
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
-	platform = win
+   platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
-	platform = osx
+   platform = osx
 else ifneq ($(findstring win,$(shell uname -a)),)
-	platform = win
+   platform = win
 endif
 endif
 
 ifeq ($(platform), unix)
-	TARGET := libsnes.so
-	fpic := -fPIC
-	SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
-	LIBS := -lz
+   TARGET := libsnes.so
+   fpic := -fPIC
+   SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), osx)
-	TARGET := libsnes.dylib
-	fpic := -fPIC
-	SHARED := -dynamiclib
-	LIBS := -lz
+   TARGET := libsnes.dylib
+   fpic := -fPIC
+   SHARED := -dynamiclib
 else
-	TARGET := snes.dll
-	CC = gcc
-	CXX = g++
-	SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
-	CFLAGS += -Izlib
-	CXXFLAGS += -Izlib
+   TARGET := snes.dll
+   CC = gcc
+   CXX = g++
+   SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
 endif
 
-CFLAGS += -Wall -pedantic -I. -Iinclude -pipe
-CXXFLAGS += -Wall -pedantic -I. -Iinclude -pipe
+#LIBS := -lz
+LIBS := $(shell pkg-config --libs sigc++-2.0)
+CFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses 
+CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses $(shell pkg-config --cflags sigc++-2.0)
 
 ifeq ($(DEBUG), 1)
-	CFLAGS += -O0 -g
-	CXXFLAGS += -O0 -g
+   CFLAGS += -O0 -g
+   CXXFLAGS += -O0 -g
 else
-	CFLAGS += -O3
-	CXXFLAGS += -O3
+   CFLAGS += -O3
+   CXXFLAGS += -O3
 endif
 
-SOURCES := libsnes.cpp \
-	source/audio/dsound.cpp \
-	source/audio/sound1.cpp \
-	source/audio/sound2.cpp \
-	source/audio/sound4.cpp \
-	source/audio/speaker.cpp \
-	source/disassembler/argimmediate.cpp \
-	source/disassembler/argmulregisters.cpp \
-	source/disassembler/argpsr.cpp \
-	source/disassembler/argregister.cpp \
-	source/disassembler/argrelative.cpp \
-	source/disassembler/argshift.cpp \
-	source/disassembler/arguimmediate.cpp \
-	source/disassembler/arguments.cpp \
-	source/disassembler/instruction.cpp \
-	source/graphics/bglayer.cpp \
-	source/graphics/object.cpp \
-	source/graphics/objects.cpp \
-	source/graphics/renderer.cpp \
-	source/graphics/screen.cpp \
-	source/ameteor.cpp \
-	source/bios.cpp \
-	source/clock.cpp \
-	source/cpu.cpp \
-	source/debug.cpp \
-	source/dma.cpp \
-	source/eeprom.cpp \
-	source/flash.cpp \
-	source/cartmem.cpp \
-	source/interpreter.cpp \
-	source/interpreter_arm.cpp \
-	source/interpreter_thumb.cpp \
-	source/io.cpp \
-	source/keypad.cpp \
-	source/lcd.cpp \
-	source/memory.cpp \
-	source/sound.cpp \
-	source/sram.cpp \
-	source/timer.cpp
+SRCDIR := ../ameteor/source
 
-ZLIB_SOURCES := $(wildcard zlib/*.c)
+SOURCES := \
+	$(SRCDIR)/audio/dsound.cpp \
+	$(SRCDIR)/audio/sound1.cpp \
+	$(SRCDIR)/audio/sound2.cpp \
+	$(SRCDIR)/audio/sound4.cpp \
+	$(SRCDIR)/audio/speaker.cpp \
+	$(SRCDIR)/disassembler/argimmediate.cpp \
+	$(SRCDIR)/disassembler/argmulregisters.cpp \
+	$(SRCDIR)/disassembler/argpsr.cpp \
+	$(SRCDIR)/disassembler/argregister.cpp \
+	$(SRCDIR)/disassembler/argrelative.cpp \
+	$(SRCDIR)/disassembler/argshift.cpp \
+	$(SRCDIR)/disassembler/arguimmediate.cpp \
+	$(SRCDIR)/disassembler/arguments.cpp \
+	$(SRCDIR)/disassembler/instruction.cpp \
+	$(SRCDIR)/graphics/bglayer.cpp \
+	$(SRCDIR)/graphics/object.cpp \
+	$(SRCDIR)/graphics/objects.cpp \
+	$(SRCDIR)/graphics/renderer.cpp \
+	$(SRCDIR)/graphics/screen.cpp \
+	$(SRCDIR)/ameteor.cpp \
+	$(SRCDIR)/bios.cpp \
+	$(SRCDIR)/clock.cpp \
+	$(SRCDIR)/cpu.cpp \
+	$(SRCDIR)/debug.cpp \
+	$(SRCDIR)/dma.cpp \
+	$(SRCDIR)/eeprom.cpp \
+	$(SRCDIR)/flash.cpp \
+	$(SRCDIR)/cartmem.cpp \
+	$(SRCDIR)/interpreter.cpp \
+	$(SRCDIR)/interpreter_arm.cpp \
+	$(SRCDIR)/interpreter_thumb.cpp \
+	$(SRCDIR)/io.cpp \
+	$(SRCDIR)/keypad.cpp \
+	$(SRCDIR)/lcd.cpp \
+	$(SRCDIR)/memory.cpp \
+	$(SRCDIR)/sound.cpp \
+	$(SRCDIR)/sram.cpp \
+	$(SRCDIR)/timer.cpp \
+	libsnes.cpp
 
-ifeq ($(platform), win)
-	OBJ := $(SOURCES:.cpp=.o) $(ZLIB_SOURCES:.c=.o)
-else
-	OBJ := $(SOURCES:.cpp=.o)
-endif
+OBJ := $(SOURCES:.cpp=.o)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CXX) -o $@ $^ $(SHARED) $(LDFLAGS) $(LIBS)
+	@$(CXX) -o $@ $^ $(SHARED) $(LDFLAGS) $(LIBS)
+	@echo LD $(notdir $@)
 
 %.o: %.cpp
-	$(CXX) -o $@ -c $< $(CXXFLAGS) $(fpic)
-
-%.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(fpic)
+	@$(CXX) -o $@ -c $< $(CXXFLAGS) $(fpic)
+	@echo CXX $(notdir $<)
 
 clean:
 	rm -f $(TARGET)
 	rm -f $(OBJ)
 
 .PHONY: clean
+

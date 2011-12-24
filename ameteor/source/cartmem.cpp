@@ -19,8 +19,16 @@
 
 namespace AMeteor
 {
+#ifdef __LIBSNES__
+	uint8_t CartMemData[CartMem::MAX_SIZE+4];
+#endif
+
 	CartMem::CartMem() :
+#ifdef __LIBSNES__
+		m_data(CartMemData)
+#else
 		m_data(new uint8_t[MAX_SIZE+4])
+#endif
 	{
 	}
 
