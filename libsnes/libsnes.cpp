@@ -19,6 +19,7 @@
 #include "libsnes.hpp"
 #include "video.hpp"
 #include "audio.hpp"
+#include "input.hpp"
 #include "ameteor.hpp"
 #include "ameteor/cartmem.hpp"
 #include <sstream>
@@ -28,6 +29,7 @@
 
 Video am_video;
 Audio am_audio;
+Input am_input;
 
 const char* snes_library_id(void) { return "Meteor GBA"; }
 
@@ -76,11 +78,12 @@ void snes_run(void)
 		AMeteor::_memory.LoadCartInferred();
 		am_video.InitAMeteor();
 		am_audio.InitAMeteor();
+		am_input.InitAMeteor();
 		first_run = false;
 	}
 
 	psnes_poll();
-	AMeteor::Run(10000000);
+	AMeteor::Run(280896);
 }
 
 static unsigned serialize_size;

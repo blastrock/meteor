@@ -82,6 +82,7 @@ SOURCES := \
 	$(SRCDIR)/timer.cpp \
 	video.cpp \
 	audio.cpp \
+	input.cpp \
 	libsnes.cpp
 
 OBJ := $(SOURCES:.cpp=.o)
