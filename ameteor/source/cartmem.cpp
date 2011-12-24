@@ -34,7 +34,9 @@ namespace AMeteor
 
 	CartMem::~CartMem()
 	{
+#ifndef __LIBSNES__
 		delete [] m_data;
+#endif
 	}
 
 	bool CartMem::SaveState (std::ostream& stream)
