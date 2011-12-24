@@ -208,6 +208,10 @@ namespace mym
 		glViewport(0, 0, 240*4, 160*4);
 
 		void* buf;
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_INT, 2*sizeof(int), (void*)0);
+		glVertexPointer(2, GL_INT, 2*sizeof(int), (void*)0);
 
 		// TODO check for errors
 		pthread_mutex_lock(&m_mutex);
@@ -216,37 +220,25 @@ namespace mym
 			// this unlocks the mutex while waiting
 			pthread_cond_wait(&m_cond, &m_mutex);
 
-			if (m_w && m_h)
-			{
-				m_w = m_h = 0;
-			}
-
 			buf = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-
 #if 1
 			Filters::hq4x((unsigned char*)m_tbase, (unsigned char*)buf,
 					240, 160, 240*4*4);
 #else
 			memcpy((void*)buf, (void*)m_tbase, 240*160*2);
 #endif
-
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 240*4, 160*4, GL_BGRA,
 					GL_UNSIGNED_BYTE, 0);
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(2, GL_INT, 2*sizeof(int), (void*)0);
-			glVertexPointer(2, GL_INT, 2*sizeof(int), (void*)0);
 			glDrawArrays(GL_QUADS, 0, 4);
-			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-			glFlush();
 
 			m_window.Display();
 		}
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		m_window.SetActive(false);
 		pthread_mutex_unlock(&m_mutex);
