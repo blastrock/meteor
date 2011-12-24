@@ -34,7 +34,7 @@
 
 MainWindow::MainWindow () :
 	Gtk::Window(),
-	m_renderer(AMeteor::_lcd.GetScreen().GetRenderer()),
+	m_events(m_window.GetWindow()),
 	m_mainimage(PREFIX_SHARE "/meteor.png"),
 	m_padConfigDialog(*this, m_config),
 	m_running(false)
@@ -186,6 +186,9 @@ MainWindow::MainWindow () :
 	m_sstatePath = m_config.GetSStatePath();
 	m_romPath = m_config.GetRomPath();
 
+	m_window.InitAMeteor();
+	m_audio.InitAMeteor();
+
 	//m_refDisassemblerCheck->set_active(true);
 	//m_refPaletteCheck->set_active(true);
 	m_aboutDialog.set_logo(m_mainimage.get_pixbuf());
@@ -247,7 +250,8 @@ void MainWindow::on_close ()
 	m_running = false;
 
 	AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
-	m_renderer.Uninit();
+	m_window.Uninit();
+	m_audio.Uninit();
 	m_openFile.clear();
 
 	m_viewport.hide();
@@ -277,7 +281,8 @@ void MainWindow::on_run ()
 		gtk_widget_realize(widget);
 		GdkWindow* win = widget->window;
 		XFlush(GDK_WINDOW_XDISPLAY(win));
-		m_renderer.Init(GDK_WINDOW_XWINDOW(win));
+		m_window.Init(GDK_WINDOW_XWINDOW(win));
+		m_audio.Init();
 	}
 
 	m_running = true;

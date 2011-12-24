@@ -40,7 +40,6 @@ namespace mym
 			void EventResize (unsigned int w, unsigned int h);
 
 		private :
-			const uint16_t* m_base;
 			volatile uint16_t* m_tbase;
 			volatile unsigned int m_w, m_h;
 

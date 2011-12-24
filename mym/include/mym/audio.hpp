@@ -30,7 +30,7 @@ namespace mym
 
 			void InitAMeteor();
 			void Init();
-			void Close();
+			void Uninit();
 
 			void PlayFrames(const uint8_t* data, uint32_t size);
 

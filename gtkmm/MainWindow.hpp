@@ -23,7 +23,9 @@
 #include "AboutDialog.hpp"
 #include "PadConfigDialog.hpp"
 
-#include <ameteor/graphics/renderer.hpp>
+#include <mym/window.hpp>
+#include <mym/audio.hpp>
+#include <mym/events.hpp>
 
 #include <gtkmm/window.h>
 #include <gtkmm/checkmenuitem.h>
@@ -37,7 +39,10 @@ class MainWindow : public Gtk::Window
 		MainWindow ();
 
 	private :
-		AMeteor::Graphics::Renderer& m_renderer;
+		mym::Window m_window;
+		mym::Audio m_audio;
+		mym::Events m_events;
+
 		Configurator m_config;
 
 		Gtk::VBox m_mainvbox;

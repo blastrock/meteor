@@ -17,9 +17,9 @@
 #ifndef __CONFIGURATOR_HPP__
 #define __CONFIGURATOR_HPP__
 
-#include <ameteor/cfg/config.hpp>
+#include <mym/config.hpp>
 
-class Configurator : public AMeteor::Cfg::Config
+class Configurator : public mym::Config
 {
 	public:
 		bool Load();

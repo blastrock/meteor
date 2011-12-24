@@ -205,6 +205,8 @@ namespace mym
 		if (!m_window.SetActive())
 			puts("Can't activate window !");
 
+		glViewport(0, 0, 240*4, 160*4);
+
 		void* buf;
 
 		// TODO check for errors
@@ -216,7 +218,6 @@ namespace mym
 
 			if (m_w && m_h)
 			{
-				glViewport(0, 0, m_w, m_h);
 				m_w = m_h = 0;
 			}
 

@@ -28,7 +28,7 @@ namespace mym
 
 	Audio::~Audio ()
 	{
-		Close();
+		Uninit();
 	}
 
 	void Audio::InitAMeteor()
@@ -54,7 +54,7 @@ namespace mym
 		}
 	}
 
-	void Audio::Close()
+	void Audio::Uninit()
 	{
 		if (m_device)
 			ao_close(m_device);
