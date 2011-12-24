@@ -26,6 +26,7 @@ add_executable(meteor
 
 target_link_libraries(meteor
 	${MyM_LIBRARIES}
+	X11
 	${GTK2_LIBRARIES}
 )
 
