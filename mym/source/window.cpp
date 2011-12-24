@@ -26,8 +26,6 @@ namespace mym
 {
 	Window::Window () :
 		m_tbase(new uint16_t[240*160]),
-		m_w(0),
-		m_h(0),
 		m_thread(0),
 		m_pbo(0),
 		m_texture(0),
@@ -180,11 +178,6 @@ namespace mym
 		std::memcpy(const_cast<uint16_t*>(m_tbase), frame, 240*160*2);
 		pthread_cond_signal(&m_cond);
 		pthread_mutex_unlock(&m_mutex);
-	}
-
-	void Window::EventResize (unsigned int w, unsigned int h)
-	{
-		m_w = w; m_h = h;
 	}
 
 	void* Window::EntryPoint (void* ptr)

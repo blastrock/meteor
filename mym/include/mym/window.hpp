@@ -37,11 +37,8 @@ namespace mym
 
 			void ShowFrame(const uint16_t* frame);
 
-			void EventResize (unsigned int w, unsigned int h);
-
 		private :
 			volatile uint16_t* m_tbase;
-			volatile unsigned int m_w, m_h;
 
 			pthread_t m_thread;
 			pthread_mutex_t m_mutex;

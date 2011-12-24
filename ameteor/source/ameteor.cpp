@@ -106,7 +106,7 @@ namespace AMeteor
 			return false;
 
 		file.close();
-		if (!file)
+		if (file.bad())
 			return false;
 
 		return true;
@@ -125,12 +125,12 @@ namespace AMeteor
 
 			// 1Mo
 			std::vector<uint8_t> buf(0x100000);
-			if (!file.read((char*)&buf[0], 0x100000))
+			if (file.read((char*)&buf[0], 0x100000).bad())
 				return false;
 			int nread = file.gcount();
 
 			file.close();
-			if (!file)
+			if (file.bad())
 				return false;
 
 			ss.str(std::string((char*)&buf[0], nread));
