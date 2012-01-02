@@ -259,7 +259,8 @@ class slot1
 		friend SlotType ptr_fun<Tret, Targ0>(Tret (*fun)(Targ0));
 
 		template <typename Tobj2, typename Tret2, typename Targ02>
-		friend SlotType mem_fun(Tobj2& obj, Tret2 (Tobj2::*fun)());
+		friend slot1<Tret2, Targ02> mem_fun(Tobj2& obj,
+				Tret2 (Tobj2::*fun)(Targ02));
 };
 
 template <typename Tret>

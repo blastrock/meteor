@@ -32,7 +32,7 @@ namespace mym
 			void Init();
 			void Uninit();
 
-			void PlayFrames(const int16_t* data, uint32_t count);
+			void PlayFrames(const int16_t* data);
 
 			//inline void SetSampleskip (uint16_t skip);
 
