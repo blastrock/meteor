@@ -46,7 +46,7 @@ PaletteWindow::PaletteWindow () :
 				&PaletteWindow::on_bg_expose));
 	m_objPalette.signal_expose_event().connect(sigc::mem_fun(*this,
 				&PaletteWindow::on_obj_expose));
-	m_vblank_conn = AMeteor::_lcd.sig_vblank.connect(sigc::mem_fun(*this,
+	m_vblank_conn = AMeteor::_lcd.sig_vblank.connect(syg::mem_fun(*this,
 				&PaletteWindow::on_vblank));
 }
 

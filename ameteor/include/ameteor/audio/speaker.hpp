@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <istream>
 #include <ostream>
-#include <sigc++/slot.h>
+#include <syg/signal.hpp>
 #include "sound1.hpp"
 #include "sound2.hpp"
 #include "sound4.hpp"
@@ -33,7 +33,7 @@ namespace AMeteor
 		class Speaker
 		{
 			public :
-				typedef sigc::slot<void, const int16_t*, uint32_t> FrameSlot;
+				typedef syg::slot1<void, const int16_t*> FrameSlot;
 
 				Speaker (uint16_t& cnt1l, uint16_t& cnt1h, uint16_t& cnt1x,
 						uint16_t& cnt2l, uint16_t& cnt2h,

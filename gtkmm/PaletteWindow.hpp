@@ -19,6 +19,7 @@
 
 #include <gtkmm/window.h>
 #include <gtkmm/drawingarea.h>
+#include <syg/signal.hpp>
 
 class PaletteWindow : public Gtk::Window
 {
@@ -32,7 +33,7 @@ class PaletteWindow : public Gtk::Window
 		Glib::RefPtr<Gdk::GC> m_bgGc;
 		Glib::RefPtr<Gdk::GC> m_objGc;
 
-		sigc::connection m_vblank_conn;
+		syg::connection<void> m_vblank_conn;
 
 		void DrawGrid (Glib::RefPtr<Gdk::Window> area,
 				Glib::RefPtr<Gdk::GC>& gc);

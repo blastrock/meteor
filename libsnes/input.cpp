@@ -25,7 +25,7 @@ extern snes_input_poll_t psnes_poll;
 void Input::InitAMeteor()
 {
 	AMeteor::_lcd.sig_vblank.connect(
-			sigc::mem_fun(*this, &Input::CheckEvents));
+			syg::mem_fun(*this, &Input::CheckEvents));
 }
 
 void Input::CheckEvents()

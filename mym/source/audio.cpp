@@ -34,7 +34,7 @@ namespace mym
 	void Audio::InitAMeteor()
 	{
 		AMeteor::_sound.GetSpeaker().SetFrameSlot(
-				sigc::mem_fun(*this, &Audio::PlayFrames));
+				syg::mem_fun(*this, &Audio::PlayFrames));
 	}
 
 	void Audio::Init()
@@ -60,9 +60,9 @@ namespace mym
 			ao_close(m_device);
 	}
 
-	void Audio::PlayFrames(const int16_t* data, uint32_t count)
+	void Audio::PlayFrames(const int16_t* data)
 	{
 		// ugly :(
-		ao_play(m_device, const_cast<char*>((const char*)data), count*2);
+		ao_play(m_device, const_cast<char*>((const char*)data), 2*2);
 	}
 }

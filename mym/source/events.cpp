@@ -27,7 +27,7 @@ namespace mym
 	void Events::InitAMeteor()
 	{
 		AMeteor::_lcd.sig_vblank.connect(
-				sigc::mem_fun(*this, &Events::CheckEvents));
+				syg::mem_fun(*this, &Events::CheckEvents));
 	}
 
 	void Events::CheckEvents ()

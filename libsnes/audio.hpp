@@ -24,7 +24,7 @@ class Audio
 	public :
 		void InitAMeteor();
 
-		void PlayFrames(const int16_t* data, uint32_t count);
+		void PlayFrames(const int16_t* data);
 };
 
 #endif

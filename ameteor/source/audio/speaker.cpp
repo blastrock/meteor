@@ -78,7 +78,7 @@ namespace AMeteor
 			// right
 			f[1] = MixSample (m_cntl, m_cnth >> 8);
 
-			m_sig_frame(f, 2);
+			m_sig_frame(f);
 		}
 
 		int16_t Speaker::MixSample (uint16_t cntl, uint8_t cnth)

@@ -66,7 +66,7 @@ namespace mym
 	void Window::InitAMeteor()
 	{
 		AMeteor::_lcd.GetScreen().GetRenderer().SetFrameSlot(
-				sigc::mem_fun(*this, &Window::ShowFrame));
+				syg::mem_fun(*this, &Window::ShowFrame));
 	}
 
 	// TODO check if we crash if we don't Init()

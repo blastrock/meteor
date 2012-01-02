@@ -18,7 +18,8 @@
 #define __GRAPHICS_RENDERER_H__
 
 #include <stdint.h>
-#include <sigc++/slot.h>
+
+#include <syg/signal.hpp>
 
 namespace AMeteor
 {
@@ -27,7 +28,7 @@ namespace AMeteor
 		class Renderer
 		{
 			public:
-				typedef sigc::slot<void, const uint16_t*> FrameSlot;
+				typedef syg::slot1<void, const uint16_t*> FrameSlot;
 
 				Renderer(const uint16_t* surface);
 
@@ -38,7 +39,7 @@ namespace AMeteor
 			private :
 				const uint16_t* m_base;
 
-				sigc::slot<void, const uint16_t*> m_sig_frame;
+				FrameSlot m_sig_frame;
 		};
 
 		void Renderer::SetFrameSlot(const FrameSlot& slot)
