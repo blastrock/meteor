@@ -11,7 +11,6 @@ enable_language(ASM_NASM)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBAO REQUIRED ao)
-pkg_check_modules(LIBSIGC++ REQUIRED sigc++-2.0)
 find_library(SFML-GRAPHICS_LIBRARY
 	NAMES sfml-graphics
 )
@@ -28,17 +27,14 @@ endif(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LI
 
 set(AMeteor_INCLUDE_DIRS
 	${Meteor_SOURCE_DIR}/ameteor/include
-	${LIBSIGC++_INCLUDE_DIRS}
 )
 
 set(AMeteor_LIBRARY_DIRS
 	${Meteor_SOURCE_DIR}/ameteor/source
-	${LIBSIGC++_LIBRARY_DIRS}
 )
 
 set(AMeteor_LIBRARIES
 	ameteor
-	${LIBSIGC++_LIBRARIES}
 )
 
 set(MyM_INCLUDE_DIRS

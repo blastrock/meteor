@@ -27,7 +27,7 @@
 #include <istream>
 #include <ostream>
 
-#include <sigc++/sigc++.h>
+#include <syg/signal.hpp>
 
 namespace AMeteor
 {
@@ -115,7 +115,7 @@ namespace AMeteor
 			bool SaveState (std::ostream& stream);
 			bool LoadState (std::istream& stream);
 
-			sigc::signal<void> sig_vblank;
+			syg::signal<void> sig_vblank;
 
 		private :
 			Graphics::Screen m_screen;
