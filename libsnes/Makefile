@@ -27,8 +27,8 @@ else
 endif
 
 #LIBS := -lz
-CFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses 
-CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses
+CFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses
+CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses -fno-exceptions -fno-rtti
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g
