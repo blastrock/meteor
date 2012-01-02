@@ -21,6 +21,8 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 
+#include <syg/signal.hpp>
+
 #include "VramArea.hpp"
 
 class VramWindow : public Gtk::Window
@@ -35,7 +37,7 @@ class VramWindow : public Gtk::Window
 		Gtk::SpinButton m_palette;
 		VramArea m_area;
 
-		sigc::connection m_vblank_conn;
+		syg::connection<void> m_vblank_conn;
 
 		void on_radio_changed (Gtk::RadioButton* radio);
 		void on_refresh ();

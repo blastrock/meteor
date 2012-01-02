@@ -1,7 +1,7 @@
 #ifndef SYG_connection_HPP
 #define SYG_connection_HPP
 
-#include <vector>
+#include <list>
 
 namespace syg
 {
@@ -292,18 +292,52 @@ inline slot1<Tret, Targ0> mem_fun(Tobj& obj, Tret (Tobj::*fun)(Targ0))
 //------------------------------
 
 template <typename Tret>
+class signal;
+
+template <typename Tret>
+class connection
+{
+	public:
+		connection():
+			_list(0)
+		{
+		}
+
+		void disconnect()
+		{
+			_list->erase(_iter);
+		}
+
+	private:
+		typedef std::list<slot<Tret> > List;
+		typedef typename List::iterator Iterator;
+
+		List* _list;
+		Iterator _iter;
+
+		connection(List* list, Iterator iter):
+			_list(list),
+			_iter(iter)
+		{}
+
+		friend class signal<Tret>;
+};
+
+template <typename Tret>
 class signal
 {
 	public:
-		void connect(const slot<Tret> s)
+		connection<Tret> connect(const slot<Tret> s)
 		{
 			_slots.push_back(s);
+			return connection<Tret>(&_slots, (++_slots.rbegin()).base());
 		}
 
 		Tret emit() const
 		{
-			for (typename Slots::const_iterator iter = _slots.begin();
-					iter != _slots.end()-1; ++iter)
+			for (typename Slots::const_iterator iter = _slots.begin(),
+					end = (++_slots.rbegin()).base();
+					iter != end; ++iter)
 				iter->call();
 
 			return _slots.back().call();
@@ -315,7 +349,7 @@ class signal
 		}
 
 	private:
-		typedef std::vector<slot<Tret> > Slots;
+		typedef std::list<slot<Tret> > Slots;
 
 		Slots _slots;
 };
@@ -329,22 +363,23 @@ class signal1
 			_slots.push_back(s);
 		}
 
-		Tret emit() const
+		Tret emit(Targ0 arg0) const
 		{
-			for (typename Slots::const_iterator iter = _slots.begin();
+			for (typename Slots::const_iterator iter = _slots.begin(),
+					end = (++_slots.rbegin()).base();
 					iter != _slots.end()-1; ++iter)
 				iter->call();
 
-			return _slots.back().call();
+			return _slots.back().call(arg0);
 		}
 
-		Tret operator()() const
+		Tret operator()(Targ0 arg0) const
 		{
-			return emit();
+			return emit(arg0);
 		}
 
 	private:
-		typedef std::vector<slot<Tret> > Slots;
+		typedef std::list<slot<Tret> > Slots;
 
 		Slots _slots;
 };
