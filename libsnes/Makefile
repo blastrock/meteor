@@ -27,9 +27,8 @@ else
 endif
 
 #LIBS := -lz
-LIBS := $(shell pkg-config --libs sigc++-2.0)
 CFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses 
-CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses $(shell pkg-config --cflags sigc++-2.0)
+CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g

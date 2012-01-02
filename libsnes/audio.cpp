@@ -24,12 +24,10 @@ extern snes_audio_sample_t psnes_sample;
 void Audio::InitAMeteor()
 {
 	AMeteor::_sound.GetSpeaker().SetFrameSlot(
-			sigc::mem_fun(*this, &Audio::PlayFrames));
+			syg::mem_fun(*this, &Audio::PlayFrames));
 }
 
-void Audio::PlayFrames(const int16_t* data, uint32_t count)
+void Audio::PlayFrames(const int16_t* data)
 {
-	assert(count == 2);
-
 	psnes_sample(data[0], data[1]);
 }

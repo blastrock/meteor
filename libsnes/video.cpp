@@ -24,7 +24,7 @@ extern snes_video_refresh_t psnes_refresh;
 void Video::InitAMeteor()
 {
 	AMeteor::_lcd.GetScreen().GetRenderer().SetFrameSlot(
-			sigc::mem_fun(*this, &Video::ShowFrame));
+			syg::mem_fun(*this, &Video::ShowFrame));
 }
 
 void Video::ShowFrame (const uint16_t* frame)
