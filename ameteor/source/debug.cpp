@@ -55,28 +55,23 @@ namespace AMeteor
 #endif
 	}
 
-#ifdef MYDEBUG
+#ifdef MET_REGS_DEBUG
 	void PrintRegs ()
 	{
-#if 1
+		static uint32_t regs[17] = {0};
+
 		for (uint8_t c = 0; c <= 15; ++c)
-			if (R(c))
-#else
-		const int c = 15;
-#endif
+			if (R(c) != regs[c])
+			{
 				STDBG << "R" << std::setbase(10) << (int)c << " = " << IOS_ADD << R(c) << '\n';
-#if 1
+				regs[c] = R(c);
+			}
 		CPU.UpdateCpsr();
-		if (CPSR)
+		if (CPSR != regs[16])
+		{
 			STDBG << "R16 = " << IOS_ADD << CPSR << '\n';
-#endif
-		if (0&&SPSR)
-			STDBG << "R17 = " << IOS_ADD << SPSR << '\n';
-		STDBG << "IRQ R13 = " << IOS_ADD << CPU.irq13() << '\n';
-		STDBG << "IRQ R14 = " << IOS_ADD << CPU.irq14() << '\n';
-		STDBG << "SVC R13 = " << IOS_ADD << CPU.svc13() << '\n';
-		STDBG << "SVC R14 = " << IOS_ADD << CPU.svc14() << '\n';
-		STDBG << std::flush;
+			regs[16] = CPSR;
+		}
 	}
 
 	void PrintStack (uint32_t stackadd)

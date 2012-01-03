@@ -66,24 +66,6 @@ namespace AMeteor
 				M_SYS = 0x1F
 			};
 
-			// XXX
-			uint32_t irq13 ()
-			{
-				return m_st.irq_r[0];
-			}
-			uint32_t irq14 ()
-			{
-				return m_st.irq_r[1];
-			}
-			uint32_t svc13 ()
-			{
-				return m_st.svc_r[0];
-			}
-			uint32_t svc14 ()
-			{
-				return m_st.svc_r[1];
-			}
-
 			Cpu ();
 			virtual ~Cpu () {}
 
