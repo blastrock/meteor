@@ -63,6 +63,7 @@ namespace AMeteor
 			switch (m_haltcnt)
 			{
 				case 255: // normal mode
+					PrintRegs();
 					if (FLAG_T)
 					{
 						if (R(15) & 0x1)

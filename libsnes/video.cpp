@@ -39,5 +39,6 @@ void Video::ShowFrame (const uint16_t* frame)
 		conv_buf[i] = (r << 10) | (g << 5) | (b << 0);
 	}
 
+	AMeteor::Stop();
 	psnes_refresh(conv_buf, 240, 160);
 }

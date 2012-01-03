@@ -66,7 +66,7 @@ namespace AMeteor
 	void debug_bits(uint32_t u);
 	void debug_bits_16(uint16_t u);
 
-#if defined METDEBUG && defined METDEBUGLOG
+#if defined MET_REGS_DEBUG
 	void PrintRegs ();
 	void PrintStack (uint32_t stackadd);
 #else

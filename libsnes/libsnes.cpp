@@ -70,7 +70,7 @@ void snes_power(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_
 void snes_reset(void) { snes_power(); }
 void snes_term(void) { snes_power(); }
 
-void snes_run(void)
+static void init_first_run()
 {
 	static bool first_run = true;
 	if (first_run)
@@ -81,46 +81,55 @@ void snes_run(void)
 		am_input.InitAMeteor();
 		first_run = false;
 	}
-
-	psnes_poll();
-	AMeteor::Run(280896);
 }
 
-static unsigned serialize_size;
+void snes_run(void)
+{
+	init_first_run();
+	psnes_poll();
+	AMeteor::Run(10000000); // We emulate until VBlank.
+}
+
 unsigned snes_serialize_size(void)
 {
+	init_first_run();
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
-	serialize_size = stream.str().size();
+	unsigned serialize_size = stream.str().size();
+
+	// If we can rewind,
+	// we need to make sure that we never report a size that can potentially increase behind our backs.
+	bool has_rewind = false;
+	if (psnes_environment && psnes_environment(SNES_ENVIRONMENT_GET_CAN_REWIND, &has_rewind) && has_rewind)
+	{
+		// We want constant sized streams, and thus we have to pad.
+		uint32_t current_size = *(uint32_t*)(AMeteor::CartMemData + AMeteor::CartMem::MAX_SIZE);
+
+		// Battery is not installed (yet!),
+		// accomodate for the largest possible battery size if it does get installed after this check.
+		// Flash 128kB + 4 byte state variable.
+		if (!current_size)
+			serialize_size += AMeteor::CartMem::MAX_SIZE + sizeof(uint32_t);
+	}
+
 	return serialize_size;
 }
 
 bool snes_serialize(uint8_t *data, unsigned size)
 {
-	if (!serialize_size)
-		snes_serialize_size();
-
-	if (size != serialize_size)
-		return false;
-
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
 
 	std::string s = stream.str();
-	assert(size == s.size());
-	std::memcpy(data, s.data(), size);
+	if (s.size() > size)
+		return false;
 
+	std::memcpy(data, s.data(), s.size());
 	return true;
 }
 
 bool snes_unserialize(const uint8_t *data, unsigned size)
 {
-	if (!serialize_size)
-		snes_serialize_size();
-
-	if (size != serialize_size)
-		return false;
-
 	std::istringstream stream;
 	stream.str(std::string((char*)data, size));
 	AMeteor::LoadState(stream);
