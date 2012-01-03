@@ -49,7 +49,7 @@ void Input::CheckEvents()
 	FETCH(L);
 #undef FETCH
 
-	input ^= 0xffff;
+	input ^= 0x3FF;
 
 	AMeteor::_keypad.SetPadState(input);
 }
