@@ -768,6 +768,31 @@ namespace AMeteor
 	}
 #endif
 
+#ifdef NO_MEMMEM // memmem() is a GNU extension, and does not exist in at least MinGW.
+#define memmem memmem_compat
+	// Implementation from Git.
+	static void *memmem_compat(const void *haystack, size_t haystack_len,
+			const void *needle, size_t needle_len)
+	{
+		const char *begin = (const char*)haystack;
+		const char *last_possible = begin + haystack_len - needle_len;
+
+		if (needle_len == 0)
+			return (void *)begin;
+
+		if (haystack_len < needle_len)
+			return NULL;
+
+		for (; begin <= last_possible; begin++)
+		{
+			if (!memcmp(begin, needle, needle_len))
+				return (void *)begin;
+		}
+
+		return NULL;
+	}
+#endif
+
 	void Memory::WriteCart (uint16_t add, uint8_t val)
 	{
 		if (m_carttype == CTYPE_EEPROM512 || m_carttype == CTYPE_EEPROM8192)

@@ -21,13 +21,11 @@ else ifeq ($(platform), osx)
    SHARED := -dynamiclib
 else
    TARGET := snes.dll
-   CC = gcc
    CXX = g++
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
+   CXXFLAGS += -DNO_MEMMEM
 endif
 
-#LIBS := -lz
-CFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses
 CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses -fno-exceptions -fno-rtti
 
 ifeq ($(DEBUG), 1)
