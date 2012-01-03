@@ -16,6 +16,7 @@ class connection_base
 	public:
 		virtual Tret call() const = 0;
 		virtual connection_base<Tret>* clone() const = 0;
+		virtual ~connection_base() {}
 };
 
 template <typename Tret, typename Targ0>
@@ -24,6 +25,7 @@ class connection_base1
 	public:
 		virtual Tret call(Targ0) const = 0;
 		virtual connection_base1<Tret, Targ0>* clone() const = 0;
+		virtual ~connection_base1() {}
 };
 
 template <typename Tret>
