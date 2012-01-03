@@ -20,8 +20,6 @@
 #include <cstring>
 #include <sstream>
 
-#include <ao/ao.h>
-
 // TODO add version
 #define SS_MAGIC_STRING ("AMeteor SaveState")
 #define SS_MS_SIZE (sizeof(SS_MAGIC_STRING)-1)
