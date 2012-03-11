@@ -268,6 +268,9 @@ namespace AMeteor
 				case 0x07:
 					Bios::DivArm();
 					break;
+				case 0x08:
+					Bios::Sqrt();
+					break;
 				case 0x09:
 					Bios::ArcTan();
 					break;

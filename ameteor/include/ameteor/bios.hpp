@@ -41,6 +41,7 @@ namespace AMeteor
 		void VBlankIntrWait (); // 05
 		void Div (); // 06
 		void DivArm (); // 07
+		void Sqrt (); // 08
 		void ArcTan (); // 09
 		void ArcTan2 (); // 0A
 		void CpuSet ();  // 0B

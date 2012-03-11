@@ -22,6 +22,8 @@
 
 #include "debug.hpp"
 
+#include <cmath>
+
 namespace AMeteor
 {
 	namespace Bios
@@ -341,6 +343,11 @@ namespace AMeteor
 			R(0) = R(1);
 			R(1) = tmp;
 			Div();
+		}
+
+		void Sqrt ()
+		{
+			R(0) = (uint16_t)sqrt((float)R(0));
 		}
 
 		void ArcTan ()
