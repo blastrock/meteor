@@ -1,6 +1,7 @@
 find_package(GTK2 2.24 REQUIRED COMPONENTS gtk gtkmm)
 
 include_directories(
+	${CMAKE_CURRENT_BINARY_DIR}
 	${MyM_INCLUDE_DIRS}
 	${GTK2_INCLUDE_DIRS}
 )
