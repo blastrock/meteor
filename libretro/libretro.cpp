@@ -98,14 +98,14 @@ size_t retro_serialize_size(void)
 	AMeteor::SaveState(stream);
 	unsigned serialize_size = stream.str().size();
 
-   // We want constant sized streams, and thus we have to pad.
-   uint32_t current_size = *(uint32_t*)(AMeteor::CartMemData + AMeteor::CartMem::MAX_SIZE);
+	// We want constant sized streams, and thus we have to pad.
+	uint32_t current_size = *(uint32_t*)(AMeteor::CartMemData + AMeteor::CartMem::MAX_SIZE);
 
-   // Battery is not installed (yet!),
-   // accomodate for the largest possible battery size if it does get installed after this check.
-   // Flash 128kB + 4 byte state variable.
-   if (!current_size)
-      serialize_size += AMeteor::CartMem::MAX_SIZE + sizeof(uint32_t);
+	// Battery is not installed (yet!),
+	// accomodate for the largest possible battery size if it does get installed after this check.
+	// Flash 128kB + 4 byte state variable.
+	if (!current_size)
+		serialize_size += AMeteor::CartMem::MAX_SIZE + sizeof(uint32_t);
 
 	return serialize_size;
 }
