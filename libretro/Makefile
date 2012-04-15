@@ -12,21 +12,21 @@ endif
 endif
 
 ifeq ($(platform), unix)
-   TARGET := libsnes.so
+   TARGET := libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), osx)
-   TARGET := libsnes.dylib
+   TARGET := libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
 else
-   TARGET := snes.dll
+   TARGET := retro.dll
    CXX = g++
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
    CXXFLAGS += -DNO_MEMMEM
 endif
 
-CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBSNES__ -Wno-parentheses -fno-exceptions -fno-rtti
+CXXFLAGS += -Wall -pedantic -I. -I../ameteor/include -pipe -D__LIBRETRO__ -Wno-parentheses -fno-exceptions -fno-rtti
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g
@@ -80,7 +80,7 @@ SOURCES := \
 	video.cpp \
 	audio.cpp \
 	input.cpp \
-	libsnes.cpp
+	libretro.cpp
 
 OBJ := $(SOURCES:.cpp=.o)
 
