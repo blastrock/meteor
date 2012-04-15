@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include "libsnes.hpp"
+#include "libretro.h"
 #include "video.hpp"
 #include "audio.hpp"
 #include "input.hpp"
@@ -31,44 +31,45 @@ Video am_video;
 Audio am_audio;
 Input am_input;
 
-const char* snes_library_id(void) { return "Meteor GBA"; }
+unsigned retro_api_version(void) { return RETRO_API_VERSION; }
 
-unsigned snes_library_revision_major(void) { return 1; }
-unsigned snes_library_revision_minor(void) { return 3; }
+retro_video_refresh_t pretro_refresh;
+retro_audio_sample_t pretro_sample;
+retro_input_poll_t pretro_poll;
+retro_input_state_t pretro_input;
+static retro_environment_t pretro_environment;
 
-snes_video_refresh_t psnes_refresh;
-snes_audio_sample_t psnes_sample;
-snes_input_poll_t psnes_poll;
-snes_input_state_t psnes_input;
-static snes_environment_t psnes_environment;
+void retro_set_video_refresh(retro_video_refresh_t video_refresh) { pretro_refresh = video_refresh; }
+void retro_set_audio_sample(retro_audio_sample_t audio_sample) { pretro_sample = audio_sample; }
+void retro_set_audio_sample_batch(retro_audio_sample_batch_t) {}
+void retro_set_input_poll(retro_input_poll_t input_poll) { pretro_poll = input_poll; }
+void retro_set_input_state(retro_input_state_t input_state) { pretro_input = input_state; }
+void retro_set_environment(retro_environment_t environment) { pretro_environment = environment; }
 
-void snes_set_video_refresh(snes_video_refresh_t video_refresh) { psnes_refresh = video_refresh; }
-void snes_set_audio_sample(snes_audio_sample_t audio_sample) { psnes_sample = audio_sample; }
-void snes_set_input_poll(snes_input_poll_t input_poll) { psnes_poll = input_poll; }
-void snes_set_input_state(snes_input_state_t input_state) { psnes_input = input_state; }
-void snes_set_environment(snes_environment_t environment) { psnes_environment = environment; }
+void retro_set_controller_port_device(unsigned, unsigned) {}
 
-void snes_set_controller_port_device(bool, unsigned) {}
-
-void snes_set_cartridge_basename(const char *) {}
-
-void snes_init(void)
+void retro_get_system_info(struct retro_system_info *info)
 {
-	if (psnes_environment)
-	{
-		unsigned pitch = 240 * 2;
-		psnes_environment(SNES_ENVIRONMENT_SET_PITCH, &pitch);
-		snes_geometry geom = { 240, 160, 240, 160 };
-		psnes_environment(SNES_ENVIRONMENT_SET_GEOMETRY, &geom);
-
-		snes_system_timing timing = { 16777216.0 / 280896.0, 44100.0 };
-		psnes_environment(SNES_ENVIRONMENT_SET_TIMING, &timing);
-	}
+	info->library_name = "Meteor GBA";
+	info->library_version = "v1.3.0";
+	info->need_fullpath = false;
+	info->block_extract = false;
+	info->valid_extensions = "gba|GBA";
 }
 
-void snes_power(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS); }
-void snes_reset(void) { snes_power(); }
-void snes_term(void) { snes_power(); }
+void retro_get_system_av_info(struct retro_system_av_info *info)
+{
+	struct retro_game_geometry geom = { 240, 160, 240, 160 };
+	struct retro_system_timing timing = { 16777216.0 / 280896.0, 44100.0 };
+
+	info->geometry = geom;
+	info->timing   = timing;
+}
+
+void retro_init(void) {}
+
+void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS); }
+void retro_deinit(void) { retro_reset(); }
 
 static void init_first_run()
 {
@@ -83,39 +84,33 @@ static void init_first_run()
 	}
 }
 
-void snes_run(void)
+void retro_run(void)
 {
 	init_first_run();
-	psnes_poll();
+	pretro_poll();
 	AMeteor::Run(10000000); // We emulate until VBlank.
 }
 
-unsigned snes_serialize_size(void)
+size_t retro_serialize_size(void)
 {
 	init_first_run();
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
 	unsigned serialize_size = stream.str().size();
 
-	// If we can rewind,
-	// we need to make sure that we never report a size that can potentially increase behind our backs.
-	bool has_rewind = false;
-	if (psnes_environment && psnes_environment(SNES_ENVIRONMENT_GET_CAN_REWIND, &has_rewind) && has_rewind)
-	{
-		// We want constant sized streams, and thus we have to pad.
-		uint32_t current_size = *(uint32_t*)(AMeteor::CartMemData + AMeteor::CartMem::MAX_SIZE);
+   // We want constant sized streams, and thus we have to pad.
+   uint32_t current_size = *(uint32_t*)(AMeteor::CartMemData + AMeteor::CartMem::MAX_SIZE);
 
-		// Battery is not installed (yet!),
-		// accomodate for the largest possible battery size if it does get installed after this check.
-		// Flash 128kB + 4 byte state variable.
-		if (!current_size)
-			serialize_size += AMeteor::CartMem::MAX_SIZE + sizeof(uint32_t);
-	}
+   // Battery is not installed (yet!),
+   // accomodate for the largest possible battery size if it does get installed after this check.
+   // Flash 128kB + 4 byte state variable.
+   if (!current_size)
+      serialize_size += AMeteor::CartMem::MAX_SIZE + sizeof(uint32_t);
 
 	return serialize_size;
 }
 
-bool snes_serialize(uint8_t *data, unsigned size)
+bool retro_serialize(void *data, size_t size)
 {
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
@@ -128,7 +123,7 @@ bool snes_serialize(uint8_t *data, unsigned size)
 	return true;
 }
 
-bool snes_unserialize(const uint8_t *data, unsigned size)
+bool retro_unserialize(const void *data, size_t size)
 {
 	std::istringstream stream;
 	stream.str(std::string((char*)data, size));
@@ -137,62 +132,34 @@ bool snes_unserialize(const uint8_t *data, unsigned size)
 	return true;
 }
 
-void snes_cheat_reset(void) {}
-void snes_cheat_set(unsigned, bool, const char *) {}
+void retro_cheat_reset(void) {}
+void retro_cheat_set(unsigned, bool, const char *) {}
 
-bool snes_load_cartridge_normal(
-		const char *, const uint8_t *data, unsigned size)
+bool retro_load_game(const struct retro_game_info *info)
 {
-	AMeteor::_memory.LoadRom(data, size);
-
+	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
 	return true;
 }
 
-bool snes_load_cartridge_bsx_slotted(
-		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned)
+bool retro_load_game_special(unsigned, const struct retro_game_info*, size_t) { return false; }
+
+void retro_unload_game(void) {}
+
+unsigned retro_get_region(void) { return RETRO_REGION_NTSC; }
+
+void* retro_get_memory_data(unsigned id)
 {
-	return false;
-}
-
-bool snes_load_cartridge_bsx(
-		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned)
-{
-	return false;
-}
-
-bool snes_load_cartridge_sufami_turbo(
-		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned)
-{
-	return false;
-}
-
-bool snes_load_cartridge_super_game_boy(
-		const char *, const uint8_t *, unsigned,
-		const char *, const uint8_t *, unsigned)
-{
-	return false;
-}
-
-void snes_unload_cartridge(void) {}
-
-bool snes_get_region(void) { return SNES_REGION_NTSC; }
-
-uint8_t* snes_get_memory_data(unsigned id)
-{
-	if (id != SNES_MEMORY_CARTRIDGE_RAM)
+	if (id != RETRO_MEMORY_SAVE_RAM)
 		return 0;
 
 	return AMeteor::CartMemData;
 }
 
-unsigned snes_get_memory_size(unsigned id)
+size_t retro_get_memory_size(unsigned id)
 {
-	if (id != SNES_MEMORY_CARTRIDGE_RAM)
+	if (id != RETRO_MEMORY_SAVE_RAM)
 		return 0;
 
-	return AMeteor::CartMem::MAX_SIZE+4;
+	return AMeteor::CartMem::MAX_SIZE + 4;
 }
+

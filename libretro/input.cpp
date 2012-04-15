@@ -17,10 +17,10 @@
 
 #include "input.hpp"
 #include "ameteor.hpp"
-#include "libsnes.hpp"
+#include "libretro.h"
 
-extern snes_input_state_t psnes_input;
-extern snes_input_poll_t psnes_poll;
+extern retro_input_state_t pretro_input;
+extern retro_input_poll_t pretro_poll;
 
 void Input::InitAMeteor()
 {
@@ -30,12 +30,12 @@ void Input::InitAMeteor()
 
 void Input::CheckEvents()
 {
-	psnes_poll();
+	pretro_poll();
 
 	uint16_t input = 0;
 
 #define FETCH(key) \
-	input |= psnes_input(0, SNES_DEVICE_JOYPAD, 0, SNES_DEVICE_ID_JOYPAD_##key) \
+	input |= pretro_input(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##key) \
 		? AMeteor::Keypad::BTN_##key : 0;
 	FETCH(A);
 	FETCH(B);

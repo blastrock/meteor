@@ -254,7 +254,7 @@ namespace AMeteor
 		return CERR_NO_ERROR;
 	}
 
-#ifdef __LIBSNES__
+#ifdef __LIBRETRO__
 	bool Memory::LoadCartInferred ()
 	{
 		uint32_t size = *(uint32_t*)(CartMemData+CartMem::MAX_SIZE);

@@ -17,9 +17,9 @@
 
 #include "video.hpp"
 #include "ameteor.hpp"
-#include "libsnes.hpp"
+#include "libretro.h"
 
-extern snes_video_refresh_t psnes_refresh;
+extern retro_video_refresh_t pretro_refresh;
 
 void Video::InitAMeteor()
 {
@@ -29,7 +29,7 @@ void Video::InitAMeteor()
 
 void Video::ShowFrame (const uint16_t* frame)
 {
-	// Convert from native XBGR1555 to libsnes XRGB1555.
+	// Convert from native XBGR1555 to libretro XRGB1555.
 	for (unsigned i = 0; i < sizeof(conv_buf) / sizeof(uint16_t); i++)
 	{
 		uint16_t col = frame[i];
@@ -40,5 +40,5 @@ void Video::ShowFrame (const uint16_t* frame)
 	}
 
 	AMeteor::Stop();
-	psnes_refresh(conv_buf, 240, 160);
+	pretro_refresh(conv_buf, 240, 160, 240 * 2);
 }

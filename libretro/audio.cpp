@@ -15,11 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "audio.hpp"
-#include "libsnes.hpp"
+#include "libretro.h"
 #include "ameteor.hpp"
 #include <assert.h>
 
-extern snes_audio_sample_t psnes_sample;
+extern retro_audio_sample_t pretro_sample;
 
 void Audio::InitAMeteor()
 {
@@ -29,5 +29,5 @@ void Audio::InitAMeteor()
 
 void Audio::PlayFrames(const int16_t* data)
 {
-	psnes_sample(data[0], data[1]);
+	pretro_sample(data[0], data[1]);
 }

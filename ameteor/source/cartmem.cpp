@@ -19,12 +19,12 @@
 
 namespace AMeteor
 {
-#ifdef __LIBSNES__
+#ifdef __LIBRETRO__
 	uint8_t CartMemData[CartMem::MAX_SIZE+4];
 #endif
 
 	CartMem::CartMem() :
-#ifdef __LIBSNES__
+#ifdef __LIBRETRO__
 		m_data(CartMemData)
 #else
 		m_data(new uint8_t[MAX_SIZE+4])
@@ -34,7 +34,7 @@ namespace AMeteor
 
 	CartMem::~CartMem()
 	{
-#ifndef __LIBSNES__
+#ifndef __LIBRETRO__
 		delete [] m_data;
 #endif
 	}

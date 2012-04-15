@@ -85,7 +85,7 @@ namespace AMeteor
 			bool LoadRom (const char* filename);
 			void LoadRom (const uint8_t* data, uint32_t size);
 			CartError LoadCart ();
-#ifdef __LIBSNES__
+#ifdef __LIBRETRO__
 			bool LoadCartInferred ();
 #endif
 

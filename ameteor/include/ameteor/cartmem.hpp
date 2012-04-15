@@ -49,7 +49,7 @@ namespace AMeteor
 			uint32_t m_size;
 	};
 
-#ifdef __LIBSNES__
+#ifdef __LIBRETRO__
 	extern uint8_t CartMemData[CartMem::MAX_SIZE+4];
 #endif
 }
