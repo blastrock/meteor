@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(Meteor)
 
 set(METEOR_VERSION_MAJOR 1)
-set(METEOR_VERSION_MINOR 3)
+set(METEOR_VERSION_MINOR 4)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
