@@ -56,33 +56,30 @@ namespace AMeteor
 				m_screen.UpdateBg2RefY(IO.DRead32(Io::BG2Y_L));
 				m_screen.UpdateBg3RefX(IO.DRead32(Io::BG3X_L));
 				m_screen.UpdateBg3RefY(IO.DRead32(Io::BG3Y_L));
-				// and we draw the line 0
-				m_screen.DrawLine(0);
 				// FIXME see below, vblank finished
 				dispstat ^= 0x1;
 			}
 			else
-			{
 				++vcount; // we're on next line
-				if (vcount < 160) // we draw normally
-					m_screen.DrawLine(vcount);
-				else if (vcount == 160) // We enter V-Blank
-				{
-					dispstat |= 0x1;
-					if (dispstat & (0x1 << 3)) // if V-Blank irq is enabled
-						CPU.SendInterrupt(0x1);
-					DMA.CheckAll(Dma::VBlank);
 
-					KEYPAD.VBlank();
+			if (vcount < 160) // we draw normally
+				m_screen.DrawLine(vcount);
+			else if (vcount == 160) // We enter V-Blank
+			{
+				dispstat |= 0x1;
+				if (dispstat & (0x1 << 3)) // if V-Blank irq is enabled
+					CPU.SendInterrupt(0x1);
+				DMA.CheckAll(Dma::VBlank);
 
-					// we send the vblank signal
-					sig_vblank.emit();
-				}
-				// NOTE : v-blank finishes on line 227, not 0
-				// FIXME on vba, it finishes on 0
-				//if (vcount == 227) // V-Blank finished
-					//dispstat ^= 0x1;
+				KEYPAD.VBlank();
+
+				// we send the vblank signal
+				sig_vblank.emit();
 			}
+			// NOTE : v-blank finishes on line 227, not 0
+			// FIXME on vba, it finishes on 0
+			//if (vcount == 227) // V-Blank finished
+				//dispstat ^= 0x1;
 
 			// check for vcount match
 			if (vcount == ((dispstat >> 8) & 0xFF)) // vcount match
