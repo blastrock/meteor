@@ -29,19 +29,28 @@ namespace AMeteor
 			union Psr
 			{
 				uint32_t dw;
+            // This is VERY dangerous!
+#if defined(__GNUC__) || defined(_MSC_VER)
+#pragma pack(push, 1)
+#endif
 				struct
 				{
-					unsigned int mode     :  5;
-					bool thumb			      :  1;
-					bool fiq_d            :  1;
-					bool irq_d            :  1;
-					unsigned int reserved : 19;
-					bool s_overflow       :  1;
-					bool f_overflow       :  1;
-					bool f_carry          :  1;
-					bool f_zero           :  1;
-					bool f_sign           :  1;
+					unsigned char mode   : 5;
+					bool thumb           : 1;
+					bool fiq_d           : 1;
+					bool irq_d           : 1;
+					unsigned char        : 8;
+					unsigned char        : 8;
+					unsigned char        : 3;
+					bool s_overflow      : 1;
+					bool f_overflow      : 1;
+					bool f_carry         : 1;
+					bool f_zero          : 1;
+					bool f_sign          : 1;
 				} b;
+#if defined(__GNUC__) || defined(_MSC_VER)
+#pragma pack(pop)
+#endif
 			};
 			struct IPsr
 			{
