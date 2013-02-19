@@ -20,6 +20,7 @@
 #include "libretro.h"
 
 extern retro_video_refresh_t pretro_refresh;
+extern bool retro_rgb565;
 
 void Video::InitAMeteor()
 {
@@ -29,15 +30,31 @@ void Video::InitAMeteor()
 
 void Video::ShowFrame (const uint16_t* frame)
 {
-	// Convert from native XBGR1555 to libretro XRGB1555.
-	for (unsigned i = 0; i < sizeof(conv_buf) / sizeof(uint16_t); i++)
-	{
-		uint16_t col = frame[i];
-		uint16_t b = (col >> 10) & 0x1f;
-		uint16_t g = (col >>  5) & 0x1f;
-		uint16_t r = (col >>  0) & 0x1f;
-		conv_buf[i] = (r << 10) | (g << 5) | (b << 0);
-	}
+   if (retro_rgb565)
+   {
+      // Convert from native XBGR1555 to libretro XRGB1555.
+      for (unsigned i = 0; i < sizeof(conv_buf) / sizeof(uint16_t); i++)
+      {
+         uint16_t col = frame[i];
+         uint16_t b = (col >> 10) & 0x1f;
+         uint16_t g = (col >>  5) & 0x1f;
+         g = (g << 1) | (g >> 4);
+         uint16_t r = (col >>  0) & 0x1f;
+         conv_buf[i] = (r << 11) | (g << 5) | (b << 0);
+      }
+   }
+   else
+   {
+      // Convert from native XBGR1555 to libretro XRGB1555.
+      for (unsigned i = 0; i < sizeof(conv_buf) / sizeof(uint16_t); i++)
+      {
+         uint16_t col = frame[i];
+         uint16_t b = (col >> 10) & 0x1f;
+         uint16_t g = (col >>  5) & 0x1f;
+         uint16_t r = (col >>  0) & 0x1f;
+         conv_buf[i] = (r << 10) | (g << 5) | (b << 0);
+      }
+   }
 
 	AMeteor::Stop();
 	pretro_refresh(conv_buf, 240, 160, 240 * 2);

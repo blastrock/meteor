@@ -37,6 +37,7 @@ retro_video_refresh_t pretro_refresh;
 retro_audio_sample_t pretro_sample;
 retro_input_poll_t pretro_poll;
 retro_input_state_t pretro_input;
+bool retro_rgb565;
 static retro_environment_t pretro_environment;
 
 void retro_set_video_refresh(retro_video_refresh_t video_refresh) { pretro_refresh = video_refresh; }
@@ -138,6 +139,8 @@ void retro_cheat_set(unsigned, bool, const char *) {}
 bool retro_load_game(const struct retro_game_info *info)
 {
 	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
+   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+   retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
 	return true;
 }
 
