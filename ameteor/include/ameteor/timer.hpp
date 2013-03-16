@@ -60,12 +60,12 @@ namespace AMeteor
 				uint16_t w;
 				struct
 				{
-					unsigned int prescaler : 2;
-					bool countup           : 1;
-					unsigned int unused1   : 3;
-					bool irq               : 1;
-					bool start             : 1;
-					unsigned int unused2   : 8;
+					unsigned char prescaler : 2;
+					bool countup            : 1;
+					unsigned char unused1   : 3;
+					bool irq                : 1;
+					bool start              : 1;
+					unsigned char unused2   : 8;
 				} b;
 			};
 
