@@ -11,16 +11,18 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
+TARGET_NAME = meteor
+
 ifeq ($(platform), unix)
-   TARGET := libretro.so
+   TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), osx)
-   TARGET := libretro.dylib
+   TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
 else
-   TARGET := retro.dll
+   TARGET := $(TARGET_NAME)_retro.dll
    CXX = g++
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
    CXXFLAGS += -DNO_MEMMEM
