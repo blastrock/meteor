@@ -46,15 +46,6 @@ SOURCES := \
 	$(SRCDIR)/audio/sound2.cpp \
 	$(SRCDIR)/audio/sound4.cpp \
 	$(SRCDIR)/audio/speaker.cpp \
-	$(SRCDIR)/disassembler/argimmediate.cpp \
-	$(SRCDIR)/disassembler/argmulregisters.cpp \
-	$(SRCDIR)/disassembler/argpsr.cpp \
-	$(SRCDIR)/disassembler/argregister.cpp \
-	$(SRCDIR)/disassembler/argrelative.cpp \
-	$(SRCDIR)/disassembler/argshift.cpp \
-	$(SRCDIR)/disassembler/arguimmediate.cpp \
-	$(SRCDIR)/disassembler/arguments.cpp \
-	$(SRCDIR)/disassembler/instruction.cpp \
 	$(SRCDIR)/graphics/bglayer.cpp \
 	$(SRCDIR)/graphics/object.cpp \
 	$(SRCDIR)/graphics/objects.cpp \
