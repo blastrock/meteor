@@ -29,7 +29,7 @@ namespace AMeteor
 			union Psr
 			{
 				uint32_t dw;
-            // This is VERY dangerous!
+				// This is VERY dangerous!
 #if defined(__GNUC__) || defined(_MSC_VER)
 #pragma pack(push, 1)
 #endif
