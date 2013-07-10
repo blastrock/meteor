@@ -69,7 +69,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_init(void) {}
 
-void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS); }
+void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ (AMeteor::UNIT_MEMORY_BIOS | AMeteor::UNIT_MEMORY_ROM)); }
 void retro_deinit(void) { retro_reset(); }
 
 static void init_first_run()
