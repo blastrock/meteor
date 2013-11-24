@@ -18,6 +18,7 @@
 #include "filters/hq4x.hpp"
 #include <ameteor.hpp>
 #include <cstring>
+#include <unistd.h>
 #include <sys/syscall.h>
 #include <sched.h>
 #include <stdio.h>
