@@ -246,7 +246,10 @@ namespace AMeteor
 		// sound
 		if (dest == 0x040000A0)
 		{
-			SOUND.SendDigitalA((uint8_t*)MEM.GetRealAddress(src));
+			uint8_t* buf = (uint8_t*)MEM.GetRealAddress(src);
+			if (!buf)
+				return;
+			SOUND.SendDigitalA(buf);
 			src += 4*4;
 			if (d_inc != 0)
 				met_abort("dinc != 0 on dma sound, should not happen");
@@ -254,7 +257,10 @@ namespace AMeteor
 		}
 		if (dest == 0x040000A4)
 		{
-			SOUND.SendDigitalB((uint8_t*)MEM.GetRealAddress(src));
+			uint8_t* buf = (uint8_t*)MEM.GetRealAddress(src);
+			if (!buf)
+				return;
+			SOUND.SendDigitalB(buf);
 			src += 4*4;
 			if (d_inc != 0)
 				met_abort("dinc != 0 on dma sound, should not happen");
