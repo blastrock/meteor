@@ -33,18 +33,18 @@ namespace mym
 	void Events::CheckEvents ()
 	{
 		sf::Event event;
-		while (m_window.GetEvent(event))
+		while (m_window.pollEvent(event))
 		{
-			switch (event.Type)
+			switch (event.type)
 			{
 				case sf::Event::KeyPressed:
-					AMeteor::_keypad.KeyPressed(event.Key.Code);
+					AMeteor::_keypad.KeyPressed(event.key.code);
 					break;
 				case sf::Event::KeyReleased:
-					AMeteor::_keypad.KeyReleased(event.Key.Code);
+					AMeteor::_keypad.KeyReleased(event.key.code);
 					break;
-				case sf::Event::JoyButtonPressed:
-					switch (event.JoyButton.Button)
+				case sf::Event::JoystickButtonPressed:
+					switch (event.joystickButton.button)
 					{
 						// XXX
 						//case 7:
@@ -52,13 +52,13 @@ namespace mym
 						//	SOUND.SetSampleskip(SPDUP_SNDSKIP);
 						//	break;
 						default:
-							AMeteor::_keypad.JoyButtonPressed(event.JoyButton.JoystickId,
-									event.JoyButton.Button);
+							AMeteor::_keypad.JoyButtonPressed(event.joystickButton.joystickId,
+									event.joystickButton.button);
 							break;
 					}
 					break;
-				case sf::Event::JoyButtonReleased:
-					switch (event.JoyButton.Button)
+				case sf::Event::JoystickButtonReleased:
+					switch (event.joystickButton.button)
 					{
 						// XXX
 						//case 7:
@@ -66,14 +66,14 @@ namespace mym
 						//	SOUND.SetSampleskip(0);
 						//	break;
 						default:
-							AMeteor::_keypad.JoyButtonReleased(event.JoyButton.JoystickId,
-									event.JoyButton.Button);
+							AMeteor::_keypad.JoyButtonReleased(event.joystickButton.joystickId,
+									event.joystickButton.button);
 							break;
 					}
 					break;
-				case sf::Event::JoyMoved:
-					AMeteor::_keypad.JoyMoved(event.JoyMove.JoystickId,
-							event.JoyMove.Axis, event.JoyMove.Position);
+				case sf::Event::JoystickMoved:
+					AMeteor::_keypad.JoyMoved(event.joystickMove.joystickId,
+							event.joystickMove.axis, event.joystickMove.position);
 					break;
 				//case sf::Event::Resized:
 				//	LCD.EventResize(event.Size.Width, event.Size.Height);

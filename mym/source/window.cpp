@@ -76,9 +76,9 @@ namespace mym
 		Uninit();
 
 		if (display)
-			m_window.Create (display);
+			m_window.create (display);
 		else
-			m_window.Create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+			m_window.create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
 
 		InitGl();
 		StartThread();
@@ -99,7 +99,7 @@ namespace mym
 			0, 1,
 		};
 
-		m_window.SetActive();
+		m_window.setActive();
 
 		// TODO check (may be called multiple times)
 		if (GLEW_OK != glewInit())
@@ -130,8 +130,8 @@ namespace mym
 		glBufferData(GL_PIXEL_UNPACK_BUFFER, 4*240*4*160*4, NULL,
 				GL_DYNAMIC_DRAW);
 
-		m_window.Display();
-		m_window.SetActive(false);
+		m_window.display();
+		m_window.setActive(false);
 	}
 
 	void Window::StartThread()
@@ -161,13 +161,13 @@ namespace mym
 
 	void Window::UninitGl()
 	{
-		if (m_window.SetActive())
+		if (m_window.setActive())
 		{
 			glDeleteBuffers(1, &m_pbo);
 			glDeleteTextures(1, &m_texture);
 			glDeleteBuffers(1, &m_vbo);
 			m_vbo = m_texture = m_pbo = 0;
-			m_window.Close();
+			m_window.close();
 		}
 	}
 
@@ -196,7 +196,7 @@ namespace mym
 			sched_setaffinity(syscall(__NR_gettid), sizeof(set), &set);
 		}
 
-		if (!m_window.SetActive())
+		if (!m_window.setActive())
 			puts("Can't activate window !");
 
 		glViewport(0, 0, 240*4, 160*4);
@@ -228,13 +228,13 @@ namespace mym
 
 			glDrawArrays(GL_QUADS, 0, 4);
 
-			m_window.Display();
+			m_window.display();
 		}
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		m_window.SetActive(false);
+		m_window.setActive(false);
 		pthread_mutex_unlock(&m_mutex);
 	}
 }
