@@ -92,7 +92,10 @@ endif(NOT DISABLE_ASM AND
 		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
 		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wstrict-aliasing=3 -Wmissing-noreturn -pedantic -ansi -pipe")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wmissing-noreturn -pedantic")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-aliasing=3")
+endif()
 
 set(PREFIX_SHARE "${CMAKE_INSTALL_PREFIX}/share/meteor")
 
