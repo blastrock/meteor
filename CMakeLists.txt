@@ -9,6 +9,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 enable_language(CXX)
 enable_language(ASM_NASM)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBAO REQUIRED ao)
 find_library(SFML-GRAPHICS_LIBRARY
