@@ -173,7 +173,7 @@ namespace AMeteor
 				m_args.AddArgument(ArgRegister(Rn, code & (0x1 << 21)));
 
 				ArgMulRegisters argRegs(code & (0x1 << 22));
-				for (register uint8_t n = 0; n < 16; ++n)
+				for (uint8_t n = 0; n < 16; ++n)
 					if (code & (0x1 << n))
 						argRegs.AddRegister(n);
 				m_args.AddArgument(argRegs);
@@ -438,7 +438,7 @@ namespace AMeteor
 					m_operator = "PUSH";
 
 				ArgMulRegisters argRegs(false);
-				for (register uint8_t n = 0; n < 8; ++n)
+				for (uint8_t n = 0; n < 8; ++n)
 					if (Imm & (0x1 << n))
 						argRegs.AddRegister(n);
 
@@ -552,7 +552,7 @@ namespace AMeteor
 				m_args.AddArgument(ArgRegister(Rb, true));
 
 				ArgMulRegisters argRegs(false);
-				for (register uint8_t n = 0; n < 8; ++n)
+				for (uint8_t n = 0; n < 8; ++n)
 					if (Imm & (0x1 << n))
 						argRegs.AddRegister(n);
 				m_args.AddArgument(argRegs);

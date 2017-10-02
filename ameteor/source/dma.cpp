@@ -105,7 +105,7 @@ namespace AMeteor
 
 	void Dma::Check (uint8_t channum, uint8_t reason)
 	{
-		register Channel::Control cnt = m_chans[channum].control;
+		Channel::Control cnt = m_chans[channum].control;
 
 		if (cnt.b.enable &&
 				cnt.b.start == reason)

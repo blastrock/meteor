@@ -887,7 +887,7 @@ namespace AMeteor
 			CYCLES32NSeq(add, numregs);
 			ICYCLES(1);
 
-			for (register uint8_t n = 0; n < 8; ++n)
+			for (uint8_t n = 0; n < 8; ++n)
 				if (code & (0x1 << n))
 				{
 					R(n) = MEM.Read32 (add);
@@ -909,7 +909,7 @@ namespace AMeteor
 			CYCLES32NSeq(add, numregs);
 			CYCLES16NSeq(R(15), 1);
 
-			for (register uint8_t n = 0; n < 8; ++n)
+			for (uint8_t n = 0; n < 8; ++n)
 				if (code & (0x1 << n))
 				{
 					MEM.Write32 (add, R(n));
@@ -946,7 +946,7 @@ namespace AMeteor
 			CYCLES32NSeq(add, numregs);
 			ICYCLES(1);
 
-			for (register uint8_t n = 0; n < 8; ++n)
+			for (uint8_t n = 0; n < 8; ++n)
 				if (code & (0x1 << n))
 				{
 					R(n) = MEM.Read32 (add);
@@ -960,7 +960,7 @@ namespace AMeteor
 			CYCLES32NSeq(add, numregs);
 			CYCLES16NSeq(R(15), 1);
 
-			for (register uint8_t n = 0; n < 8; ++n)
+			for (uint8_t n = 0; n < 8; ++n)
 				if (code & (0x1 << n))
 				{
 					MEM.Write32 (add, R(n));

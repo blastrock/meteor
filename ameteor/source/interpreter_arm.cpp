@@ -1137,7 +1137,7 @@ namespace AMeteor
 		{
 			CYCLES32NSeq(add, numregs);
 			ICYCLES(1);
-			for (register uint8_t n = 0; n < 16; ++n)
+			for (uint8_t n = 0; n < 16; ++n)
 				if (regs & (0x1 << n))
 				{
 					R(n) = MEM.Read32 (add);
@@ -1155,7 +1155,7 @@ namespace AMeteor
 			CYCLES32NSeq(add, numregs);
 			CYCLES32NSeq(R(15), 1);
 
-			for (register uint8_t n = 0; n < 16; ++n)
+			for (uint8_t n = 0; n < 16; ++n)
 				if (regs & (0x1 << n))
 				{
 					if (n == 15)
