@@ -7,7 +7,7 @@ Microsoft Windows or if you want features from the retroarch frontend.
 ## libretro build
 
 The libretro build is the recommended way to use Meteor.
-[retroarch](http://themaister.net/retroarch.html) is an emulator frontend and
+[retroarch](http://retroarch.com) is an emulator frontend and
 Meteor is a backend implementation.
 
 To build the libretro implementation, you need no dependency. Just go to the
