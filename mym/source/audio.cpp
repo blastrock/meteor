@@ -63,6 +63,8 @@ namespace mym
 	void Audio::PlayFrames(const int16_t* data)
 	{
 		// ugly :(
-		ao_play(m_device, const_cast<char*>((const char*)data), 2*2);
+		if (!ao_play(m_device, const_cast<char*>((const char*)data), 2*2))
+			;
+		//	puts("audio failure");
 	}
 }

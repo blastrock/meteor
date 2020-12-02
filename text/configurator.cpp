@@ -15,16 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "configurator.hpp"
+#include <filesystem>
 #include <string>
-#include <glibmm/miscutils.h>
+
+namespace {
+std::string _GetHomeDir()
+{
+	const char* home = getenv("HOME");
+	if (!home)
+		throw std::runtime_error("can't find HOME environment variable");
+	return home;
+}
+
+std::string GetHomeDir()
+{
+	static std::string home = _GetHomeDir();
+	return home;
+}
+}
 
 void Configurator::Load()
 {
-	std::vector<std::string> path;
-	path.push_back(Glib::get_home_dir());
-	path.push_back(".meteor");
-	path.push_back("meteor.cfg");
-	std::string file = Glib::build_filename(path);
+	std::filesystem::path file =
+		std::filesystem::path(_GetHomeDir()) / ".meteor" / "meteor.cfg";
 	m_cfg.LoadFile(file.c_str());
 }
 
@@ -36,7 +49,7 @@ void Configurator::InitAMeteor()
 #define SET_PATH(name, var) \
 	str = m_cfg.GetStr(name); \
 	if (!str.empty() && str[0] == '~') \
-		str = Glib::get_home_dir() + str.substr(1); \
+		str = GetHomeDir() + str.substr(1); \
 	m_##var = str;
 	SET_PATH("BatteryPath", batteryPath);
 	SET_PATH("SaveStatePath", sstatePath);

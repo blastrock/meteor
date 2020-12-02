@@ -18,9 +18,9 @@
 
 #include <ameteor.hpp>
 #include "configurator.hpp"
-#include <glibmm/miscutils.h>
 #include <iostream>
 #include <stdexcept>
+#include <filesystem>
 
 MainText::MainText () :
 	m_events(m_window.GetWindow()),
@@ -47,8 +47,8 @@ void MainText::Open(const std::string& rom)
 	if (!AMeteor::_memory.LoadRom(m_openFile.c_str()))
 		throw std::runtime_error("Failed to load ROM");
 
-	std::string file = Glib::build_filename(m_batteryPath,
-			Glib::path_get_basename(m_openFile));
+	std::string file = (std::filesystem::path(m_batteryPath) /
+			std::filesystem::path(m_openFile).filename()).string();
 	if (file[file.size()-4] == '.')
 		file.replace(file.end()-3, file.end(), "mct");
 	else
@@ -111,8 +111,8 @@ void MainText::Reset()
 
 void MainText::SaveState(uint8_t n)
 {
-	std::string file = Glib::build_filename(m_sstatePath,
-			Glib::path_get_basename(m_openFile));
+	std::string file = (std::filesystem::path(m_sstatePath) /
+			std::filesystem::path(m_openFile).filename()).string();
 	if (file[file.size()-4] == '.')
 		file.replace(file.end()-3, file.end(), "mst");
 	else
@@ -124,8 +124,8 @@ void MainText::SaveState(uint8_t n)
 
 void MainText::LoadState(uint8_t n)
 {
-	std::string file = Glib::build_filename(m_sstatePath,
-			Glib::path_get_basename(m_openFile));
+	std::string file = (std::filesystem::path(m_sstatePath) /
+			std::filesystem::path(m_openFile).filename()).string();
 	if (file[file.size()-4] == '.')
 		file.replace(file.end()-3, file.end(), "mst");
 	else
