@@ -151,14 +151,18 @@ namespace AMeteor
 
 					// support for big maps and wrap around
 					if (!((pTile - pMap) % 32))
+					{
 						if (m_tWidth == 32)
 							pTile -= 32;
 						else
-							if (yoff >= 256 && pTile - pMap > 32*32 * 3
-									|| yoff < 256 && pTile - pMap > 32*32)
+						{
+							if ((yoff >= 256 && pTile - pMap > 32*32 * 3)
+									|| (yoff < 256 && pTile - pMap > 32*32))
 								pTile -= 32*33;
 							else
 								pTile += 32*31;
+						}
+					}
 				}
 			}
 			else
@@ -228,14 +232,18 @@ namespace AMeteor
 
 					// support for big maps and wrap around
 					if (!((pTile - pMap) % 32))
+					{
 						if (m_tWidth == 32)
 							pTile -= 32;
 						else
-							if (yoff >= 256 && pTile - pMap > 32*32 * 3
-									|| yoff < 256 && pTile - pMap > 32*32)
+						{
+							if ((yoff >= 256 && pTile - pMap > 32*32 * 3)
+									|| (yoff < 256 && pTile - pMap > 32*32))
 								pTile -= 32*33;
 							else
 								pTile += 32*31;
+						}
+					}
 				}
 			}
 		}
@@ -270,6 +278,7 @@ namespace AMeteor
 
 				// if we are off layer
 				if (intX < 0 || intX >= m_rWidth*8)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						// NOTE : in C++, the modulus can be negative, this is because in
@@ -282,7 +291,9 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 				if (intY < 0 || intY >= m_rHeight*8)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						curY %= m_rHeight*8 << 8;
@@ -292,6 +303,7 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 
 				colorInd = pChar[pMap[intY / 8 * m_rWidth + intX / 8] * 8 * 8
 					+ (intY % 8) * 8 + intX % 8];
@@ -318,6 +330,7 @@ namespace AMeteor
 
 				// if we are off layer
 				if (intX < 0 || intX >= 240)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						// NOTE : in C++, the modulus can be negative
@@ -327,7 +340,9 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 				if (intY < 0 || intY >= 160)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						intY %= 160;
@@ -336,6 +351,7 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 
 				*ptr = pChar[intY * 240 * 2 + intX * 2] | 0x8000;
 			}
@@ -385,6 +401,7 @@ namespace AMeteor
 
 				// if we are off layer
 				if (intX < 0 || intX >= 240)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						// NOTE : in C++, the modulus can be negative
@@ -394,7 +411,9 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 				if (intY < 0 || intY >= 160)
+				{
 					if (m_cnt & (0x1 << 13))
 					{
 						intY %= 160;
@@ -403,6 +422,7 @@ namespace AMeteor
 					}
 					else
 						continue;
+				}
 
 				colorInd = pChar[intY * 240 + intX];
 

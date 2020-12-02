@@ -1167,10 +1167,12 @@ namespace AMeteor
 		}
 
 		if (code & (0x1 << 21))
+		{
 			if (code & (0x1 << 23))
 				R(Rn) = baseadd + numregs * 4;
 			else
 				R(Rn) = baseadd - numregs * 4;
+		}
 	}
 
 	// Single Data Swap (SWP)
@@ -1291,8 +1293,8 @@ namespace AMeteor
 			switch ((code >> 25) & 0x7)
 			{
 				case 0x0:
-					switch ((code >> 18) & 0x60 | (code >> 16) & 0x10 |
-							(code >> 4) & 0x0F)
+					switch (((code >> 18) & 0x60) | ((code >> 16) & 0x10) |
+							((code >> 4) & 0x0F))
 					{
 						case 0x40:
 							aPSR();

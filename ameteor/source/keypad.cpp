@@ -78,6 +78,7 @@ namespace AMeteor
 	{
 		// if keypad IRQ are enabled
 		if (m_keycnt & (0x1 << 14))
+		{
 			// if irq condition is and
 			if (m_keycnt & (0x1 << 15))
 			{
@@ -92,5 +93,6 @@ namespace AMeteor
 				if (~m_keyinput & m_keycnt & 0x3FF)
 					CPU.SendInterrupt(0x1000);
 			}
+		}
 	}
 }

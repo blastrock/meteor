@@ -343,9 +343,9 @@ namespace AMeteor
 			// This is from Tonc documentation
 			if (win0t >= 227)
 				return;
-			else if (win0b > win0t && line >= win0t && line < win0b
+			else if ((win0b > win0t && line >= win0t && line < win0b)
 					// the above is the normal behaviour
-					|| win0b < win0t && (line >= win0t || line < win0b)
+					|| (win0b < win0t && (line >= win0t || line < win0b))
 					// the above is the "inverted" behaviour
 					)
 			{

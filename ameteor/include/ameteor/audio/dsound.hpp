@@ -39,6 +39,7 @@ namespace AMeteor
 				{
 					// if the buffer is empty, there is nothing to do
 					if (m_size)
+					{
 						// if this was the last sample, we reset all and send 0 to all next
 						// GetSample()s until the buffer is refilled
 						if (--m_size == 0)
@@ -47,6 +48,7 @@ namespace AMeteor
 						// to the last
 						else if (++m_rpos >= BUFFER_SIZE)
 							m_rpos = 0;
+					}
 				}
 
 				void Reset ()

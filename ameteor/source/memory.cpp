@@ -798,6 +798,7 @@ namespace AMeteor
 		if (m_carttype == CTYPE_EEPROM512 || m_carttype == CTYPE_EEPROM8192)
 			met_abort("Writing in SRAM/FLASH while using EEPROM");
 		if (!m_cart)
+		{
 			if (add == 0x5555)
 			{
 				if (memmem((char*)m_rom, 0x02000000, "FLASH1M_V", 9))
@@ -807,6 +808,7 @@ namespace AMeteor
 			}
 			else
 				SetCartType(CTYPE_SRAM);
+		}
 		if (m_cart->Write(add, val))
 			CLOCK.SetBattery(CART_SAVE_TIME);
 	}
