@@ -52,7 +52,10 @@ void retro_set_controller_port_device(unsigned, unsigned) {}
 void retro_get_system_info(struct retro_system_info *info)
 {
 	info->library_name = "Meteor GBA";
-	info->library_version = "v1.4";
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
+#endif
+	info->library_version = "v1.4" GIT_VERSION;
 	info->need_fullpath = false;
 	info->block_extract = false;
 	info->valid_extensions = "gba";
@@ -72,9 +75,10 @@ void retro_init(void) {}
 void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ (AMeteor::UNIT_MEMORY_BIOS | AMeteor::UNIT_MEMORY_ROM)); }
 void retro_deinit(void) { retro_reset(); }
 
-static void init_first_run()
+static bool first_run;
+static void first_run_load()
 {
-	static bool first_run = true;
+	// Have to defer ROM loading as SRAM content is used to determine cart type. GBA stuff ...
 	if (first_run)
 	{
 		AMeteor::_memory.LoadCartInferred();
@@ -87,14 +91,14 @@ static void init_first_run()
 
 void retro_run(void)
 {
-	init_first_run();
+	first_run_load();
 	pretro_poll();
 	AMeteor::Run(10000000); // We emulate until VBlank.
 }
 
 size_t retro_serialize_size(void)
 {
-	init_first_run();
+	first_run_load();
 	std::ostringstream stream;
 	AMeteor::SaveState(stream);
 	unsigned serialize_size = stream.str().size();
@@ -138,9 +142,31 @@ void retro_cheat_set(unsigned, bool, const char *) {}
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+   struct retro_input_descriptor desc[] = {
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,  "D-Pad Left" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    "D-Pad Up" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  "D-Pad Down" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, "D-Pad Right" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     "B" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     "A" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,     "L" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,     "R" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START, "Start" },
+
+      { 0 },
+   };
+
+   if (!info)
+      return false;
+
+   pretro_environment(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+
 	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
-   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
-   retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+	retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+	first_run = true;
+
 	return true;
 }
 

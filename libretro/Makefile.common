@@ -1,0 +1,38 @@
+SRCDIR   := $(CORE_DIR)/ameteor/source
+
+INCFLAGS := -I$(CORE_DIR)/libretro -I$(CORE_DIR)/ameteor/include
+
+SOURCES_CXX := \
+	$(SRCDIR)/audio/dsound.cpp \
+	$(SRCDIR)/audio/sound1.cpp \
+	$(SRCDIR)/audio/sound2.cpp \
+	$(SRCDIR)/audio/sound4.cpp \
+	$(SRCDIR)/audio/speaker.cpp \
+	$(SRCDIR)/graphics/bglayer.cpp \
+	$(SRCDIR)/graphics/object.cpp \
+	$(SRCDIR)/graphics/objects.cpp \
+	$(SRCDIR)/graphics/renderer.cpp \
+	$(SRCDIR)/graphics/screen.cpp \
+	$(SRCDIR)/ameteor.cpp \
+	$(SRCDIR)/bios.cpp \
+	$(SRCDIR)/clock.cpp \
+	$(SRCDIR)/cpu.cpp \
+	$(SRCDIR)/debug.cpp \
+	$(SRCDIR)/dma.cpp \
+	$(SRCDIR)/eeprom.cpp \
+	$(SRCDIR)/flash.cpp \
+	$(SRCDIR)/cartmem.cpp \
+	$(SRCDIR)/interpreter.cpp \
+	$(SRCDIR)/interpreter_arm.cpp \
+	$(SRCDIR)/interpreter_thumb.cpp \
+	$(SRCDIR)/io.cpp \
+	$(SRCDIR)/keypad.cpp \
+	$(SRCDIR)/lcd.cpp \
+	$(SRCDIR)/memory.cpp \
+	$(SRCDIR)/sound.cpp \
+	$(SRCDIR)/sram.cpp \
+	$(SRCDIR)/timer.cpp \
+	$(CORE_DIR)/libretro/video.cpp \
+	$(CORE_DIR)/libretro/audio.cpp \
+	$(CORE_DIR)/libretro/input.cpp \
+	$(CORE_DIR)/libretro/libretro.cpp
