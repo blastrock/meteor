@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.15)
 project(Meteor)
 
 set(METEOR_VERSION_MAJOR 1)
@@ -26,60 +26,11 @@ find_library(SFML-SYSTEM_LIBRARY
 
 if(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LIBRARY)
 	message(FATAL_ERROR "You must have SFML to compile this")
-endif(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LIBRARY)
-
-set(AMeteor_INCLUDE_DIRS
-	${Meteor_SOURCE_DIR}/ameteor/include
-)
-
-set(AMeteor_LIBRARY_DIRS
-	${Meteor_SOURCE_DIR}/ameteor/source
-)
-
-set(AMeteor_LIBRARIES
-	ameteor
-)
-
-set(MyM_INCLUDE_DIRS
-	${Meteor_SOURCE_DIR}/mym/include
-	${AMeteor_INCLUDE_DIRS}
-	${LIBAO_INCLUDE_DIRS}
-)
-
-set(MyM_LIBRARY_DIRS
-	${Meteor_SOURCE_DIR}/mym/source
-	${AMeteor_LIBRARY_DIRS}
-	${LIBAO_LIBRARY_DIRS}
-)
-
-set(MyM_LIBRARIES
-	mym
-	${AMeteor_LIBRARIES}
-	GL
-	GLU
-	GLEW
-	pthread
-	${LIBAO_LIBRARIES}
-	${SFML-SYSTEM_LIBRARY}
-	${SFML-WINDOW_LIBRARY}
-	${SFML-GRAPHICS_LIBRARY}
-	${CMAKE_THREAD_LIBS_INIT}
-)
-
-set(CXXFLAGS CACHE STRING "String to append to CXXFLAGS")
-set(LDFLAGS CACHE STRING "String to append to LDFLAGS")
-
-set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
-set(CMAKE_LD_FLAGS "${LDFLAGS}")
-
-if(CMAKE_BUILD_TYPE STREQUAL "")
-	set(CMAKE_BUILD_TYPE "Release")
-endif(CMAKE_BUILD_TYPE STREQUAL "")
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions(-DMETDEBUG)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
-endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+endif()
 
 option(DISABLE_ASM "Force asm optimizations off")
 
@@ -88,9 +39,7 @@ if(NOT DISABLE_ASM AND
 		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
 	message(STATUS "Enabling asm optimizations")
 	add_definitions(-DX86_ASM=1)
-endif(NOT DISABLE_ASM AND
-		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
-		CMAKE_SYSTEM_PROCESSOR MATCHES "i.86"))
+endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses -Wmissing-noreturn -pedantic")
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
