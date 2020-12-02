@@ -97,11 +97,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-aliasing=3")
 endif()
 
-set(PREFIX_SHARE "${CMAKE_INSTALL_PREFIX}/share/meteor")
-
-configure_file(config.h.in config.h)
-
 add_subdirectory(ameteor)
 add_subdirectory(mym)
-add_subdirectory(gtkmm)
 add_subdirectory(text)
