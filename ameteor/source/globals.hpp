@@ -102,23 +102,41 @@
 
 // Save states macros
 #define SS_WRITE_VAR(var) \
-	if (!stream.write((char*)&var, sizeof(var))) \
-		return false
+	do \
+	{ \
+		if (!stream.write((char*)&var, sizeof(var))) \
+			return false; \
+	} while (false)
 #define SS_WRITE_ARRAY(var) \
-	if (!stream.write((char*)var, sizeof(var))) \
-		return false
+	do \
+	{ \
+		if (!stream.write((char*)var, sizeof(var))) \
+			return false; \
+	} while (false)
 #define SS_WRITE_DATA(var, size) \
-	if (!stream.write((char*)var, size)) \
-		return false
+	do \
+	{ \
+		if (!stream.write((char*)var, size)) \
+			return false; \
+	} while (false)
 #define SS_READ_VAR(var) \
-	if (!stream.read((char*)&var, sizeof(var))) \
-		return false
+	do \
+	{ \
+		if (!stream.read((char*)&var, sizeof(var))) \
+			return false; \
+	} while (false)
 #define SS_READ_ARRAY(var) \
-	if (!stream.read((char*)var, sizeof(var))) \
-		return false
+	do \
+	{ \
+		if (!stream.read((char*)var, sizeof(var))) \
+			return false; \
+	} while (false)
 #define SS_READ_DATA(var, size) \
-	if (!stream.read((char*)var, size)) \
-		return false
+	do \
+	{ \
+		if (!stream.read((char*)var, size)) \
+			return false; \
+	} while (false)
 
 // macro to avoid getting warnings about and unused parameter on GCC
 #define MET_UNUSED(v) \
