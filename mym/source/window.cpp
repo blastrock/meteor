@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mym/window.hpp"
-#include "filters/hq4x.hpp"
 #include <ameteor.hpp>
 #include <cstring>
 #include <unistd.h>
@@ -32,8 +31,6 @@ namespace mym
 		m_texture(0),
 		m_vbo(0)
 	{
-		Filters::InitLUTs();
-
 		cpu_set_t set;
 		CPU_ZERO(&set);
 		CPU_SET(1, &set);
@@ -78,7 +75,7 @@ namespace mym
 		if (display)
 			m_window.create (display);
 		else
-			m_window.create (sf::VideoMode(4*240, 4*160, 32), "Meteor");
+			m_window.create (sf::VideoMode(240, 160, 32), "Meteor");
 
 		InitGl();
 		StartThread();
@@ -105,6 +102,19 @@ namespace mym
 		if (GLEW_OK != glewInit())
 			puts("err");
 
+		// glEnable(GL_DEBUG_OUTPUT);
+		// glDebugMessageCallback( []( GLenum source,
+		// 			GLenum type,
+		// 			GLuint id,
+		// 			GLenum severity,
+		// 			GLsizei length,
+		// 			const GLchar* message,
+		// 			const void* userParam )
+		// 		{
+		// 		fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		// 				( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+		// 				type, severity, message );
+		// 		}, 0 );
 		glEnable(GL_TEXTURE_2D);
 
 		glMatrixMode(GL_PROJECTION);
@@ -122,12 +132,12 @@ namespace mym
 		glBindTexture (GL_TEXTURE_2D, m_texture);
 		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4*240, 4*160, 0, GL_BGRA,
-				GL_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5, 240, 160, 0, GL_RGBA,
+				GL_UNSIGNED_BYTE, NULL);
 
 		glGenBuffers (1, &m_pbo);
 		glBindBuffer (GL_PIXEL_UNPACK_BUFFER, m_pbo);
-		glBufferData(GL_PIXEL_UNPACK_BUFFER, 4*240*4*160*4, NULL,
+		glBufferData(GL_PIXEL_UNPACK_BUFFER, 2*240*160, NULL,
 				GL_DYNAMIC_DRAW);
 
 		m_window.display();
@@ -199,7 +209,7 @@ namespace mym
 		if (!m_window.setActive())
 			puts("Can't activate window !");
 
-		glViewport(0, 0, 240*4, 160*4);
+		glViewport(0, 0, 240, 160);
 
 		void* buf;
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -215,16 +225,11 @@ namespace mym
 			pthread_cond_wait(&m_cond, &m_mutex);
 
 			buf = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-#if 1
-			Filters::hq4x((unsigned char*)m_tbase, (unsigned char*)buf,
-					240, 160, 240*4*4);
-#else
 			memcpy((void*)buf, (void*)m_tbase, 240*160*2);
-#endif
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 240*4, 160*4, GL_BGRA,
-					GL_UNSIGNED_BYTE, 0);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 240, 160, GL_RGBA,
+					GL_UNSIGNED_SHORT_1_5_5_5_REV, 0);
 
 			glDrawArrays(GL_QUADS, 0, 4);
 
