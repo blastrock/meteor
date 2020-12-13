@@ -1,4 +1,4 @@
-SRCDIR   := $(CORE_DIR)/ameteor/source
+SRCDIR   := $(CORE_DIR)/ameteor/src
 
 INCFLAGS := -I$(CORE_DIR)/libretro -I$(CORE_DIR)/ameteor/include
 
