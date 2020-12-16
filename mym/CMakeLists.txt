@@ -27,3 +27,5 @@ target_link_libraries(mym
 	${SFML-GRAPHICS_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT}
 )
+
+target_link_libraries(mym stdc++fs)
