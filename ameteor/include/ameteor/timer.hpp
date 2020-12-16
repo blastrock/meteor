@@ -19,68 +19,64 @@
 
 #include "clock.hpp"
 
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Timer
-	{
-		public :
-			Timer (int8_t num, Timer* next) :
-				m_num(num),
-				m_reload(0),
-				m_count(0),
-				m_control(0),
-				m_next(next)
-			{
-			}
+class Timer
+{
+public:
+  Timer(int8_t num, Timer* next)
+    : m_num(num), m_reload(0), m_count(0), m_control(0), m_next(next)
+  {
+  }
 
-			void Reset ();
+  void Reset();
 
-			void SetReload (uint16_t rel)
-			{
-				m_reload = rel;
-			}
-			void Reload ();
+  void SetReload(uint16_t rel)
+  {
+    m_reload = rel;
+  }
+  void Reload();
 
-			uint16_t GetCount () const;
+  uint16_t GetCount() const;
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			union Control
-			{
-				Control(uint16_t v) :
-					w(v)
-				{ }
+private:
+  union Control
+  {
+    Control(uint16_t v) : w(v)
+    {
+    }
 
-				uint16_t w;
-				struct
-				{
-					unsigned char prescaler : 2;
-					bool countup            : 1;
-					unsigned char unused1   : 3;
-					bool irq                : 1;
-					bool start              : 1;
-					unsigned char unused2   : 8;
-				} b;
-			};
+    uint16_t w;
+    struct
+    {
+      unsigned char prescaler : 2;
+      bool countup : 1;
+      unsigned char unused1 : 3;
+      bool irq : 1;
+      bool start : 1;
+      unsigned char unused2 : 8;
+    } b;
+  };
 
-			const int8_t m_num;
-			uint16_t m_reload;
-			uint32_t m_count;
-			Control m_control;
+  const int8_t m_num;
+  uint16_t m_reload;
+  uint32_t m_count;
+  Control m_control;
 
-			Timer* m_next;
+  Timer* m_next;
 
-			void TimeEvent ();
-			void Countup ();
+  void TimeEvent();
+  void Countup();
 
-			friend void Clock::Commit();
-	};
+  friend void Clock::Commit();
+};
 }
 
 #endif

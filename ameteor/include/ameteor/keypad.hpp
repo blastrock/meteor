@@ -17,89 +17,89 @@
 #ifndef __KEYPAD_H__
 #define __KEYPAD_H__
 
-#include <stdint.h>
 #include <map>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Keypad
-	{
-		public :
-			enum Button
-			{
-				BTN_A      = 0x001,
-				BTN_B      = 0x002,
-				BTN_SELECT = 0x004,
-				BTN_START  = 0x008,
-				BTN_RIGHT  = 0x010,
-				BTN_LEFT   = 0x020,
-				BTN_UP     = 0x040,
-				BTN_DOWN   = 0x080,
-				BTN_R      = 0x100,
-				BTN_L      = 0x200
-			};
+class Keypad
+{
+public:
+  enum Button
+  {
+    BTN_A = 0x001,
+    BTN_B = 0x002,
+    BTN_SELECT = 0x004,
+    BTN_START = 0x008,
+    BTN_RIGHT = 0x010,
+    BTN_LEFT = 0x020,
+    BTN_UP = 0x040,
+    BTN_DOWN = 0x080,
+    BTN_R = 0x100,
+    BTN_L = 0x200
+  };
 
-			Keypad ();
+  Keypad();
 
-			void Reset ()
-			{
-			}
+  void Reset()
+  {
+  }
 
-			void BindKey(int code, Button btn)
-			{
-				m_keys[code] = (uint16_t)btn;
-			}
-			void UnbindKey(int code)
-			{
-				m_keys.erase(code);
-			}
-			void BindJoy(uint16_t joyid, uint16_t button, Button btn)
-			{
-				m_joys[((int)joyid) << 16 | button] = (uint16_t)btn;
-			}
-			void UnbindJoy(uint16_t joyid, uint16_t button)
-			{
-				m_joys.erase(((int)joyid) << 16 | button);
-			}
-			void BindAxis(uint16_t joyid, uint16_t axis, Button btn)
-			{
-				m_axis[((int)joyid) << 16 | axis] = (uint16_t)btn;
-			}
-			void UnbindAxis(uint16_t joyid, uint16_t axis)
-			{
-				m_axis.erase(((int)joyid) << 16 | axis);
-			}
+  void BindKey(int code, Button btn)
+  {
+    m_keys[code] = (uint16_t)btn;
+  }
+  void UnbindKey(int code)
+  {
+    m_keys.erase(code);
+  }
+  void BindJoy(uint16_t joyid, uint16_t button, Button btn)
+  {
+    m_joys[((int)joyid) << 16 | button] = (uint16_t)btn;
+  }
+  void UnbindJoy(uint16_t joyid, uint16_t button)
+  {
+    m_joys.erase(((int)joyid) << 16 | button);
+  }
+  void BindAxis(uint16_t joyid, uint16_t axis, Button btn)
+  {
+    m_axis[((int)joyid) << 16 | axis] = (uint16_t)btn;
+  }
+  void UnbindAxis(uint16_t joyid, uint16_t axis)
+  {
+    m_axis.erase(((int)joyid) << 16 | axis);
+  }
 
-			void ResetBindings()
-			{
-				m_keys.clear();
-				m_joys.clear();
-				m_axis.clear();
-			}
+  void ResetBindings()
+  {
+    m_keys.clear();
+    m_joys.clear();
+    m_axis.clear();
+  }
 
-			inline void SetPadState(uint16_t keys);
+  inline void SetPadState(uint16_t keys);
 
-			void KeyPressed(int code);
-			void KeyReleased(int code);
-			void JoyButtonPressed (uint16_t joyid, uint16_t button);
-			void JoyButtonReleased (uint16_t joyid, uint16_t button);
-			void JoyMoved (uint16_t joyid, uint16_t axis, float pos);
+  void KeyPressed(int code);
+  void KeyReleased(int code);
+  void JoyButtonPressed(uint16_t joyid, uint16_t button);
+  void JoyButtonReleased(uint16_t joyid, uint16_t button);
+  void JoyMoved(uint16_t joyid, uint16_t axis, float pos);
 
-			void VBlank ();
+  void VBlank();
 
-		private :
-			uint16_t& m_keyinput;
-			uint16_t& m_keycnt;
+private:
+  uint16_t& m_keyinput;
+  uint16_t& m_keycnt;
 
-			std::map<int, uint16_t> m_keys;
-			std::map<int, uint16_t> m_joys;
-			std::map<int, uint16_t> m_axis;
-	};
+  std::map<int, uint16_t> m_keys;
+  std::map<int, uint16_t> m_joys;
+  std::map<int, uint16_t> m_axis;
+};
 
-	void Keypad::SetPadState(uint16_t keys)
-	{
-		m_keyinput = keys;
-	}
+void Keypad::SetPadState(uint16_t keys)
+{
+  m_keyinput = keys;
+}
 }
 
 #endif

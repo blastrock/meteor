@@ -19,58 +19,58 @@
 
 #include "arguments.hpp"
 
-#include <string>
 #include <stdint.h>
+#include <string>
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class Instruction
-		{
-			public :
-				Instruction ()
-				{
-				}
+namespace Disassembler
+{
+class Instruction
+{
+public:
+  Instruction()
+  {
+  }
 
-				explicit Instruction (uint32_t offset, uint32_t code)
-				{
-					ParseArm (offset, code);
-				}
+  explicit Instruction(uint32_t offset, uint32_t code)
+  {
+    ParseArm(offset, code);
+  }
 
-				explicit Instruction (uint32_t offset, uint16_t code)
-				{
-					ParseThumb(offset, code);
-				}
+  explicit Instruction(uint32_t offset, uint16_t code)
+  {
+    ParseThumb(offset, code);
+  }
 
-				void Clear ();
+  void Clear();
 
-				void ParseArm (uint32_t offset, uint32_t code);
-				void ParseThumb (uint32_t offset, uint16_t code);
+  void ParseArm(uint32_t offset, uint32_t code);
+  void ParseThumb(uint32_t offset, uint16_t code);
 
-				const std::string& GetOperator () const
-				{
-					return m_operator;
-				}
+  const std::string& GetOperator() const
+  {
+    return m_operator;
+  }
 
-				std::string GetArguments () const
-				{
-					return m_args.GetString();
-				}
+  std::string GetArguments() const
+  {
+    return m_args.GetString();
+  }
 
-				std::string ToString () const
-				{
-					return GetOperator() + ' ' + GetArguments();
-				}
+  std::string ToString() const
+  {
+    return GetOperator() + ' ' + GetArguments();
+  }
 
-			private :
-				std::string m_operator;
-				Arguments m_args;
+private:
+  std::string m_operator;
+  Arguments m_args;
 
-				void ParseArmDataProc (uint32_t code);
-				void ParseArmCondition (uint32_t code);
-		};
-	}
+  void ParseArmDataProc(uint32_t code);
+  void ParseArmCondition(uint32_t code);
+};
+}
 }
 
 #endif

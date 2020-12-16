@@ -22,40 +22,40 @@
 
 namespace mym
 {
-	class Config
-	{
-		public:
-			void Clear()
-			{
-				m_conf.clear();
-			}
+class Config
+{
+public:
+  void Clear()
+  {
+    m_conf.clear();
+  }
 
-			bool LoadFile(const char* file);
-			bool SaveFile(const char* file) const;
+  bool LoadFile(const char* file);
+  bool SaveFile(const char* file) const;
 
-			const std::string& GetStr(const std::string& key) const
-			{
-				if (m_conf.count(key))
-					return m_conf.at(key);
-				else
-					return _empty_string_;
-			}
-			void SetStr(const std::string& key, const std::string& val)
-			{
-				m_conf[key] = val;
-			}
+  const std::string& GetStr(const std::string& key) const
+  {
+    if (m_conf.count(key))
+      return m_conf.at(key);
+    else
+      return _empty_string_;
+  }
+  void SetStr(const std::string& key, const std::string& val)
+  {
+    m_conf[key] = val;
+  }
 
-			int GetInt(const std::string& key) const;
-			void SetInt(const std::string& key, int val);
+  int GetInt(const std::string& key) const;
+  void SetInt(const std::string& key, int val);
 
-			void InitAMeteor();
+  void InitAMeteor();
 
-		private:
-			typedef std::map<std::string, std::string> Config_t;
+private:
+  typedef std::map<std::string, std::string> Config_t;
 
-			static const std::string _empty_string_;
-			Config_t m_conf;
-	};
+  static const std::string _empty_string_;
+  Config_t m_conf;
+};
 }
 
 #endif

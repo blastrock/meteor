@@ -24,44 +24,44 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		enum SpecialRegister
-		{
-			SPREG_NONE = 0,
-			SPREG_LR = 1,
-			SPREG_PC = 2
-		};
+namespace Disassembler
+{
+enum SpecialRegister
+{
+  SPREG_NONE = 0,
+  SPREG_LR = 1,
+  SPREG_PC = 2
+};
 
-		class ArgMulRegisters : public Argument
-		{
-			public :
-				ArgMulRegisters (bool forceuser) :
-					m_lastreg(SPREG_NONE),
-					m_forceuser(forceuser)
-				{ }
+class ArgMulRegisters : public Argument
+{
+public:
+  ArgMulRegisters(bool forceuser)
+    : m_lastreg(SPREG_NONE), m_forceuser(forceuser)
+  {
+  }
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				void AddRegister(uint8_t reg)
-				{
-					m_regs.push_back(reg);
-				}
-				void AddLastRegister(SpecialRegister reg)
-				{
-					m_lastreg = reg;
-				}
+  void AddRegister(uint8_t reg)
+  {
+    m_regs.push_back(reg);
+  }
+  void AddLastRegister(SpecialRegister reg)
+  {
+    m_lastreg = reg;
+  }
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				typedef std::vector<uint8_t> Registers;
+private:
+  typedef std::vector<uint8_t> Registers;
 
-				Registers m_regs;
-				SpecialRegister m_lastreg;
-				bool m_forceuser;
-		};
-	}
+  Registers m_regs;
+  SpecialRegister m_lastreg;
+  bool m_forceuser;
+};
+}
 }
 
 #endif

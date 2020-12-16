@@ -18,39 +18,39 @@
 #define __SRAM_H__
 
 #include "cartmem.hpp"
-#include <stdint.h>
 #include <fstream>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Sram : public CartMem
-	{
-		public :
-			Sram ();
+class Sram : public CartMem
+{
+public:
+  Sram();
 
-			void Reset ();
+  void Reset();
 
-			bool Load (std::istream& f);
-			bool Save (std::ostream& f);
+  bool Load(std::istream& f);
+  bool Save(std::ostream& f);
 
-			uint8_t Read (uint16_t add)
-			{
-				return m_data[add % SIZE];
-			}
-			bool Write (uint16_t add, uint8_t val)
-			{
-				m_data[add % SIZE] = val;
-				return true;
-			}
+  uint8_t Read(uint16_t add)
+  {
+    return m_data[add % SIZE];
+  }
+  bool Write(uint16_t add, uint8_t val)
+  {
+    m_data[add % SIZE] = val;
+    return true;
+  }
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			static const uint16_t SIZE = 0x8000;
-	};
+private:
+  static const uint16_t SIZE = 0x8000;
+};
 }
 
 #endif

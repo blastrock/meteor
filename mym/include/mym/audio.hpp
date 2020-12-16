@@ -17,28 +17,28 @@
 #ifndef __MYM_AUDIO_HPP__
 #define __MYM_AUDIO_HPP__
 
-#include <stdint.h>
 #include <ao/ao.h>
+#include <stdint.h>
 
 namespace mym
 {
-	class Audio
-	{
-		public :
-			Audio();
-			~Audio();
+class Audio
+{
+public:
+  Audio();
+  ~Audio();
 
-			void InitAMeteor();
-			void Init();
-			void Uninit();
+  void InitAMeteor();
+  void Init();
+  void Uninit();
 
-			void PlayFrames(const int16_t* data);
+  void PlayFrames(const int16_t* data);
 
-			//inline void SetSampleskip (uint16_t skip);
+  // inline void SetSampleskip (uint16_t skip);
 
-		private :
-			ao_device* m_device;
-	};
+private:
+  ao_device* m_device;
+};
 }
 
 #endif

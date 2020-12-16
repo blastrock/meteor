@@ -23,26 +23,26 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class Arguments
-		{
-			public :
-				~Arguments ();
+namespace Disassembler
+{
+class Arguments
+{
+public:
+  ~Arguments();
 
-				void Clear ();
+  void Clear();
 
-				void AddArgument(const Argument& arg)
-				{
-					m_args.push_back(arg.Clone());
-				}
+  void AddArgument(const Argument& arg)
+  {
+    m_args.push_back(arg.Clone());
+  }
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				std::vector<Argument*> m_args;
-		};
-	}
+private:
+  std::vector<Argument*> m_args;
+};
+}
 }
 
 #endif

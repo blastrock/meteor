@@ -30,8 +30,8 @@
 #undef FLAG_C
 #undef FLAG_V
 #undef FLAG_T
-#define CPSR   (m_st.cpsr.dw)
-#define SPSR   (m_st.spsr.dw)
+#define CPSR (m_st.cpsr.dw)
+#define SPSR (m_st.spsr.dw)
 #define FLAG_Z (m_st.icpsr.f_zero)
 #define FLAG_N (m_st.icpsr.f_sign)
 #define FLAG_C (m_st.icpsr.f_carry)

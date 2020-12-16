@@ -20,38 +20,39 @@
 namespace AMeteor
 {
 #ifdef __LIBRETRO__
-	uint8_t CartMemData[CartMem::MAX_SIZE+4];
+uint8_t CartMemData[CartMem::MAX_SIZE + 4];
 #endif
 
-	CartMem::CartMem() :
+CartMem::CartMem()
+  :
 #ifdef __LIBRETRO__
-		m_data(CartMemData)
+  m_data(CartMemData)
 #else
-		m_data(new uint8_t[MAX_SIZE+4])
+  m_data(new uint8_t[MAX_SIZE + 4])
 #endif
-	{
-	}
+{
+}
 
-	CartMem::~CartMem()
-	{
+CartMem::~CartMem()
+{
 #ifndef __LIBRETRO__
-		delete [] m_data;
+  delete[] m_data;
 #endif
-	}
+}
 
-	bool CartMem::SaveState (std::ostream& stream)
-	{
-		stream.write((char*)m_data, MAX_SIZE);
-		SS_WRITE_VAR(m_size);
+bool CartMem::SaveState(std::ostream& stream)
+{
+  stream.write((char*)m_data, MAX_SIZE);
+  SS_WRITE_VAR(m_size);
 
-		return true;
-	}
+  return true;
+}
 
-	bool CartMem::LoadState (std::istream& stream)
-	{
-		stream.read((char*)m_data, MAX_SIZE);
-		SS_READ_VAR(m_size);
+bool CartMem::LoadState(std::istream& stream)
+{
+  stream.read((char*)m_data, MAX_SIZE);
+  SS_READ_VAR(m_size);
 
-		return true;
-	}
+  return true;
+}
 }

@@ -17,96 +17,97 @@
 #ifndef __DMA_H__
 #define __DMA_H__
 
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Dma
-	{
-		public :
-			enum Reason
-			{
-				Immediately = 0,
-				VBlank,
-				HBlank,
-				Special
-			};
+class Dma
+{
+public:
+  enum Reason
+  {
+    Immediately = 0,
+    VBlank,
+    HBlank,
+    Special
+  };
 
-			Dma () :
-				m_graphic(false)
-			{ }
+  Dma() : m_graphic(false)
+  {
+  }
 
-			void Reset ();
+  void Reset();
 
-			bool GraphicDma () const
-			{
-				return m_graphic;
-			}
+  bool GraphicDma() const
+  {
+    return m_graphic;
+  }
 
-			void SetReload(uint8_t channum, uint16_t reload)
-			{
-				m_chans[channum].reload = reload;
-			}
+  void SetReload(uint8_t channum, uint16_t reload)
+  {
+    m_chans[channum].reload = reload;
+  }
 
-			void UpdateCnt (uint8_t channum);
-			void Check(uint8_t channum, uint8_t reason);
-			inline void CheckAll(uint8_t reason)
-			{
-				Check(0, reason);
-				Check(1, reason);
-				Check(2, reason);
-				Check(3, reason);
-			}
+  void UpdateCnt(uint8_t channum);
+  void Check(uint8_t channum, uint8_t reason);
+  inline void CheckAll(uint8_t reason)
+  {
+    Check(0, reason);
+    Check(1, reason);
+    Check(2, reason);
+    Check(3, reason);
+  }
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			struct Channel
-			{
-				Channel () :
-					reload(0),
-					src(0),
-					dest(0),
-					count(0),
-					control(0)
-				{ }
+private:
+  struct Channel
+  {
+    Channel() : reload(0), src(0), dest(0), count(0), control(0)
+    {
+    }
 
-				uint16_t reload;
-				uint32_t src;
-				uint32_t dest;
-				uint16_t count;
-				union Control
-				{
-					Control(uint16_t v) :
-						w(v)
-					{ }
+    uint16_t reload;
+    uint32_t src;
+    uint32_t dest;
+    uint16_t count;
+    union Control
+    {
+      Control(uint16_t v) : w(v)
+      {
+      }
 
-					uint16_t w;
-					struct
-					{
-						unsigned int unused : 5;
-						unsigned int dest   : 2;
-						unsigned int src    : 2;
-						unsigned int repeat : 1;
-						unsigned int type   : 1;
-						unsigned int drq    : 1;
-						unsigned int start  : 2;
-						unsigned int irq    : 1;
-						unsigned int enable : 1;
-					} b;
-				} control;
-			};
+      uint16_t w;
+      struct
+      {
+        unsigned int unused : 5;
+        unsigned int dest : 2;
+        unsigned int src : 2;
+        unsigned int repeat : 1;
+        unsigned int type : 1;
+        unsigned int drq : 1;
+        unsigned int start : 2;
+        unsigned int irq : 1;
+        unsigned int enable : 1;
+      } b;
+    } control;
+  };
 
-			Channel m_chans[4];
-			bool m_graphic;
+  Channel m_chans[4];
+  bool m_graphic;
 
-			void Process(uint8_t channel);
-			void Copy (uint32_t& src, uint32_t& dest, int8_t s_inc, int8_t d_inc,
-					uint32_t count, bool word);
-	};
+  void Process(uint8_t channel);
+  void Copy(
+      uint32_t& src,
+      uint32_t& dest,
+      int8_t s_inc,
+      int8_t d_inc,
+      uint32_t count,
+      bool word);
+};
 }
 
 #endif

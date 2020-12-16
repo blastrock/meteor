@@ -17,19 +17,19 @@
 #include "MainText.hpp"
 #include <iostream>
 
-int main (int argc, char **argv)
+int main(int argc, char** argv)
 {
-	if (argc != 2)
-	{
-		std::cout << "Usage : " << argv[0] << " <rom>" << std::endl;
-		return 1;
-	}
+  if (argc != 2)
+  {
+    std::cout << "Usage : " << argv[0] << " <rom>" << std::endl;
+    return 1;
+  }
 
-	MainText text;
+  MainText text;
 
-	text.Open(argv[1]);
+  text.Open(argv[1]);
 
-	text.Run();
+  text.Run();
 
-	return 0;
+  return 0;
 }

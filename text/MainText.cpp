@@ -16,121 +16,123 @@
 
 #include "MainText.hpp"
 
-#include <ameteor.hpp>
 #include "configurator.hpp"
+#include <ameteor.hpp>
+#include <filesystem>
 #include <iostream>
 #include <stdexcept>
-#include <filesystem>
 
-MainText::MainText () :
-	m_events(m_window.GetWindow()),
-	m_running(false)
+MainText::MainText() : m_events(m_window.GetWindow()), m_running(false)
 {
-	Configurator config;
-	config.Load();
-	config.InitAMeteor();
+  Configurator config;
+  config.Load();
+  config.InitAMeteor();
 
-	m_window.InitAMeteor();
-	m_audio.InitAMeteor();
-	m_events.InitAMeteor();
+  m_window.InitAMeteor();
+  m_audio.InitAMeteor();
+  m_events.InitAMeteor();
 
-	m_batteryPath = config.GetBatteryPath();
-	m_sstatePath = config.GetSStatePath();
-	m_romPath = config.GetRomPath();
+  m_batteryPath = config.GetBatteryPath();
+  m_sstatePath = config.GetSStatePath();
+  m_romPath = config.GetRomPath();
 }
 
 void MainText::Open(const std::string& rom)
 {
-	std::cout << "Loading " << rom << std::endl;
+  std::cout << "Loading " << rom << std::endl;
 
-	m_openFile = rom;
-	if (!AMeteor::_memory.LoadRom(m_openFile.c_str()))
-		throw std::runtime_error("Failed to load ROM");
+  m_openFile = rom;
+  if (!AMeteor::_memory.LoadRom(m_openFile.c_str()))
+    throw std::runtime_error("Failed to load ROM");
 
-	std::string file = (std::filesystem::path(m_batteryPath) /
-			std::filesystem::path(m_openFile).filename()).string();
-	if (file[file.size()-4] == '.')
-		file.replace(file.end()-3, file.end(), "mct");
-	else
-		file.append(".mct");
-	AMeteor::_memory.SetCartFile(file.c_str());
-	if (AMeteor::_memory.LoadCart() == AMeteor::Memory::CERR_FAIL)
-		std::cout << "Failed to load battery" << std::endl;
+  std::string file = (std::filesystem::path(m_batteryPath) /
+                      std::filesystem::path(m_openFile).filename())
+                         .string();
+  if (file[file.size() - 4] == '.')
+    file.replace(file.end() - 3, file.end(), "mct");
+  else
+    file.append(".mct");
+  AMeteor::_memory.SetCartFile(file.c_str());
+  if (AMeteor::_memory.LoadCart() == AMeteor::Memory::CERR_FAIL)
+    std::cout << "Failed to load battery" << std::endl;
 
-	std::cout << "Rom loaded" << std::endl;
+  std::cout << "Rom loaded" << std::endl;
 }
 
 void MainText::OpenBios(const std::string& file)
 {
-	if (!AMeteor::_memory.LoadBios(file.c_str()))
-		throw std::runtime_error("Failed to load BIOS");
+  if (!AMeteor::_memory.LoadBios(file.c_str()))
+    throw std::runtime_error("Failed to load BIOS");
 }
 
 void MainText::Close()
 {
-	m_running = false;
+  m_running = false;
 
-	AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
-	m_window.Uninit();
-	m_openFile.clear();
+  AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
+  m_window.Uninit();
+  m_openFile.clear();
 }
 
 void MainText::CloseBios()
 {
-	if (m_running)
-		return;
+  if (m_running)
+    return;
 
-	AMeteor::Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
+  AMeteor::Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
 }
 
 void MainText::Run()
 {
-	if (m_running)
-		return;
+  if (m_running)
+    return;
 
-	m_window.Init();
-	m_audio.Init();
+  m_window.Init();
+  m_audio.Init();
 
-	m_running = true;
-	do
-	{
-		AMeteor::Run(280000);
-	} while (m_running);
+  m_running = true;
+  do
+  {
+    AMeteor::Run(280000);
+  } while (m_running);
 }
 
 void MainText::Stop()
 {
-	m_running = false;
+  m_running = false;
 }
 
 void MainText::Reset()
 {
-	AMeteor::Reset(AMeteor::UNIT_ALL ^
-			(AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
+  AMeteor::Reset(
+      AMeteor::UNIT_ALL ^
+      (AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
 }
 
 void MainText::SaveState(uint8_t n)
 {
-	std::string file = (std::filesystem::path(m_sstatePath) /
-			std::filesystem::path(m_openFile).filename()).string();
-	if (file[file.size()-4] == '.')
-		file.replace(file.end()-3, file.end(), "mst");
-	else
-		file.append(".mst");
-	file.insert(file.end()-4, 1, n+'0');
-	if (!AMeteor::SaveState(file.c_str()))
-		std::cout << "Cannot save state!" << std::endl;
+  std::string file = (std::filesystem::path(m_sstatePath) /
+                      std::filesystem::path(m_openFile).filename())
+                         .string();
+  if (file[file.size() - 4] == '.')
+    file.replace(file.end() - 3, file.end(), "mst");
+  else
+    file.append(".mst");
+  file.insert(file.end() - 4, 1, n + '0');
+  if (!AMeteor::SaveState(file.c_str()))
+    std::cout << "Cannot save state!" << std::endl;
 }
 
 void MainText::LoadState(uint8_t n)
 {
-	std::string file = (std::filesystem::path(m_sstatePath) /
-			std::filesystem::path(m_openFile).filename()).string();
-	if (file[file.size()-4] == '.')
-		file.replace(file.end()-3, file.end(), "mst");
-	else
-		file.append(".mst");
-	file.insert(file.end()-4, 1, n+'0');
-	if (!AMeteor::LoadState(file.c_str()))
-		std::cout << "Cannot load state!" << std::endl;
+  std::string file = (std::filesystem::path(m_sstatePath) /
+                      std::filesystem::path(m_openFile).filename())
+                         .string();
+  if (file[file.size() - 4] == '.')
+    file.replace(file.end() - 3, file.end(), "mst");
+  else
+    file.append(".mst");
+  file.insert(file.end() - 4, 1, n + '0');
+  if (!AMeteor::LoadState(file.c_str()))
+    std::cout << "Cannot load state!" << std::endl;
 }

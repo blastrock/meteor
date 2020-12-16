@@ -21,36 +21,36 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		enum ShiftType
-		{
-			SHIFT_LSL = 0,
-			SHIFT_LSR,
-			SHIFT_ASR,
-			SHIFT_ROR,
-			SHIFT_RRX
-		};
+namespace Disassembler
+{
+enum ShiftType
+{
+  SHIFT_LSL = 0,
+  SHIFT_LSR,
+  SHIFT_ASR,
+  SHIFT_ROR,
+  SHIFT_RRX
+};
 
-		class ArgShift : public Argument
-		{
-			public :
-				ArgShift (const Argument& arg1, const Argument& arg2,
-						ShiftType type, bool memory);
-				ArgShift (const ArgShift& arg);
-				~ArgShift ();
+class ArgShift : public Argument
+{
+public:
+  ArgShift(
+      const Argument& arg1, const Argument& arg2, ShiftType type, bool memory);
+  ArgShift(const ArgShift& arg);
+  ~ArgShift();
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				const Argument* m_arg1;
-				const Argument* m_arg2;
-				ShiftType m_type;
-				bool m_memory;
-		};
-	}
+private:
+  const Argument* m_arg1;
+  const Argument* m_arg2;
+  ShiftType m_type;
+  bool m_memory;
+};
+}
 }
 
 #endif

@@ -22,23 +22,23 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class ArgImmediate : public Argument
-		{
-			public :
-				ArgImmediate (int32_t imm) :
-					m_imm(imm)
-				{ }
+namespace Disassembler
+{
+class ArgImmediate : public Argument
+{
+public:
+  ArgImmediate(int32_t imm) : m_imm(imm)
+  {
+  }
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				int32_t m_imm;
-		};
-	}
+private:
+  int32_t m_imm;
+};
+}
 }
 
 #endif

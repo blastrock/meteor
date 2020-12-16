@@ -18,46 +18,46 @@
 #define __FLASH_H__
 
 #include "cartmem.hpp"
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Flash : public CartMem
-	{
-		public :
-			Flash (bool big);
+class Flash : public CartMem
+{
+public:
+  Flash(bool big);
 
-			void Reset ();
+  void Reset();
 
-			bool Load (std::istream& f);
-			bool Save (std::ostream& f);
+  bool Load(std::istream& f);
+  bool Save(std::ostream& f);
 
-			uint8_t Read (uint16_t add);
-			bool Write (uint16_t add, uint8_t val);
+  uint8_t Read(uint16_t add);
+  bool Write(uint16_t add, uint8_t val);
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			uint8_t m_device_id;
-			uint8_t m_manufacturer_id;
+private:
+  uint8_t m_device_id;
+  uint8_t m_manufacturer_id;
 
-			enum State
-			{
-				NORMAL,
-				CMD1,
-				CMD2,
-				ID,
-				ERASE1,
-				ERASE2,
-				ERASE3,
-				WRITE
-			};
+  enum State
+  {
+    NORMAL,
+    CMD1,
+    CMD2,
+    ID,
+    ERASE1,
+    ERASE2,
+    ERASE3,
+    WRITE
+  };
 
-			State m_state;
-	};
+  State m_state;
+};
 }
 
 #endif

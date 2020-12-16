@@ -18,41 +18,42 @@
 #include <filesystem>
 #include <string>
 
-namespace {
+namespace
+{
 std::string _GetHomeDir()
 {
-	const char* home = getenv("HOME");
-	if (!home)
-		throw std::runtime_error("can't find HOME environment variable");
-	return home;
+  const char* home = getenv("HOME");
+  if (!home)
+    throw std::runtime_error("can't find HOME environment variable");
+  return home;
 }
 
 std::string GetHomeDir()
 {
-	static std::string home = _GetHomeDir();
-	return home;
+  static std::string home = _GetHomeDir();
+  return home;
 }
 }
 
 void Configurator::Load()
 {
-	std::filesystem::path file =
-		std::filesystem::path(_GetHomeDir()) / ".meteor" / "meteor.cfg";
-	m_cfg.LoadFile(file.c_str());
+  std::filesystem::path file =
+      std::filesystem::path(_GetHomeDir()) / ".meteor" / "meteor.cfg";
+  m_cfg.LoadFile(file.c_str());
 }
 
 void Configurator::InitAMeteor()
 {
-	m_cfg.InitAMeteor();
+  m_cfg.InitAMeteor();
 
-	std::string str;
-#define SET_PATH(name, var) \
-	str = m_cfg.GetStr(name); \
-	if (!str.empty() && str[0] == '~') \
-		str = GetHomeDir() + str.substr(1); \
-	m_##var = str;
-	SET_PATH("BatteryPath", batteryPath);
-	SET_PATH("SaveStatePath", sstatePath);
-	SET_PATH("RomPath", romPath);
+  std::string str;
+#define SET_PATH(name, var)             \
+  str = m_cfg.GetStr(name);             \
+  if (!str.empty() && str[0] == '~')    \
+    str = GetHomeDir() + str.substr(1); \
+  m_##var = str;
+  SET_PATH("BatteryPath", batteryPath);
+  SET_PATH("SaveStatePath", sstatePath);
+  SET_PATH("RomPath", romPath);
 #undef SET_PATH
 }

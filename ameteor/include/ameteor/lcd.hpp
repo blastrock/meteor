@@ -19,111 +19,111 @@
 
 #include "clock.hpp"
 
-#include "memory.hpp"
-#include "io.hpp"
 #include "graphics/screen.hpp"
+#include "io.hpp"
+#include "memory.hpp"
 
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 #include <syg/signal.hpp>
 
 namespace AMeteor
 {
-	class Lcd
-	{
-		public :
-			Lcd ();
+class Lcd
+{
+public:
+  Lcd();
 
-			void Reset ();
+  void Reset();
 
-			const uint16_t* GetSurface () const
-			{
-				return m_screen.GetSurface();
-			}
+  const uint16_t* GetSurface() const
+  {
+    return m_screen.GetSurface();
+  }
 
-			Graphics::Screen& GetScreen()
-			{
-				return m_screen;
-			}
-			const Graphics::Screen& GetScreen() const
-			{
-				return m_screen;
-			}
+  Graphics::Screen& GetScreen()
+  {
+    return m_screen;
+  }
+  const Graphics::Screen& GetScreen() const
+  {
+    return m_screen;
+  }
 
-			void SetFrameskip (uint8_t skip)
-			{
-				m_screen.SetFrameskip(skip);
-			}
+  void SetFrameskip(uint8_t skip)
+  {
+    m_screen.SetFrameskip(skip);
+  }
 
-			void UpdateDispCnt (uint16_t dispcnt)
-			{
-				m_screen.UpdateDispCnt(dispcnt);
-			}
+  void UpdateDispCnt(uint16_t dispcnt)
+  {
+    m_screen.UpdateDispCnt(dispcnt);
+  }
 
-#define UPDATE_BG_CNT(num) \
-	void UpdateBg##num##Cnt (uint16_t cnt) \
-	{ \
-		m_screen.UpdateBg##num##Cnt(cnt); \
-	}
-			UPDATE_BG_CNT(0)
-			UPDATE_BG_CNT(1)
-			UPDATE_BG_CNT(2)
-			UPDATE_BG_CNT(3)
+#define UPDATE_BG_CNT(num)              \
+  void UpdateBg##num##Cnt(uint16_t cnt) \
+  {                                     \
+    m_screen.UpdateBg##num##Cnt(cnt);   \
+  }
+  UPDATE_BG_CNT(0)
+  UPDATE_BG_CNT(1)
+  UPDATE_BG_CNT(2)
+  UPDATE_BG_CNT(3)
 #undef UPDATE_BG_CNT
 
-#define UPDATE_BG_OFF(num, coord) \
-	void UpdateBg##num##coord##Off (uint16_t cnt) \
-	{ \
-		m_screen.UpdateBg##num##coord##Off(cnt); \
-	}
-			UPDATE_BG_OFF(0, X)
-			UPDATE_BG_OFF(0, Y)
-			UPDATE_BG_OFF(1, X)
-			UPDATE_BG_OFF(1, Y)
-			UPDATE_BG_OFF(2, X)
-			UPDATE_BG_OFF(2, Y)
-			UPDATE_BG_OFF(3, X)
-			UPDATE_BG_OFF(3, Y)
+#define UPDATE_BG_OFF(num, coord)              \
+  void UpdateBg##num##coord##Off(uint16_t cnt) \
+  {                                            \
+    m_screen.UpdateBg##num##coord##Off(cnt);   \
+  }
+  UPDATE_BG_OFF(0, X)
+  UPDATE_BG_OFF(0, Y)
+  UPDATE_BG_OFF(1, X)
+  UPDATE_BG_OFF(1, Y)
+  UPDATE_BG_OFF(2, X)
+  UPDATE_BG_OFF(2, Y)
+  UPDATE_BG_OFF(3, X)
+  UPDATE_BG_OFF(3, Y)
 #undef UPDATE_BG_OFF
 
-#define UPDATE_BG_REF(num, coord) \
-	void UpdateBg##num##Ref##coord (int32_t cnt) \
-	{ \
-		m_screen.UpdateBg##num##Ref##coord (cnt); \
-	}
-			UPDATE_BG_REF(2, X)
-			UPDATE_BG_REF(2, Y)
-			UPDATE_BG_REF(3, X)
-			UPDATE_BG_REF(3, Y)
+#define UPDATE_BG_REF(num, coord)             \
+  void UpdateBg##num##Ref##coord(int32_t cnt) \
+  {                                           \
+    m_screen.UpdateBg##num##Ref##coord(cnt);  \
+  }
+  UPDATE_BG_REF(2, X)
+  UPDATE_BG_REF(2, Y)
+  UPDATE_BG_REF(3, X)
+  UPDATE_BG_REF(3, Y)
 #undef UPDATE_BG_REF
 
-			void OamWrite (uint32_t begin, uint32_t end)
-			{
-				m_screen.OamWrite(begin, end);
-			}
-			void OamWrite16 (uint32_t add)
-			{
-				m_screen.OamWrite16(add);
-			}
-			void OamWrite32 (uint32_t add)
-			{
-				m_screen.OamWrite32(add);
-			}
+  void OamWrite(uint32_t begin, uint32_t end)
+  {
+    m_screen.OamWrite(begin, end);
+  }
+  void OamWrite16(uint32_t add)
+  {
+    m_screen.OamWrite16(add);
+  }
+  void OamWrite32(uint32_t add)
+  {
+    m_screen.OamWrite32(add);
+  }
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-			syg::signal<void> sig_vblank;
+  syg::signal<void> sig_vblank;
 
-		private :
-			Graphics::Screen m_screen;
+private:
+  Graphics::Screen m_screen;
 
-			void TimeEvent ();
+  void TimeEvent();
 
-			friend void Clock::Commit();
-	};
+  friend void Clock::Commit();
+};
 }
 
 #endif

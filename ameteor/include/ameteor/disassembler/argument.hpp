@@ -21,19 +21,20 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class Argument
-		{
-			public :
-				virtual ~Argument ()
-				{ }
+namespace Disassembler
+{
+class Argument
+{
+public:
+  virtual ~Argument()
+  {
+  }
 
-				virtual Argument* Clone () const = 0;
+  virtual Argument* Clone() const = 0;
 
-				virtual std::string GetString () const = 0;
-		};
-	}
+  virtual std::string GetString() const = 0;
+};
+}
 }
 
 #endif

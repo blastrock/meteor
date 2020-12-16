@@ -20,52 +20,54 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		ArgShift::ArgShift (const Argument& arg1, const Argument& arg2,
-				ShiftType type, bool memory) :
-			Argument(),
-			m_arg1(arg1.Clone()),
-			m_arg2(arg2.Clone()),
-			m_type(type),
-			m_memory(memory)
-		{ }
+namespace Disassembler
+{
+ArgShift::ArgShift(
+    const Argument& arg1, const Argument& arg2, ShiftType type, bool memory)
+  : Argument()
+  , m_arg1(arg1.Clone())
+  , m_arg2(arg2.Clone())
+  , m_type(type)
+  , m_memory(memory)
+{
+}
 
-		ArgShift::ArgShift (const ArgShift& arg) :
-			Argument(),
-			m_arg1(arg.m_arg1->Clone()),
-			m_arg2(arg.m_arg2->Clone()),
-			m_type(arg.m_type),
-			m_memory(arg.m_memory)
-		{ }
+ArgShift::ArgShift(const ArgShift& arg)
+  : Argument()
+  , m_arg1(arg.m_arg1->Clone())
+  , m_arg2(arg.m_arg2->Clone())
+  , m_type(arg.m_type)
+  , m_memory(arg.m_memory)
+{
+}
 
-		ArgShift::~ArgShift ()
-		{
-			delete m_arg1;
-			delete m_arg2;
-		}
+ArgShift::~ArgShift()
+{
+  delete m_arg1;
+  delete m_arg2;
+}
 
-		Argument* ArgShift::Clone () const
-		{
-			return new ArgShift(*this);
-		}
+Argument* ArgShift::Clone() const
+{
+  return new ArgShift(*this);
+}
 
-		std::string ArgShift::GetString () const
-		{
-			static const char* Shifts[] = {", LSL ", ", LSR ", ", ASR ", ", ROR ",
-				", RRX "};
+std::string ArgShift::GetString() const
+{
+  static const char* Shifts[] = {
+      ", LSL ", ", LSR ", ", ASR ", ", ROR ", ", RRX "};
 
-			std::ostringstream ss;
+  std::ostringstream ss;
 
-			if (m_memory)
-				ss << '[';
+  if (m_memory)
+    ss << '[';
 
-			ss << m_arg1->GetString() << Shifts[m_type] << m_arg2->GetString();
+  ss << m_arg1->GetString() << Shifts[m_type] << m_arg2->GetString();
 
-			if (m_memory)
-				ss << ']';
+  if (m_memory)
+    ss << ']';
 
-			return ss.str();
-		}
-	}
+  return ss.str();
+}
+}
 }

@@ -21,30 +21,30 @@
 
 class Configurator
 {
-	public:
-		void Load();
+public:
+  void Load();
 
-		void InitAMeteor();
+  void InitAMeteor();
 
-		const std::string& GetBatteryPath() const
-		{
-			return m_batteryPath;
-		}
-		const std::string& GetSStatePath() const
-		{
-			return m_sstatePath;
-		}
-		const std::string& GetRomPath() const
-		{
-			return m_romPath;
-		}
+  const std::string& GetBatteryPath() const
+  {
+    return m_batteryPath;
+  }
+  const std::string& GetSStatePath() const
+  {
+    return m_sstatePath;
+  }
+  const std::string& GetRomPath() const
+  {
+    return m_romPath;
+  }
 
-	private:
-		mym::Config m_cfg;
+private:
+  mym::Config m_cfg;
 
-		std::string m_batteryPath;
-		std::string m_sstatePath;
-		std::string m_romPath;
+  std::string m_batteryPath;
+  std::string m_sstatePath;
+  std::string m_romPath;
 };
 
 #endif

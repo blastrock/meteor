@@ -23,34 +23,35 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class ArgRegister : public Argument
-		{
-			public :
-				ArgRegister (uint8_t reg, bool writeback = false,
-						bool special = false, bool memory = false) :
-					m_reg(reg),
-					m_writeback(writeback),
-					m_special(special),
-					m_memory(memory)
-				{ }
+namespace Disassembler
+{
+class ArgRegister : public Argument
+{
+public:
+  ArgRegister(
+      uint8_t reg,
+      bool writeback = false,
+      bool special = false,
+      bool memory = false)
+    : m_reg(reg), m_writeback(writeback), m_special(special), m_memory(memory)
+  {
+  }
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				std::string GetString () const;
-				uint8_t GetRegister () const
-				{
-					return m_reg;
-				}
+  std::string GetString() const;
+  uint8_t GetRegister() const
+  {
+    return m_reg;
+  }
 
-			private :
-				uint8_t m_reg;
-				bool m_writeback;
-				bool m_special;
-				bool m_memory;
-		};
-	}
+private:
+  uint8_t m_reg;
+  bool m_writeback;
+  bool m_special;
+  bool m_memory;
+};
+}
 }
 
 #endif

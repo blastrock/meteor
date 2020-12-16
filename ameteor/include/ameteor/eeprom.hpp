@@ -18,62 +18,62 @@
 #define __EEPROM_H__
 
 #include "cartmem.hpp"
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Eeprom : public CartMem
-	{
-		public :
-			Eeprom (bool big);
+class Eeprom : public CartMem
+{
+public:
+  Eeprom(bool big);
 
-			void Reset ();
+  void Reset();
 
-			uint16_t GetSize () const
-			{
-				return m_size;
-			}
+  uint16_t GetSize() const
+  {
+    return m_size;
+  }
 
-			bool Load (std::istream& f);
-			bool Save (std::ostream& f);
+  bool Load(std::istream& f);
+  bool Save(std::ostream& f);
 
-			uint8_t Read (uint16_t add);
-			bool Write (uint16_t add, uint8_t val);
+  uint8_t Read(uint16_t add);
+  bool Write(uint16_t add, uint8_t val);
 
-			uint16_t Read ();
-			//bool Write (uint16_t val);
+  uint16_t Read();
+  // bool Write (uint16_t val);
 
-			bool Write (uint16_t* data, uint16_t size);
-			//XXX
+  bool Write(uint16_t* data, uint16_t size);
+  // XXX
 #if 0
 			void Read (uint16_t* pOut);
 #endif
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			enum State
-			{
-				IDLE,
-				//WAITING,
+private:
+  enum State
+  {
+    IDLE,
+    // WAITING,
 
-				//READ_ADD,
-				//READ_END,
-				READ_GARBAGE,
-				READ_DATA
+    // READ_ADD,
+    // READ_END,
+    READ_GARBAGE,
+    READ_DATA
 
-				/*WRITE_ADD,
-				WRITE_DATA,
-				WRITE_END*/
-			};
+    /*WRITE_ADD,
+    WRITE_DATA,
+    WRITE_END*/
+  };
 
-			uint8_t m_state;
-			uint16_t m_add;
-			uint8_t m_pos;
-	};
+  uint8_t m_state;
+  uint16_t m_add;
+  uint8_t m_pos;
+};
 }
 
 #endif

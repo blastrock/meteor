@@ -18,34 +18,36 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		Arguments::~Arguments ()
-		{
-			Clear();
-		}
+namespace Disassembler
+{
+Arguments::~Arguments()
+{
+  Clear();
+}
 
-		void Arguments::Clear ()
-		{
-			for (std::vector<Argument*>::iterator iter = m_args.begin();
-					iter != m_args.end(); ++iter)
-			{
-				delete *iter;
-			}
-			m_args.clear();
-		}
+void Arguments::Clear()
+{
+  for (std::vector<Argument*>::iterator iter = m_args.begin();
+       iter != m_args.end();
+       ++iter)
+  {
+    delete *iter;
+  }
+  m_args.clear();
+}
 
-		std::string Arguments::GetString () const
-		{
-			std::string out;
-			for (std::vector<Argument*>::const_iterator iter = m_args.begin();
-					iter != m_args.end(); ++iter)
-			{
-				if (!out.empty())
-					out += ", ";
-				out += (*iter)->GetString();
-			}
-			return out;
-		}
-	}
+std::string Arguments::GetString() const
+{
+  std::string out;
+  for (std::vector<Argument*>::const_iterator iter = m_args.begin();
+       iter != m_args.end();
+       ++iter)
+  {
+    if (!out.empty())
+      out += ", ";
+    out += (*iter)->GetString();
+  }
+  return out;
+}
+}
 }

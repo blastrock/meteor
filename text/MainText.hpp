@@ -17,36 +17,36 @@
 #ifndef __MAIN_TEXT_H__
 #define __MAIN_TEXT_H__
 
-#include <string>
-#include <mym/window.hpp>
 #include <mym/audio.hpp>
 #include <mym/events.hpp>
+#include <mym/window.hpp>
+#include <string>
 
 class MainText
 {
-	public :
-		MainText ();
+public:
+  MainText();
 
-		void Open(const std::string& file);
-		void OpenBios(const std::string& file);
-		void Run();
-		void Stop();
-		void Reset();
-		void Close();
-		void CloseBios();
+  void Open(const std::string& file);
+  void OpenBios(const std::string& file);
+  void Run();
+  void Stop();
+  void Reset();
+  void Close();
+  void CloseBios();
 
-		void SaveState(uint8_t n);
-		void LoadState(uint8_t n);
+  void SaveState(uint8_t n);
+  void LoadState(uint8_t n);
 
-	private :
-		mym::Window m_window;
-		mym::Audio m_audio;
-		mym::Events m_events;
+private:
+  mym::Window m_window;
+  mym::Audio m_audio;
+  mym::Events m_events;
 
-		std::string m_sstatePath, m_batteryPath, m_romPath;
-		std::string m_openFile;
+  std::string m_sstatePath, m_batteryPath, m_romPath;
+  std::string m_openFile;
 
-		bool m_running;
+  bool m_running;
 };
 
 #endif

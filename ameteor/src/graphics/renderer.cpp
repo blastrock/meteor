@@ -19,17 +19,16 @@
 
 namespace AMeteor
 {
-	namespace Graphics
-	{
-		Renderer::Renderer (const uint16_t* surface) :
-			m_base(surface)
-		{
-		}
+namespace Graphics
+{
+Renderer::Renderer(const uint16_t* surface) : m_base(surface)
+{
+}
 
-		void Renderer::VBlank ()
-		{
-			if (m_sig_frame)
-				m_sig_frame(m_base);
-		}
-	}
+void Renderer::VBlank()
+{
+  if (m_sig_frame)
+    m_sig_frame(m_base);
+}
+}
 }

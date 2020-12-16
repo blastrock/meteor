@@ -18,36 +18,36 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		std::string ArgPsr::GetString () const
-		{
-			std::string out;
+namespace Disassembler
+{
+std::string ArgPsr::GetString() const
+{
+  std::string out;
 
-			if (m_spsr)
-				out = "SPSR";
-			else
-				out = "CPSR";
+  if (m_spsr)
+    out = "SPSR";
+  else
+    out = "CPSR";
 
-			if (m_fields <= 0xF)
-			{
-				out += '_';
-				if (m_fields & 0x1)
-					out += 'c';
-				if (m_fields & 0x2)
-					out += 'x';
-				if (m_fields & 0x4)
-					out += 's';
-				if (m_fields & 0x8)
-					out += 'f';
-			}
+  if (m_fields <= 0xF)
+  {
+    out += '_';
+    if (m_fields & 0x1)
+      out += 'c';
+    if (m_fields & 0x2)
+      out += 'x';
+    if (m_fields & 0x4)
+      out += 's';
+    if (m_fields & 0x8)
+      out += 'f';
+  }
 
-			return out;
-		}
+  return out;
+}
 
-		Argument* ArgPsr::Clone () const
-		{
-			return new ArgPsr(*this);
-		}
-	}
+Argument* ArgPsr::Clone() const
+{
+  return new ArgPsr(*this);
+}
+}
 }

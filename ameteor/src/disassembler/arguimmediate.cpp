@@ -16,24 +16,24 @@
 
 #include "ameteor/disassembler/arguimmediate.hpp"
 
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		std::string ArgUImmediate::GetString () const
-		{
-			std::ostringstream ss;
-			ss << '#';
-			ss << std::hex << std::setw(8) << std::setfill('0') << m_imm << 'h';
-			return ss.str();
-		}
+namespace Disassembler
+{
+std::string ArgUImmediate::GetString() const
+{
+  std::ostringstream ss;
+  ss << '#';
+  ss << std::hex << std::setw(8) << std::setfill('0') << m_imm << 'h';
+  return ss.str();
+}
 
-		Argument* ArgUImmediate::Clone () const
-		{
-			return new ArgUImmediate(*this);
-		}
-	}
+Argument* ArgUImmediate::Clone() const
+{
+  return new ArgUImmediate(*this);
+}
+}
 }

@@ -15,48 +15,47 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/sram.hpp"
+#include "globals.hpp"
 #include <cstring>
 #include <fstream>
-#include "globals.hpp"
 
 namespace AMeteor
 {
-	Sram::Sram () :
-		CartMem()
-	{
-		m_size = SIZE;
+Sram::Sram() : CartMem()
+{
+  m_size = SIZE;
 
-		*(uint32_t*)(m_data+MAX_SIZE) = m_size;
-	}
+  *(uint32_t*)(m_data + MAX_SIZE) = m_size;
+}
 
-	void Sram::Reset ()
-	{
-		std::memset(m_data, 0, SIZE);
-	}
+void Sram::Reset()
+{
+  std::memset(m_data, 0, SIZE);
+}
 
-	bool Sram::Load (std::istream& f)
-	{
-		f.read((char*)m_data, SIZE);
-		return f.good();
-	}
+bool Sram::Load(std::istream& f)
+{
+  f.read((char*)m_data, SIZE);
+  return f.good();
+}
 
-	bool Sram::Save (std::ostream& f)
-	{
-		f.write((char*)m_data, SIZE);
-		return f.good();
-	}
+bool Sram::Save(std::ostream& f)
+{
+  f.write((char*)m_data, SIZE);
+  return f.good();
+}
 
-	bool Sram::SaveState (std::ostream& stream)
-	{
-		SS_WRITE_DATA(m_data, SIZE);
+bool Sram::SaveState(std::ostream& stream)
+{
+  SS_WRITE_DATA(m_data, SIZE);
 
-		return true;
-	}
+  return true;
+}
 
-	bool Sram::LoadState (std::istream& stream)
-	{
-		SS_READ_DATA(m_data, SIZE);
+bool Sram::LoadState(std::istream& stream)
+{
+  SS_READ_DATA(m_data, SIZE);
 
-		return true;
-	}
+  return true;
+}
 }

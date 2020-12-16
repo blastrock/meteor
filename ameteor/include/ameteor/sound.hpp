@@ -19,99 +19,99 @@
 
 #include "audio/speaker.hpp"
 #include "clock.hpp"
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	class Sound
-	{
-		public :
-			Sound ();
+class Sound
+{
+public:
+  Sound();
 
-			void Reset ();
+  void Reset();
 
-			inline Audio::Speaker& GetSpeaker();
+  inline Audio::Speaker& GetSpeaker();
 
-			void UpdateCntH1 (uint8_t val);
+  void UpdateCntH1(uint8_t val);
 
-			inline void ResetSound1 ();
-			inline void ResetSound2 ();
-			inline void ResetSound4 ();
+  inline void ResetSound1();
+  inline void ResetSound2();
+  inline void ResetSound4();
 
-			inline void ResetSound1Envelope ();
-			inline void ResetSound2Envelope ();
-			inline void ResetSound4Envelope ();
+  inline void ResetSound1Envelope();
+  inline void ResetSound2Envelope();
+  inline void ResetSound4Envelope();
 
-			void TimerOverflow (uint8_t timernum);
+  void TimerOverflow(uint8_t timernum);
 
-			inline void SendDigitalA (uint8_t* buffer);
-			inline void SendDigitalB (uint8_t* buffer);
+  inline void SendDigitalA(uint8_t* buffer);
+  inline void SendDigitalB(uint8_t* buffer);
 
-			bool SaveState (std::ostream& stream);
-			bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-		private :
-			Audio::Speaker m_speaker;
+private:
+  Audio::Speaker m_speaker;
 
-			uint8_t m_fATimer, m_fBTimer;
+  uint8_t m_fATimer, m_fBTimer;
 
-			inline void TimerOverflowA ();
-			inline void TimerOverflowB ();
+  inline void TimerOverflowA();
+  inline void TimerOverflowB();
 
-			void TimeEvent ()
-			{
-				m_speaker.SoundTick();
-			}
+  void TimeEvent()
+  {
+    m_speaker.SoundTick();
+  }
 
-			friend void Clock::Commit ();
-	};
+  friend void Clock::Commit();
+};
 
-	inline Audio::Speaker& Sound::GetSpeaker()
-	{
-		return m_speaker;
-	}
+inline Audio::Speaker& Sound::GetSpeaker()
+{
+  return m_speaker;
+}
 
-	inline void Sound::ResetSound1 ()
-	{
-		m_speaker.ResetSound1();
-	}
+inline void Sound::ResetSound1()
+{
+  m_speaker.ResetSound1();
+}
 
-	inline void Sound::ResetSound2 ()
-	{
-		m_speaker.ResetSound2();
-	}
+inline void Sound::ResetSound2()
+{
+  m_speaker.ResetSound2();
+}
 
-	inline void Sound::ResetSound4 ()
-	{
-		m_speaker.ResetSound4();
-	}
+inline void Sound::ResetSound4()
+{
+  m_speaker.ResetSound4();
+}
 
-	inline void Sound::ResetSound1Envelope ()
-	{
-		m_speaker.ResetSound1Envelope();
-	}
+inline void Sound::ResetSound1Envelope()
+{
+  m_speaker.ResetSound1Envelope();
+}
 
-	inline void Sound::ResetSound2Envelope ()
-	{
-		m_speaker.ResetSound2Envelope();
-	}
+inline void Sound::ResetSound2Envelope()
+{
+  m_speaker.ResetSound2Envelope();
+}
 
-	inline void Sound::ResetSound4Envelope ()
-	{
-		m_speaker.ResetSound4Envelope();
-	}
+inline void Sound::ResetSound4Envelope()
+{
+  m_speaker.ResetSound4Envelope();
+}
 
-	inline void Sound::SendDigitalA (uint8_t* buffer)
-	{
-		m_speaker.FillFifoA((int8_t*)buffer);
-	}
+inline void Sound::SendDigitalA(uint8_t* buffer)
+{
+  m_speaker.FillFifoA((int8_t*)buffer);
+}
 
-	inline void Sound::SendDigitalB (uint8_t* buffer)
-	{
-		m_speaker.FillFifoB((int8_t*)buffer);
-	}
+inline void Sound::SendDigitalB(uint8_t* buffer)
+{
+  m_speaker.FillFifoB((int8_t*)buffer);
+}
 }
 
 #endif

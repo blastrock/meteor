@@ -20,52 +20,58 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		ArgRelative::ArgRelative (const ArgRegister& reg, const Argument& off,
-				bool pre, bool up, bool writeback) :
-			Argument(),
-			m_reg(reg),
-			m_off(off.Clone()),
-			m_pre(pre),
-			m_up(up),
-			m_writeback(writeback)
-		{ }
+namespace Disassembler
+{
+ArgRelative::ArgRelative(
+    const ArgRegister& reg,
+    const Argument& off,
+    bool pre,
+    bool up,
+    bool writeback)
+  : Argument()
+  , m_reg(reg)
+  , m_off(off.Clone())
+  , m_pre(pre)
+  , m_up(up)
+  , m_writeback(writeback)
+{
+}
 
-		ArgRelative::ArgRelative (const ArgRelative& arg) :
-			Argument(),
-			m_reg(arg.m_reg),
-			m_off(arg.m_off->Clone()),
-			m_pre(arg.m_pre),
-			m_up(arg.m_up),
-			m_writeback(arg.m_writeback)
-		{ }
+ArgRelative::ArgRelative(const ArgRelative& arg)
+  : Argument()
+  , m_reg(arg.m_reg)
+  , m_off(arg.m_off->Clone())
+  , m_pre(arg.m_pre)
+  , m_up(arg.m_up)
+  , m_writeback(arg.m_writeback)
+{
+}
 
-		ArgRelative::~ArgRelative ()
-		{
-			delete m_off;
-		}
+ArgRelative::~ArgRelative()
+{
+  delete m_off;
+}
 
-		Argument* ArgRelative::Clone () const
-		{
-			return new ArgRelative(*this);
-		}
+Argument* ArgRelative::Clone() const
+{
+  return new ArgRelative(*this);
+}
 
-		std::string ArgRelative::GetString () const
-		{
-			std::ostringstream ss;
-			ss << "[r" << (int)m_reg.GetRegister();
+std::string ArgRelative::GetString() const
+{
+  std::ostringstream ss;
+  ss << "[r" << (int)m_reg.GetRegister();
 
-			if (m_pre)
-			{
-				ss << (m_up ? ", +" : ", -") << m_off->GetString() << ']';
-				if (m_writeback)
-					ss << '!';
-			}
-			else
-				ss << (m_up ? "], +" : "], -") << m_off->GetString();
+  if (m_pre)
+  {
+    ss << (m_up ? ", +" : ", -") << m_off->GetString() << ']';
+    if (m_writeback)
+      ss << '!';
+  }
+  else
+    ss << (m_up ? "], +" : "], -") << m_off->GetString();
 
-			return ss.str();
-		}
-	}
+  return ss.str();
+}
+}
 }

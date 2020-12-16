@@ -17,64 +17,64 @@
 #ifndef __AMETEOR_H__
 #define __AMETEOR_H__
 
-#include "ameteor/memory.hpp"
-#include "ameteor/io.hpp"
+#include "ameteor/clock.hpp"
 #include "ameteor/dma.hpp"
 #include "ameteor/interpreter.hpp"
-#include "ameteor/lcd.hpp"
-#include "ameteor/clock.hpp"
-#include "ameteor/timer.hpp"
-#include "ameteor/sound.hpp"
+#include "ameteor/io.hpp"
 #include "ameteor/keypad.hpp"
+#include "ameteor/lcd.hpp"
+#include "ameteor/memory.hpp"
+#include "ameteor/sound.hpp"
+#include "ameteor/timer.hpp"
 
 namespace AMeteor
 {
-	extern Clock _clock;
-	extern Io _io;
-	extern Interpreter _cpu;
-	extern Memory _memory;
-	extern Dma _dma;
-	extern Lcd _lcd;
-	extern Sound _sound;
-	extern Keypad _keypad;
-	extern Timer _timer0;
-	extern Timer _timer1;
-	extern Timer _timer2;
-	extern Timer _timer3;
+extern Clock _clock;
+extern Io _io;
+extern Interpreter _cpu;
+extern Memory _memory;
+extern Dma _dma;
+extern Lcd _lcd;
+extern Sound _sound;
+extern Keypad _keypad;
+extern Timer _timer0;
+extern Timer _timer1;
+extern Timer _timer2;
+extern Timer _timer3;
 
-	const uint32_t UNIT_CLOCK  = 0x0001;
-	const uint32_t UNIT_IO     = 0x0002;
-	const uint32_t UNIT_CPU    = 0x0004;
-	const uint32_t UNIT_MEMORY = 0x0008;
-	const uint32_t UNIT_DMA    = 0x0010;
-	const uint32_t UNIT_LCD    = 0x0020;
-	const uint32_t UNIT_SOUND  = 0x0040;
-	const uint32_t UNIT_KEYPAD = 0x0080;
-	const uint32_t UNIT_TIMER0 = 0x0100;
-	const uint32_t UNIT_TIMER1 = 0x0200;
-	const uint32_t UNIT_TIMER2 = 0x0400;
-	const uint32_t UNIT_TIMER3 = 0x0800;
-	const uint32_t UNIT_MEMORY_ROM = 0x1000;
-	const uint32_t UNIT_MEMORY_BIOS = 0x2000;
-	const uint32_t UNIT_ALL = 0x3FFF;
+const uint32_t UNIT_CLOCK = 0x0001;
+const uint32_t UNIT_IO = 0x0002;
+const uint32_t UNIT_CPU = 0x0004;
+const uint32_t UNIT_MEMORY = 0x0008;
+const uint32_t UNIT_DMA = 0x0010;
+const uint32_t UNIT_LCD = 0x0020;
+const uint32_t UNIT_SOUND = 0x0040;
+const uint32_t UNIT_KEYPAD = 0x0080;
+const uint32_t UNIT_TIMER0 = 0x0100;
+const uint32_t UNIT_TIMER1 = 0x0200;
+const uint32_t UNIT_TIMER2 = 0x0400;
+const uint32_t UNIT_TIMER3 = 0x0800;
+const uint32_t UNIT_MEMORY_ROM = 0x1000;
+const uint32_t UNIT_MEMORY_BIOS = 0x2000;
+const uint32_t UNIT_ALL = 0x3FFF;
 
-	void Reset (uint32_t units);
+void Reset(uint32_t units);
 
-	bool SaveState (const char* filename);
-	bool LoadState (const char* filename);
+bool SaveState(const char* filename);
+bool LoadState(const char* filename);
 
-	bool SaveState (std::ostream& stream);
-	bool LoadState (std::istream& stream);
+bool SaveState(std::ostream& stream);
+bool LoadState(std::istream& stream);
 
-	inline void Run (unsigned int cycles)
-	{
-		_cpu.Run(cycles);
-	}
+inline void Run(unsigned int cycles)
+{
+  _cpu.Run(cycles);
+}
 
-	inline void Stop ()
-	{
-		_cpu.Stop();
-	}
+inline void Stop()
+{
+  _cpu.Stop();
+}
 }
 
 #endif

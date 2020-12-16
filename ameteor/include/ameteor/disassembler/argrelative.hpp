@@ -17,34 +17,38 @@
 #ifndef __ARG_RELATIVE_H__
 #define __ARG_RELATIVE_H__
 
-#include "argument.hpp"
-#include "argregister.hpp"
 #include "argimmediate.hpp"
+#include "argregister.hpp"
+#include "argument.hpp"
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class ArgRelative : public Argument
-		{
-			public :
-				ArgRelative (const ArgRegister& reg, const Argument& off,
-						bool pre, bool up, bool writeback);
-				ArgRelative (const ArgRelative& arg);
-				~ArgRelative ();
+namespace Disassembler
+{
+class ArgRelative : public Argument
+{
+public:
+  ArgRelative(
+      const ArgRegister& reg,
+      const Argument& off,
+      bool pre,
+      bool up,
+      bool writeback);
+  ArgRelative(const ArgRelative& arg);
+  ~ArgRelative();
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				ArgRegister m_reg;
-				const Argument* m_off;
-				bool m_pre;
-				bool m_up;
-				bool m_writeback;
-		};
-	}
+private:
+  ArgRegister m_reg;
+  const Argument* m_off;
+  bool m_pre;
+  bool m_up;
+  bool m_writeback;
+};
+}
 }
 
 #endif

@@ -23,30 +23,30 @@
 
 namespace AMeteor
 {
-	namespace Graphics
-	{
-		class Renderer
-		{
-			public:
-				typedef syg::slot1<void, const uint16_t*> FrameSlot;
+namespace Graphics
+{
+class Renderer
+{
+public:
+  typedef syg::slot1<void, const uint16_t*> FrameSlot;
 
-				Renderer(const uint16_t* surface);
+  Renderer(const uint16_t* surface);
 
-				inline void SetFrameSlot(const FrameSlot& slot);
+  inline void SetFrameSlot(const FrameSlot& slot);
 
-				void VBlank();
+  void VBlank();
 
-			private :
-				const uint16_t* m_base;
+private:
+  const uint16_t* m_base;
 
-				FrameSlot m_sig_frame;
-		};
+  FrameSlot m_sig_frame;
+};
 
-		void Renderer::SetFrameSlot(const FrameSlot& slot)
-		{
-			m_sig_frame = slot;
-		}
-	}
+void Renderer::SetFrameSlot(const FrameSlot& slot)
+{
+  m_sig_frame = slot;
+}
+}
 }
 
 #endif

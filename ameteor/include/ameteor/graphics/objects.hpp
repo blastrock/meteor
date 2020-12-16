@@ -17,37 +17,37 @@
 #ifndef __GRAPHICS_OBJECTS_H__
 #define __GRAPHICS_OBJECTS_H__
 
-#include "object.hpp"
-#include "ameteor/memory.hpp"
 #include "ameteor/io.hpp"
+#include "ameteor/memory.hpp"
+#include "object.hpp"
 
 #include <vector>
 
 namespace AMeteor
 {
-	namespace Graphics
-	{
-		class Objects
-		{
-			public :
-				Objects (Memory& memory, Io& io, uint16_t* pPalette);
+namespace Graphics
+{
+class Objects
+{
+public:
+  Objects(Memory& memory, Io& io, uint16_t* pPalette);
 
-				void DrawLine (uint8_t line, uint32_t* surface);
-				void DrawLineHighOnly (uint8_t line, uint32_t* surface);
-				void DrawWindow (uint8_t line, uint8_t* surface);
+  void DrawLine(uint8_t line, uint32_t* surface);
+  void DrawLineHighOnly(uint8_t line, uint32_t* surface);
+  void DrawWindow(uint8_t line, uint8_t* surface);
 
-				void OamWrite (uint32_t begin, uint32_t end);
-				void OamWrite16 (uint32_t add);
-				void OamWrite32 (uint32_t add);
+  void OamWrite(uint32_t begin, uint32_t end);
+  void OamWrite16(uint32_t add);
+  void OamWrite32(uint32_t add);
 
-			private :
-				typedef std::vector<Object> Objs;
+private:
+  typedef std::vector<Object> Objs;
 
-				Io& m_io;
-				Objs m_objs;
-				uint16_t* m_pOam;
-		};
-	}
+  Io& m_io;
+  Objs m_objs;
+  uint16_t* m_pOam;
+};
+}
 }
 
 #endif

@@ -17,62 +17,62 @@
 #ifndef __AUDIO_SOUND_4_H__
 #define __AUDIO_SOUND_4_H__
 
-#include <stdint.h>
 #include <istream>
 #include <ostream>
+#include <stdint.h>
 
 namespace AMeteor
 {
-	namespace Audio
-	{
-		void InitNoise ();
+namespace Audio
+{
+void InitNoise();
 
-		class Sound4
-		{
-			public :
-				Sound4 (uint16_t& cntl, uint16_t& cnth, uint16_t freq);
+class Sound4
+{
+public:
+  Sound4(uint16_t& cntl, uint16_t& cnth, uint16_t freq);
 
-				void Reset ();
+  void Reset();
 
-				// call this at the frequence given in constructor
-				void SoundTick ();
+  // call this at the frequence given in constructor
+  void SoundTick();
 
-				void ResetSound ();
-				void ResetEnvelope ()
-				{
-					m_envelope = 0;
-				}
+  void ResetSound();
+  void ResetEnvelope()
+  {
+    m_envelope = 0;
+  }
 
-				int8_t GetSample () const
-				{
-					return m_sample;
-				}
+  int8_t GetSample() const
+  {
+    return m_sample;
+  }
 
-				bool IsOn () const
-				{
-					return m_on;
-				}
+  bool IsOn() const
+  {
+    return m_on;
+  }
 
-				bool SaveState (std::ostream& stream);
-				bool LoadState (std::istream& stream);
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
 
-			private :
-				uint16_t &m_cntl, &m_cnth;
-				bool m_on;
-				// positions in Period, position in noise and Envelope step time
-				uint32_t m_posP, m_posN, m_posE;
-				int8_t m_sample;
-				// sample period in cycles
-				uint16_t m_speriod;
-				// envelope level
-				uint8_t m_envelope;
-				// sound length in cycles
-				uint32_t m_length;
-				bool m_timed;
-				// clock divider
-				uint8_t m_div;
-		};
-	}
+private:
+  uint16_t &m_cntl, &m_cnth;
+  bool m_on;
+  // positions in Period, position in noise and Envelope step time
+  uint32_t m_posP, m_posN, m_posE;
+  int8_t m_sample;
+  // sample period in cycles
+  uint16_t m_speriod;
+  // envelope level
+  uint8_t m_envelope;
+  // sound length in cycles
+  uint32_t m_length;
+  bool m_timed;
+  // clock divider
+  uint8_t m_div;
+};
+}
 }
 
 #endif

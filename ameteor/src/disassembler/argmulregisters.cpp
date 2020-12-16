@@ -20,64 +20,62 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		std::string ArgMulRegisters::GetString () const
-		{
-			std::ostringstream ss;
-			ss << '{';
+namespace Disassembler
+{
+std::string ArgMulRegisters::GetString() const
+{
+  std::ostringstream ss;
+  ss << '{';
 
-			bool open = false;
+  bool open = false;
 
-			for (Registers::const_iterator iter = m_regs.begin();
-					iter != m_regs.end(); ++iter)
-			{
-				if (open &&
-						iter + 1 < m_regs.end() &&
-						*(iter + 1) == (*iter) + 1)
-				{
-					continue;
-				}
-				else if (iter + 2 < m_regs.end() &&
-						*(iter + 1) == (*iter) + 1 &&
-						*(iter + 2) == (*iter) + 2)
-				{
-					ss << 'r' << (int)*iter << '-';
-					open = true;
-				}
-				else
-				{
-					ss << 'r' << (int)*iter;
-					open = false;
-					if (iter + 1 != m_regs.end())
-						ss << ", ";
-				}
-			}
+  for (Registers::const_iterator iter = m_regs.begin(); iter != m_regs.end();
+       ++iter)
+  {
+    if (open && iter + 1 < m_regs.end() && *(iter + 1) == (*iter) + 1)
+    {
+      continue;
+    }
+    else if (
+        iter + 2 < m_regs.end() && *(iter + 1) == (*iter) + 1 &&
+        *(iter + 2) == (*iter) + 2)
+    {
+      ss << 'r' << (int)*iter << '-';
+      open = true;
+    }
+    else
+    {
+      ss << 'r' << (int)*iter;
+      open = false;
+      if (iter + 1 != m_regs.end())
+        ss << ", ";
+    }
+  }
 
-			if (m_lastreg == SPREG_LR)
-			{
-				if (ss.width() != 1)
-					ss << ", ";
-				ss << "lr";
-			}
-			else if (m_lastreg == SPREG_PC)
-			{
-				if (ss.width() != 1)
-					ss << ", ";
-				ss << "pc";
-			}
+  if (m_lastreg == SPREG_LR)
+  {
+    if (ss.width() != 1)
+      ss << ", ";
+    ss << "lr";
+  }
+  else if (m_lastreg == SPREG_PC)
+  {
+    if (ss.width() != 1)
+      ss << ", ";
+    ss << "pc";
+  }
 
-			ss << '}';
+  ss << '}';
 
-			if (m_forceuser)
-				ss << '^';
+  if (m_forceuser)
+    ss << '^';
 
-			return ss.str();
-		}
+  return ss.str();
+}
 
-		Argument* ArgMulRegisters::Clone () const
-		{
-			return new ArgMulRegisters(*this);
-		}
-	}
+Argument* ArgMulRegisters::Clone() const
+{
+  return new ArgMulRegisters(*this);
+}
+}
 }

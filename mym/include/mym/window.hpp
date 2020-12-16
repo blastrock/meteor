@@ -18,52 +18,53 @@
 #define __MYM_WINDOW_H__
 
 #include <GL/glew.h>
+
 #include <GL/gl.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 namespace mym
 {
-	class Window
-	{
-		public:
-			Window();
-			~Window();
+class Window
+{
+public:
+  Window();
+  ~Window();
 
-			inline sf::Window& GetWindow();
+  inline sf::Window& GetWindow();
 
-			void InitAMeteor();
-			void Init(sf::WindowHandle display = 0);
-			void Uninit();
+  void InitAMeteor();
+  void Init(sf::WindowHandle display = 0);
+  void Uninit();
 
-			void ShowFrame(const uint16_t* frame);
+  void ShowFrame(const uint16_t* frame);
 
-		private :
-			volatile uint16_t* m_tbase;
+private:
+  volatile uint16_t* m_tbase;
 
-			pthread_t m_thread;
-			pthread_mutex_t m_mutex;
-			pthread_cond_t m_cond;
-			volatile bool m_quit;
+  pthread_t m_thread;
+  pthread_mutex_t m_mutex;
+  pthread_cond_t m_cond;
+  volatile bool m_quit;
 
-			sf::RenderWindow m_window;
+  sf::RenderWindow m_window;
 
-			GLuint m_pbo;
-			GLuint m_texture;
-			GLuint m_vbo;
+  GLuint m_pbo;
+  GLuint m_texture;
+  GLuint m_vbo;
 
-			void InitGl();
-			void UninitGl();
-			void StartThread();
-			void StopThread();
+  void InitGl();
+  void UninitGl();
+  void StartThread();
+  void StopThread();
 
-			static void* EntryPoint (void* ptr);
-			void MainLoop ();
-	};
+  static void* EntryPoint(void* ptr);
+  void MainLoop();
+};
 
-	inline sf::Window& Window::GetWindow()
-	{
-		return m_window;
-	}
+inline sf::Window& Window::GetWindow()
+{
+  return m_window;
+}
 }
 
 #endif

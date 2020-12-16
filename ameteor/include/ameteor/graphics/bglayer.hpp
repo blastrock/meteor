@@ -17,81 +17,86 @@
 #ifndef __GRAPHICS_BG_LAYER_H__
 #define __GRAPHICS_BG_LAYER_H__
 
-#include "ameteor/memory.hpp"
 #include "ameteor/io.hpp"
+#include "ameteor/memory.hpp"
 
-#include <vector>
 #include <stdint.h>
+#include <vector>
 
 namespace AMeteor
 {
-	namespace Graphics
-	{
-		class BgLayer
-		{
-			public :
-				BgLayer (int8_t num, Memory& memory, Io& io, uint16_t* pPalette);
-				~BgLayer ();
+namespace Graphics
+{
+class BgLayer
+{
+public:
+  BgLayer(int8_t num, Memory& memory, Io& io, uint16_t* pPalette);
+  ~BgLayer();
 
-				inline uint8_t GetNum () const;
-				inline uint8_t GetPriority () const;
+  inline uint8_t GetNum() const;
+  inline uint8_t GetPriority() const;
 
-				void DrawLine0 (uint8_t line, uint16_t* ptr);
-				void DrawLine2 (uint16_t* ptr,
-						int32_t refX, int32_t refY,
-						int16_t dx, int16_t dy);
-				void DrawLine3 (uint16_t* ptr,
-						int32_t refX, int32_t refY,
-						int16_t dx, int16_t dy);
-				void DrawLine4 (uint8_t line, uint16_t* ptr,
-						int32_t curX, int32_t curY,
-						int16_t dx, int16_t dmx, int16_t dy, int16_t dmy, bool frame1);
-				void FillList ();
+  void DrawLine0(uint8_t line, uint16_t* ptr);
+  void DrawLine2(
+      uint16_t* ptr, int32_t refX, int32_t refY, int16_t dx, int16_t dy);
+  void DrawLine3(
+      uint16_t* ptr, int32_t refX, int32_t refY, int16_t dx, int16_t dy);
+  void DrawLine4(
+      uint8_t line,
+      uint16_t* ptr,
+      int32_t curX,
+      int32_t curY,
+      int16_t dx,
+      int16_t dmx,
+      int16_t dy,
+      int16_t dmy,
+      bool frame1);
+  void FillList();
 
-				void UpdateCnt (uint16_t cnt);
-				inline void UpdateXOff (uint16_t off);
-				inline void UpdateYOff (uint16_t off);
+  void UpdateCnt(uint16_t cnt);
+  inline void UpdateXOff(uint16_t off);
+  inline void UpdateYOff(uint16_t off);
 
-			private :
-				Memory& m_memory;
-				Io& m_io;
+private:
+  Memory& m_memory;
+  Io& m_io;
 
-				const uint8_t m_num;
-				uint8_t m_priority;
+  const uint8_t m_num;
+  uint8_t m_priority;
 
-				uint16_t m_cnt;
-				bool m_hicolor;
-				uint16_t m_xoff, m_yoff;
-				// in text mode
-				uint8_t m_tWidth, m_tHeight;
-				// in rotation/scale mode
-				uint8_t m_rWidth, m_rHeight;
+  uint16_t m_cnt;
+  bool m_hicolor;
+  uint16_t m_xoff, m_yoff;
+  // in text mode
+  uint8_t m_tWidth, m_tHeight;
+  // in rotation/scale mode
+  uint8_t m_rWidth, m_rHeight;
 
-				uint32_t m_mapAdd;
-				uint32_t m_charAdd;
-				uint16_t* m_pPalette;
-		};
+  uint32_t m_mapAdd;
+  uint32_t m_charAdd;
+  uint16_t* m_pPalette;
+};
 
-		inline uint8_t BgLayer::GetNum () const
-		{
-			return m_num;
-		}
+inline uint8_t BgLayer::GetNum() const
+{
+  return m_num;
+}
 
-		inline uint8_t BgLayer::GetPriority () const
-		{
-			return m_priority;
-		}
+inline uint8_t BgLayer::GetPriority() const
+{
+  return m_priority;
+}
 
-		inline void BgLayer::UpdateXOff (uint16_t off)
-		{
-			m_xoff = off;
-		}
+inline void BgLayer::UpdateXOff(uint16_t off)
+{
+  m_xoff = off;
+}
 
-		inline void BgLayer::UpdateYOff (uint16_t off)
-		{
-			m_yoff = off;
-		}
-	}
+inline void BgLayer::UpdateYOff(uint16_t off)
+{
+  m_yoff = off;
+}
+}
 }
 
 #endif

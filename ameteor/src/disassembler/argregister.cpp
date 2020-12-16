@@ -20,34 +20,34 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		std::string ArgRegister::GetString () const
-		{
-			static const char* SpeRegisters[] = {"SP", "LR", "PC"};
+namespace Disassembler
+{
+std::string ArgRegister::GetString() const
+{
+  static const char* SpeRegisters[] = {"SP", "LR", "PC"};
 
-			std::ostringstream ss;
+  std::ostringstream ss;
 
-			if (m_memory)
-				ss << '[';
+  if (m_memory)
+    ss << '[';
 
-			if (m_special)
-				ss << SpeRegisters[m_reg-13];
-			else
-				ss << 'r' << (int)m_reg;
+  if (m_special)
+    ss << SpeRegisters[m_reg - 13];
+  else
+    ss << 'r' << (int)m_reg;
 
-			if (m_memory)
-				ss << ']';
+  if (m_memory)
+    ss << ']';
 
-			if (m_writeback)
-				ss << '!';
+  if (m_writeback)
+    ss << '!';
 
-			return ss.str();
-		}
+  return ss.str();
+}
 
-		Argument* ArgRegister::Clone () const
-		{
-			return new ArgRegister(*this);
-		}
-	}
+Argument* ArgRegister::Clone() const
+{
+  return new ArgRegister(*this);
+}
+}
 }

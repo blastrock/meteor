@@ -21,18 +21,18 @@
 
 namespace mym
 {
-	class Events
-	{
-		public:
-			Events(sf::Window& window);
+class Events
+{
+public:
+  Events(sf::Window& window);
 
-			void InitAMeteor();
+  void InitAMeteor();
 
-			void CheckEvents();
+  void CheckEvents();
 
-		private:
-			sf::Window& m_window;
-	};
+private:
+  sf::Window& m_window;
+};
 }
 
 #endif

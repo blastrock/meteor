@@ -20,63 +20,60 @@
 
 namespace AMeteor
 {
-	namespace Audio
-	{
-		DSound::DSound () :
-			m_rpos(0),
-			m_wpos(0),
-			m_size(0)
-		{
-			std::memset(m_buffer, 0, sizeof(m_buffer));
-		}
+namespace Audio
+{
+DSound::DSound() : m_rpos(0), m_wpos(0), m_size(0)
+{
+  std::memset(m_buffer, 0, sizeof(m_buffer));
+}
 
-		void DSound::FillFifo (int8_t* buffer)
-		{
-			int8_t* pmbuf = m_buffer + m_wpos;
-			// we copy 16 bytes of data
-			for (int8_t* pbuf = buffer;
-					pbuf < buffer + BUFFER_SIZE/2 && m_size < 32; ++pbuf, ++pmbuf)
-			{
-				if (pmbuf >= m_buffer + BUFFER_SIZE)
-					pmbuf = m_buffer;
+void DSound::FillFifo(int8_t* buffer)
+{
+  int8_t* pmbuf = m_buffer + m_wpos;
+  // we copy 16 bytes of data
+  for (int8_t* pbuf = buffer; pbuf < buffer + BUFFER_SIZE / 2 && m_size < 32;
+       ++pbuf, ++pmbuf)
+  {
+    if (pmbuf >= m_buffer + BUFFER_SIZE)
+      pmbuf = m_buffer;
 
-				*pmbuf = *pbuf;
-				++m_size;
-			}
+    *pmbuf = *pbuf;
+    ++m_size;
+  }
 
-			m_wpos = pmbuf - m_buffer;
-		}
+  m_wpos = pmbuf - m_buffer;
+}
 
-		void DSound::FillFifo (int8_t sample)
-		{
-			if (m_size == 32)
-				return;
-			if (m_wpos == BUFFER_SIZE)
-				m_wpos = 0;
-			m_buffer[m_wpos++] = sample;
-			++m_size;
-		}
+void DSound::FillFifo(int8_t sample)
+{
+  if (m_size == 32)
+    return;
+  if (m_wpos == BUFFER_SIZE)
+    m_wpos = 0;
+  m_buffer[m_wpos++] = sample;
+  ++m_size;
+}
 
-		bool DSound::SaveState (std::ostream& stream)
-		{
-			SS_WRITE_VAR(m_rpos);
-			SS_WRITE_VAR(m_wpos);
-			SS_WRITE_VAR(m_size);
+bool DSound::SaveState(std::ostream& stream)
+{
+  SS_WRITE_VAR(m_rpos);
+  SS_WRITE_VAR(m_wpos);
+  SS_WRITE_VAR(m_size);
 
-			SS_WRITE_ARRAY(m_buffer);
+  SS_WRITE_ARRAY(m_buffer);
 
-			return true;
-		}
+  return true;
+}
 
-		bool DSound::LoadState (std::istream& stream)
-		{
-			SS_READ_VAR(m_rpos);
-			SS_READ_VAR(m_wpos);
-			SS_READ_VAR(m_size);
+bool DSound::LoadState(std::istream& stream)
+{
+  SS_READ_VAR(m_rpos);
+  SS_READ_VAR(m_wpos);
+  SS_READ_VAR(m_size);
 
-			SS_READ_ARRAY(m_buffer);
+  SS_READ_ARRAY(m_buffer);
 
-			return true;
-		}
-	}
+  return true;
+}
+}
 }

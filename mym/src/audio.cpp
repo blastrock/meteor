@@ -15,56 +15,55 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mym/audio.hpp"
-#include <cstring>
 #include <ameteor.hpp>
+#include <cstring>
 
 namespace mym
 {
-	Audio::Audio() :
-		m_device(0)
-	{
-		ao_initialize();
-	}
+Audio::Audio() : m_device(0)
+{
+  ao_initialize();
+}
 
-	Audio::~Audio ()
-	{
-		Uninit();
-	}
+Audio::~Audio()
+{
+  Uninit();
+}
 
-	void Audio::InitAMeteor()
-	{
-		AMeteor::_sound.GetSpeaker().SetFrameSlot(
-				syg::mem_fun(*this, &Audio::PlayFrames));
-	}
+void Audio::InitAMeteor()
+{
+  AMeteor::_sound.GetSpeaker().SetFrameSlot(
+      syg::mem_fun(*this, &Audio::PlayFrames));
+}
 
-	void Audio::Init()
-	{
-		ao_sample_format format;
-		std::memset(&format, 0, sizeof(format));
-		format.bits = 16;
-		format.channels = 2;
-		format.rate = 44100;
-		format.byte_format = AO_FMT_NATIVE;
+void Audio::Init()
+{
+  ao_sample_format format;
+  std::memset(&format, 0, sizeof(format));
+  format.bits = 16;
+  format.channels = 2;
+  format.rate = 44100;
+  format.byte_format = AO_FMT_NATIVE;
 
-		m_device = ao_open_live(ao_default_driver_id(), &format, NULL);
-		if (m_device == NULL)
-		{
-			puts("Cannot open sound device");
-			abort();
-		}
-	}
+  m_device = ao_open_live(ao_default_driver_id(), &format, NULL);
+  if (m_device == NULL)
+  {
+    puts("Cannot open sound device");
+    abort();
+  }
+}
 
-	void Audio::Uninit()
-	{
-		if (m_device)
-			ao_close(m_device);
-	}
+void Audio::Uninit()
+{
+  if (m_device)
+    ao_close(m_device);
+}
 
-	void Audio::PlayFrames(const int16_t* data)
-	{
-		// ugly :(
-		if (!ao_play(m_device, const_cast<char*>((const char*)data), 2*2))
-			;
-		//	puts("audio failure");
-	}
+void Audio::PlayFrames(const int16_t* data)
+{
+  // ugly :(
+  if (!ao_play(m_device, const_cast<char*>((const char*)data), 2 * 2))
+    ;
+  //	puts("audio failure");
+}
 }

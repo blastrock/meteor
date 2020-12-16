@@ -23,25 +23,24 @@
 
 namespace AMeteor
 {
-	namespace Disassembler
-	{
-		class ArgPsr : public Argument
-		{
-			public :
-				ArgPsr (bool spsr, uint8_t fields = 0xFF) :
-					m_spsr(spsr),
-					m_fields(fields)
-				{ }
+namespace Disassembler
+{
+class ArgPsr : public Argument
+{
+public:
+  ArgPsr(bool spsr, uint8_t fields = 0xFF) : m_spsr(spsr), m_fields(fields)
+  {
+  }
 
-				Argument* Clone () const;
+  Argument* Clone() const;
 
-				std::string GetString () const;
+  std::string GetString() const;
 
-			private :
-				bool m_spsr;
-				uint8_t m_fields;
-		};
-	}
+private:
+  bool m_spsr;
+  uint8_t m_fields;
+};
+}
 }
 
 #endif
