@@ -251,59 +251,59 @@ void Cpu::SoftwareInterrupt(uint32_t comment)
     switch (comment)
     {
     case 0x00:
-      Bios::SoftReset();
+      BIOS.SoftReset();
       break;
     case 0x01:
-      Bios::RegisterRamReset();
+      BIOS.RegisterRamReset();
       break;
     case 0x02:
-      Bios::Halt();
+      BIOS.Halt();
       break;
     case 0x04:
     case 0x05:
       SoftwareInterrupt();
       break;
     case 0x06:
-      Bios::Div();
+      BIOS.Div();
       break;
     case 0x07:
-      Bios::DivArm();
+      BIOS.DivArm();
       break;
     case 0x08:
-      Bios::Sqrt();
+      BIOS.Sqrt();
       break;
     case 0x09:
-      Bios::ArcTan();
+      BIOS.ArcTan();
       break;
     case 0x0A:
-      Bios::ArcTan2();
+      BIOS.ArcTan2();
       break;
     case 0x0B:
-      Bios::CpuSet();
+      BIOS.CpuSet();
       break;
     case 0x0C:
-      Bios::CpuFastSet();
+      BIOS.CpuFastSet();
       break;
     case 0x0E:
-      Bios::BgAffineSet();
+      BIOS.BgAffineSet();
       break;
     case 0x0F:
-      Bios::ObjAffineSet();
+      BIOS.ObjAffineSet();
       break;
     case 0x11:
-      Bios::LZ77UnCompWram();
+      BIOS.LZ77UnCompWram();
       break;
     case 0x12:
-      Bios::LZ77UnCompVram();
+      BIOS.LZ77UnCompVram();
       break;
     case 0x13:
-      Bios::HuffUnComp();
+      BIOS.HuffUnComp();
       break;
     case 0x14:
-      Bios::RLUnCompWram();
+      BIOS.RLUnCompWram();
       break;
     case 0x15:
-      Bios::RLUnCompVram();
+      BIOS.RLUnCompVram();
       break;
     default:
       met_abort("Unknown software interrupt : " << IOS_ADD << comment);

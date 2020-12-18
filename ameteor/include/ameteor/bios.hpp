@@ -17,43 +17,42 @@
 #ifndef __BIOS_H__
 #define __BIOS_H__
 
-#include "ameteor.hpp"
-
 namespace AMeteor
 {
-namespace Bios
+class Bios
 {
-// Entry point
-void Bios000h();
-// Software IRQ
-void Bios008h();
-void Bios168h();
-// Return from IntrWait (after the IRQ)
-void Bios338h();
-// IRQ
-void Bios018h();
-void Bios130h();
+public:
+  // Entry point
+  void Bios000h();
+  // Software IRQ
+  void Bios008h();
+  void Bios168h();
+  // Return from IntrWait (after the IRQ)
+  void Bios338h();
+  // IRQ
+  void Bios018h();
+  void Bios130h();
 
-void SoftReset();        // 00
-void RegisterRamReset(); // 01
-void Halt();             // 02
-void IntrWait();         // 04
-void VBlankIntrWait();   // 05
-void Div();              // 06
-void DivArm();           // 07
-void Sqrt();             // 08
-void ArcTan();           // 09
-void ArcTan2();          // 0A
-void CpuSet();           // 0B
-void CpuFastSet();       // 0C
-void BgAffineSet();      // 0E
-void ObjAffineSet();     // 0F
-void LZ77UnCompWram();   // 11
-void LZ77UnCompVram();   // 12
-void HuffUnComp();       // 13
-void RLUnCompWram();     // 14
-void RLUnCompVram();     // 15
-}
+  void SoftReset();        // 00
+  void RegisterRamReset(); // 01
+  void Halt();             // 02
+  void IntrWait();         // 04
+  void VBlankIntrWait();   // 05
+  void Div();              // 06
+  void DivArm();           // 07
+  void Sqrt();             // 08
+  void ArcTan();           // 09
+  void ArcTan2();          // 0A
+  void CpuSet();           // 0B
+  void CpuFastSet();       // 0C
+  void BgAffineSet();      // 0E
+  void ObjAffineSet();     // 0F
+  void LZ77UnCompWram();   // 11
+  void LZ77UnCompVram();   // 12
+  void HuffUnComp();       // 13
+  void RLUnCompWram();     // 14
+  void RLUnCompVram();     // 15
+};
 }
 
 #endif

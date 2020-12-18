@@ -62,6 +62,7 @@ Timer _timer3(3, NULL);
 Timer _timer2(2, &_timer3);
 Timer _timer1(1, &_timer2);
 Timer _timer0(0, &_timer1);
+Bios _bios;
 
 void Reset(uint32_t units)
 {

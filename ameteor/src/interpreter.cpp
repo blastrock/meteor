@@ -84,22 +84,22 @@ void Interpreter::Run(unsigned int cycles)
           switch (R(15))
           {
           case 0x004:
-            Bios::Bios000h();
+            BIOS.Bios000h();
             break;
           case 0x00C:
-            Bios::Bios008h();
+            BIOS.Bios008h();
             break;
           case 0x01C:
-            Bios::Bios018h();
+            BIOS.Bios018h();
             break;
           case 0x134:
-            Bios::Bios130h();
+            BIOS.Bios130h();
             break;
           case 0x33C:
-            Bios::Bios338h();
+            BIOS.Bios338h();
             break;
           case 0x16C:
-            Bios::Bios168h();
+            BIOS.Bios168h();
             break;
           default:
             met_abort("Jump to " << IOS_ADD << R(15));

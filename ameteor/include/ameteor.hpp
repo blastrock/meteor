@@ -17,6 +17,7 @@
 #ifndef __AMETEOR_H__
 #define __AMETEOR_H__
 
+#include "ameteor/bios.hpp"
 #include "ameteor/clock.hpp"
 #include "ameteor/dma.hpp"
 #include "ameteor/interpreter.hpp"
@@ -41,6 +42,7 @@ extern Timer _timer0;
 extern Timer _timer1;
 extern Timer _timer2;
 extern Timer _timer3;
+extern Bios _bios;
 
 const uint32_t UNIT_CLOCK = 0x0001;
 const uint32_t UNIT_IO = 0x0002;

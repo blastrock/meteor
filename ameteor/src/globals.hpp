@@ -37,6 +37,7 @@
 #define TIMER1 _timer1
 #define TIMER2 _timer2
 #define TIMER3 _timer3
+#define BIOS _bios
 
 #define CYCLES16NSeq(add, count) \
   CLOCK.TimePass(MEM.GetCycles16NoSeq(add, count))

@@ -26,8 +26,6 @@
 
 namespace AMeteor
 {
-namespace Bios
-{
 static const int16_t sineTable[256] = {
     (int16_t)0x0000, (int16_t)0x0192, (int16_t)0x0323, (int16_t)0x04B5,
     (int16_t)0x0645, (int16_t)0x07D5, (int16_t)0x0964, (int16_t)0x0AF1,
@@ -94,7 +92,7 @@ static const int16_t sineTable[256] = {
     (int16_t)0xF384, (int16_t)0xF50F, (int16_t)0xF69C, (int16_t)0xF82B,
     (int16_t)0xF9BB, (int16_t)0xFB4B, (int16_t)0xFCDD, (int16_t)0xFE6E};
 
-void Bios000h()
+void Bios::Bios000h()
 {
   debug("Bios entry point");
   R(13) = 0x03007FE0;
@@ -107,7 +105,7 @@ void Bios000h()
   IO.Write8(Io::POSTFLG, 0x01);
 }
 
-void Bios008h()
+void Bios::Bios008h()
 {
   // if we are here, we should be in SVC mode (0x13)
   // store the spsr, r11, r12 and r14 on the stack
@@ -149,7 +147,7 @@ void Bios008h()
   }
 }
 
-void Bios168h()
+void Bios::Bios168h()
 {
   uint32_t add = R(13) & 0xFFFFFFFC;
   R(2) = MEM.Read32(add);
@@ -179,7 +177,7 @@ void Bios168h()
   CPU.SwitchModeBack();
 }
 
-void Bios018h()
+void Bios::Bios018h()
 {
   debug("IRQ start");
   // stmfd r13!,r0-r3,r12,r14
@@ -199,7 +197,7 @@ void Bios018h()
   R(15) = MEM.Read32(0x03007FFC) + 4;
 }
 
-void Bios130h()
+void Bios::Bios130h()
 {
   debug("IRQ end");
   // ldmfd r13!,r0-r3,r12,r14
@@ -227,7 +225,7 @@ void Bios130h()
           R(15) &= 0xFFFFFFFC;*/
 }
 
-void SoftReset()
+void Bios::SoftReset()
 {
   CPU.SoftReset();
   if (MEM.Read8(0x03007FFA))
@@ -238,7 +236,7 @@ void SoftReset()
   MEM.SoftReset();
 }
 
-void RegisterRamReset()
+void Bios::RegisterRamReset()
 {
   IO.Write16(Io::DISPCNT, 0x0080);
   uint8_t flagRes = R(0);
@@ -260,12 +258,12 @@ void RegisterRamReset()
     IO.ClearOthers();
 }
 
-void Halt()
+void Bios::Halt()
 {
   IO.Write8(Io::HALTCNT, 0);
 }
 
-void IntrWait()
+void Bios::IntrWait()
 {
   // FIXME ugly
   R(13) -= 8;
@@ -291,7 +289,7 @@ void IntrWait()
   debug("IntrWait start");
 }
 
-void Bios338h()
+void Bios::Bios338h()
 {
   uint16_t& intFlags = *(uint16_t*)MEM.GetRealAddress(0x03007FF8);
 
@@ -317,14 +315,14 @@ void Bios338h()
   debug("IntWait end");
 }
 
-void VBlankIntrWait()
+void Bios::VBlankIntrWait()
 {
   R(0) = 1;
   R(1) = 1;
   IntrWait();
 }
 
-void Div()
+void Bios::Div()
 {
   if (!R(1))
     met_abort("Div by 0");
@@ -337,7 +335,7 @@ void Div()
   R(3) = div < 0 ? -div : div;
 }
 
-void DivArm()
+void Bios::DivArm()
 {
   uint32_t tmp = R(0);
   R(0) = R(1);
@@ -345,12 +343,12 @@ void DivArm()
   Div();
 }
 
-void Sqrt()
+void Bios::Sqrt()
 {
   R(0) = (uint16_t)sqrt((float)R(0));
 }
 
-void ArcTan()
+void Bios::ArcTan()
 {
   int32_t a = -(((int32_t)R(0) * R(0)) >> 14);
   int32_t b = 0xA9;
@@ -365,7 +363,7 @@ void ArcTan()
   R(0) = (R(0) * b) >> 16;
 }
 
-void ArcTan2()
+void Bios::ArcTan2()
 {
   int16_t x = R(0), y = R(1);
   if (y)
@@ -401,7 +399,7 @@ void ArcTan2()
     R(0) = 0x0000;
 }
 
-void CpuSet()
+void Bios::CpuSet()
 {
   if (R(2) & (0x1 << 26)) // 32 bits
   {
@@ -453,7 +451,7 @@ void CpuSet()
   }
 }
 
-void CpuFastSet()
+void Bios::CpuFastSet()
 {
   if (R(2) & (0x1 << 24)) // fixed source address
   {
@@ -478,7 +476,7 @@ void CpuFastSet()
   }
 }
 
-void BgAffineSet()
+void Bios::BgAffineSet()
 {
   uint32_t src = R(0);
   uint32_t dest = R(1);
@@ -532,7 +530,7 @@ void BgAffineSet()
   }
 }
 
-void ObjAffineSet()
+void Bios::ObjAffineSet()
 {
   uint32_t src = R(0);
   uint32_t dest = R(1);
@@ -573,7 +571,7 @@ void ObjAffineSet()
   }
 }
 
-void LZ77UnCompWram()
+void Bios::LZ77UnCompWram()
 {
   uint32_t src = R(0);
   uint32_t header = MEM.Read32(src);
@@ -634,7 +632,7 @@ void LZ77UnCompWram()
   }
 }
 
-void LZ77UnCompVram()
+void Bios::LZ77UnCompVram()
 {
   uint32_t src = R(0);
   uint32_t header = MEM.Read32(src);
@@ -715,7 +713,7 @@ void LZ77UnCompVram()
   }
 }
 
-void HuffUnComp()
+void Bios::HuffUnComp()
 {
   uint32_t src = R(0) & 0xFFFFFFFC;
   uint32_t dest = R(1);
@@ -787,7 +785,7 @@ void HuffUnComp()
   }
 }
 
-void RLUnCompWram()
+void Bios::RLUnCompWram()
 {
   uint32_t src = R(0);
   uint32_t header = MEM.Read32(src);
@@ -847,7 +845,7 @@ void RLUnCompWram()
   }
 }
 
-void RLUnCompVram()
+void Bios::RLUnCompVram()
 {
   uint32_t src = R(0);
   uint32_t header = MEM.Read32(src);
@@ -925,6 +923,5 @@ void RLUnCompVram()
       }
     }
   }
-}
 }
 }
