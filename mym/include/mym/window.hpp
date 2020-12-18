@@ -17,7 +17,7 @@
 #ifndef __MYM_WINDOW_H__
 #define __MYM_WINDOW_H__
 
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 
 #include <GL/glew.h>
 

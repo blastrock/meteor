@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/interpreter.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/bios.hpp"
 #include "ameteor/cpu.hpp"
 #include "ameteor/disassembler/instruction.hpp"

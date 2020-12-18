@@ -17,7 +17,7 @@
 #ifndef __MAIN_TEXT_H__
 #define __MAIN_TEXT_H__
 
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 #include <mym/audio.hpp>
 #include <mym/events.hpp>
 #include <mym/window.hpp>

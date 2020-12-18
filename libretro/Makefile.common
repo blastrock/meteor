@@ -13,7 +13,7 @@ SOURCES_CXX := \
 	$(SRCDIR)/graphics/objects.cpp \
 	$(SRCDIR)/graphics/renderer.cpp \
 	$(SRCDIR)/graphics/screen.cpp \
-	$(SRCDIR)/ameteor.cpp \
+	$(SRCDIR)/core.cpp \
 	$(SRCDIR)/bios.cpp \
 	$(SRCDIR)/clock.cpp \
 	$(SRCDIR)/cpu.cpp \

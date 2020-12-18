@@ -21,7 +21,7 @@ add_library(ameteor
 	src/graphics/objects.cpp
 	src/graphics/renderer.cpp
 	src/graphics/screen.cpp
-	src/ameteor.cpp
+	src/core.cpp
 	src/bios.cpp
 	src/cartmem.cpp
 	src/clock.cpp

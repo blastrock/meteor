@@ -17,7 +17,7 @@
 #include "ameteor/graphics/screen.hpp"
 #include "../debug.hpp"
 #include "../globals.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 
 #include <cstring>
 

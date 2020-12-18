@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "video.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "libretro.h"
 
 extern retro_video_refresh_t pretro_refresh;

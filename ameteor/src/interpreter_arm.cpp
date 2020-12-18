@@ -53,7 +53,7 @@ ARM Binary Opcode Format
 
 */
 
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/interpreter.hpp"
 #include "globals.hpp"
 

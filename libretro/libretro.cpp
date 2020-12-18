@@ -20,7 +20,7 @@
 #include "video.hpp"
 #include "audio.hpp"
 #include "input.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/cartmem.hpp"
 #include <sstream>
 #include <stdio.h>

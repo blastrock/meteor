@@ -17,7 +17,7 @@
 #include "MainText.hpp"
 
 #include "configurator.hpp"
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 #include <filesystem>
 #include <iostream>
 #include <stdexcept>

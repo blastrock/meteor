@@ -23,7 +23,7 @@
 #include <iostream>
 
 // for abort macro
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "globals.hpp"
 
 #ifdef METDEBUG

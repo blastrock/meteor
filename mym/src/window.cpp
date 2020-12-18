@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mym/window.hpp"
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 #include <cstring>
 #include <sched.h>
 #include <stdio.h>

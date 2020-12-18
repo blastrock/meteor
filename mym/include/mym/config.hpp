@@ -17,7 +17,7 @@
 #ifndef __MYM_CONFIG_HPP__
 #define __MYM_CONFIG_HPP__
 
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 
 #include <map>
 #include <string>

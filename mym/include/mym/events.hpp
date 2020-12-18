@@ -17,7 +17,7 @@
 #ifndef __MYM_EVENTS_H__
 #define __MYM_EVENTS_H__
 
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 
 #include <SFML/Window.hpp>
 

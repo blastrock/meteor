@@ -16,7 +16,7 @@
 
 #include "audio.hpp"
 #include "libretro.h"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include <assert.h>
 
 extern retro_audio_sample_t pretro_sample;

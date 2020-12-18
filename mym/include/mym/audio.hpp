@@ -17,7 +17,7 @@
 #ifndef __MYM_AUDIO_HPP__
 #define __MYM_AUDIO_HPP__
 
-#include <ameteor.hpp>
+#include <ameteor/core.hpp>
 
 #include <ao/ao.h>
 #include <stdint.h>

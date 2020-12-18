@@ -50,7 +50,7 @@ U_|_1___1___1___0___1_|_________________________var___________|_1_|UNDEF ARM9
 
 */
 
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/interpreter.hpp"
 #include "ameteor/memory.hpp"
 #include "globals.hpp"

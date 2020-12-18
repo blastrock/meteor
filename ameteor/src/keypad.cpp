@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/keypad.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "globals.hpp"
 
 namespace AMeteor

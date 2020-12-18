@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/memory.hpp"
-#include "ameteor.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/eeprom.hpp"
 #include "ameteor/flash.hpp"
 #include "ameteor/io.hpp"
