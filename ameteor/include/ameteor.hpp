@@ -38,10 +38,10 @@ extern Dma _dma;
 extern Lcd _lcd;
 extern Sound _sound;
 extern Keypad _keypad;
-extern Timer _timer0;
-extern Timer _timer1;
-extern Timer _timer2;
-extern Timer _timer3;
+extern Timer<0> _timer0;
+extern Timer<1> _timer1;
+extern Timer<2> _timer2;
+extern Timer<3> _timer3;
 extern Bios _bios;
 
 const uint32_t UNIT_CLOCK = 0x0001;

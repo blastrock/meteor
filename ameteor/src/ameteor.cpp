@@ -58,10 +58,10 @@ Sound _sound;
 // it must also be initialized after io since it takes the keyinput
 // reference
 Keypad _keypad;
-Timer _timer3(3, NULL);
-Timer _timer2(2, &_timer3);
-Timer _timer1(1, &_timer2);
-Timer _timer0(0, &_timer1);
+Timer<3> _timer3(NULL);
+Timer<2> _timer2(&_timer3);
+Timer<1> _timer1(&_timer2);
+Timer<0> _timer0(&_timer1);
 Bios _bios;
 
 void Reset(uint32_t units)

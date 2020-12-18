@@ -24,14 +24,16 @@ namespace AMeteor
 {
 static const uint16_t Prescalers[] = {1, 64, 256, 1024};
 
-void Timer::Reset()
+template <unsigned Num>
+void Timer<Num>::Reset()
 {
   m_reload = 0;
   m_count = 0;
   m_control.w = 0;
 }
 
-void Timer::Reload()
+template <unsigned Num>
+void Timer<Num>::Reload()
 {
   // FIXME to test on hardware, vba update the prescaler even if the timer
   // didn't restart
@@ -43,10 +45,10 @@ void Timer::Reload()
   // the current behaviour for the above example is that it will reach 34 in
   // 1 cycle instead of 64
   if (!m_control.b.start &&
-      (IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE) & (0x1 << 7)))
+      (IO.DRead16(Io::TM0CNT_H + Num * Io::TIMER_SIZE) & (0x1 << 7)))
   // if start has changed from 0 to 1
   {
-    m_control.w = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
+    m_control.w = IO.DRead16(Io::TM0CNT_H + Num * Io::TIMER_SIZE);
     m_count = 65536 - m_reload;
     if (!m_control.b.countup)
     {
@@ -56,38 +58,40 @@ void Timer::Reload()
       // will be taken in account by this timer
       // in other words, if the str instruction takes 3 cycles, the
       // timer will be incremented by 3 cycles just after its start
-      CLOCK.SetTimer(m_num, m_count);
+      CLOCK.SetTimer(Num, m_count);
     }
   }
   else
   {
-    uint16_t cnt = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
+    uint16_t cnt = IO.DRead16(Io::TM0CNT_H + Num * Io::TIMER_SIZE);
     if (m_control.b.start && (cnt & (0x1 << 7)) &&
         m_control.b.prescaler != (cnt & 0x3))
-      met_abort("Prescaler changed while timer " << (int)m_num << " was up");
+      met_abort("Prescaler changed while timer " << (int)Num << " was up");
 
-    m_control.w = IO.DRead16(Io::TM0CNT_H + m_num * Io::TIMER_SIZE);
+    m_control.w = IO.DRead16(Io::TM0CNT_H + Num * Io::TIMER_SIZE);
 
     if (!m_control.b.start)
-      CLOCK.DisableTimer(m_num);
+      CLOCK.DisableTimer(Num);
   }
 
-  if (m_num == 0 && m_control.b.countup)
+  if (Num == 0 && m_control.b.countup)
     met_abort("Count-up on first timer !");
 }
 
-uint16_t Timer::GetCount() const
+template <unsigned Num>
+uint16_t Timer<Num>::GetCount() const
 {
   if (m_control.b.countup)
     return 65536 - m_count;
   else
-    return 65536 - CLOCK.GetTimer(m_num) / Prescalers[m_control.b.prescaler];
+    return 65536 - CLOCK.GetTimer(Num) / Prescalers[m_control.b.prescaler];
 }
 
-void Timer::TimeEvent()
+template <unsigned Num>
+void Timer<Num>::TimeEvent()
 {
-  debug("Timer" << (int)m_num << " overflow");
-  SOUND.TimerOverflow(m_num);
+  debug("Timer<" << Num << "> overflow");
+  SOUND.TimerOverflow(Num);
 
   m_count = 65536 - m_reload;
   if (!m_control.b.countup)
@@ -95,26 +99,27 @@ void Timer::TimeEvent()
     m_count *= Prescalers[m_control.b.prescaler];
 
     // GetTimer should be zero or less since this function was called
-    if (m_count >= (unsigned short)-CLOCK.GetTimer(m_num))
+    if (m_count >= (unsigned short)-CLOCK.GetTimer(Num))
     {
-      m_count += CLOCK.GetTimer(m_num);
+      m_count += CLOCK.GetTimer(Num);
 
-      CLOCK.SetTimer(m_num, m_count);
+      CLOCK.SetTimer(Num, m_count);
     }
     else
     {
-      CLOCK.AddTimer(m_num, m_count);
+      CLOCK.AddTimer(Num, m_count);
     }
   }
 
   if (m_control.b.irq)
-    CPU.SendInterrupt(0x1 << (3 + m_num));
+    CPU.SendInterrupt(0x1 << (3 + Num));
 
-  if (m_num != 3)
+  if constexpr (Num != 3)
     m_next->Countup();
 }
 
-void Timer::Countup()
+template <unsigned Num>
+void Timer<Num>::Countup()
 {
   if (m_control.b.countup)
   {
@@ -124,7 +129,8 @@ void Timer::Countup()
   }
 }
 
-bool Timer::SaveState(std::ostream& stream)
+template <unsigned Num>
+bool Timer<Num>::SaveState(std::ostream& stream)
 {
   SS_WRITE_VAR(m_reload);
   SS_WRITE_VAR(m_count);
@@ -133,7 +139,8 @@ bool Timer::SaveState(std::ostream& stream)
   return true;
 }
 
-bool Timer::LoadState(std::istream& stream)
+template <unsigned Num>
+bool Timer<Num>::LoadState(std::istream& stream)
 {
   SS_READ_VAR(m_reload);
   SS_READ_VAR(m_count);
@@ -141,4 +148,9 @@ bool Timer::LoadState(std::istream& stream)
 
   return true;
 }
+
+template class Timer<0>;
+template class Timer<1>;
+template class Timer<2>;
+template class Timer<3>;
 }

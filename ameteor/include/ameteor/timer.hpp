@@ -25,11 +25,12 @@
 
 namespace AMeteor
 {
+template <unsigned Num>
 class Timer
 {
 public:
-  Timer(int8_t num, Timer* next)
-    : m_num(num), m_reload(0), m_count(0), m_control(0), m_next(next)
+  Timer(Timer<Num + 1>* next)
+    : m_reload(0), m_count(0), m_control(0), m_next(next)
   {
   }
 
@@ -65,18 +66,23 @@ private:
     } b;
   };
 
-  const int8_t m_num;
   uint16_t m_reload;
   uint32_t m_count;
   Control m_control;
 
-  Timer* m_next;
+  Timer<Num + 1>* m_next;
 
   void TimeEvent();
   void Countup();
 
   friend void Clock::Commit();
+  friend class Timer<Num - 1>;
 };
+
+extern template class Timer<0>;
+extern template class Timer<1>;
+extern template class Timer<2>;
+extern template class Timer<3>;
 }
 
 #endif
