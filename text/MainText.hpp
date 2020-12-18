@@ -17,6 +17,7 @@
 #ifndef __MAIN_TEXT_H__
 #define __MAIN_TEXT_H__
 
+#include <ameteor.hpp>
 #include <mym/audio.hpp>
 #include <mym/events.hpp>
 #include <mym/window.hpp>
@@ -39,6 +40,8 @@ public:
   void LoadState(uint8_t n);
 
 private:
+  AMeteor::Core m_core;
+
   mym::Window m_window;
   mym::Audio m_audio;
   mym::Events m_events;

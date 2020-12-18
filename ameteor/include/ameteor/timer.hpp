@@ -29,8 +29,7 @@ template <unsigned Num>
 class Timer
 {
 public:
-  Timer(Timer<Num + 1>* next)
-    : m_reload(0), m_count(0), m_control(0), m_next(next)
+  Timer() : m_reload(0), m_count(0), m_control(0)
   {
   }
 
@@ -42,7 +41,7 @@ public:
   }
   void Reload();
 
-  uint16_t GetCount() const;
+  uint16_t GetCount();
 
   bool SaveState(std::ostream& stream);
   bool LoadState(std::istream& stream);
@@ -69,8 +68,6 @@ private:
   uint16_t m_reload;
   uint32_t m_count;
   Control m_control;
-
-  Timer<Num + 1>* m_next;
 
   void TimeEvent();
   void Countup();

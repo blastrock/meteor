@@ -30,20 +30,6 @@
 
 namespace AMeteor
 {
-extern Clock _clock;
-extern Io _io;
-extern Interpreter _cpu;
-extern Memory _memory;
-extern Dma _dma;
-extern Lcd _lcd;
-extern Sound _sound;
-extern Keypad _keypad;
-extern Timer<0> _timer0;
-extern Timer<1> _timer1;
-extern Timer<2> _timer2;
-extern Timer<3> _timer3;
-extern Bios _bios;
-
 const uint32_t UNIT_CLOCK = 0x0001;
 const uint32_t UNIT_IO = 0x0002;
 const uint32_t UNIT_CPU = 0x0004;
@@ -60,22 +46,70 @@ const uint32_t UNIT_MEMORY_ROM = 0x1000;
 const uint32_t UNIT_MEMORY_BIOS = 0x2000;
 const uint32_t UNIT_ALL = 0x3FFF;
 
-void Reset(uint32_t units);
-
-bool SaveState(const char* filename);
-bool LoadState(const char* filename);
-
-bool SaveState(std::ostream& stream);
-bool LoadState(std::istream& stream);
-
-inline void Run(unsigned int cycles)
+class Core
+  // the clock must be initialized first since there are devices like lcd which
+  // needs to set the timer
+  : private Clock
+  , private Io
+  // the interpreter (which is in the cpu) takes io addresses, thus the cpu must
+  // be initialized after io
+  , private Interpreter
+  , private Memory
+  , private Dma
+  // the lcd must be initialized after the memory since it takes pointers from
+  // it
+  , private Lcd
+  // the sound must be initialized after the io since it takes references from
+  // it
+  , private Sound
+  // the keypad needs to take the vblank event from lcd, so it must be
+  // initialized after lcd it must also be initialized after io since it takes
+  // the keyinput reference
+  , private Keypad
+  , private Timer<3>
+  , private Timer<2>
+  , private Timer<1>
+  , private Timer<0>
+  , private Bios
 {
-  _cpu.Run(cycles);
-}
+public:
+  Core();
 
-inline void Stop()
+  template <typename Target>
+  auto& get()
+  {
+    return *static_cast<Target*>(this);
+  }
+
+  template <typename Target, typename Source>
+  static Target& get(Source& src)
+  {
+    return static_cast<Core*>(&src)->get<Target>();
+  }
+
+  void Reset(uint32_t units);
+
+  bool SaveState(const char* filename);
+  bool LoadState(const char* filename);
+
+  bool SaveState(std::ostream& stream);
+  bool LoadState(std::istream& stream);
+
+  inline void Run(unsigned int cycles)
+  {
+    get<Interpreter>().Run(cycles);
+  }
+
+  inline void Stop()
+  {
+    get<Interpreter>().Stop();
+  }
+};
+
+template <>
+inline auto& Core::get<Cpu>()
 {
-  _cpu.Stop();
+  return *static_cast<Interpreter*>(this);
 }
 }
 

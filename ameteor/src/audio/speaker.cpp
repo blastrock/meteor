@@ -114,7 +114,7 @@ int16_t Speaker::MixSample(uint16_t cntl, uint8_t cnth)
     case 2: // 100%
       break;
     case 3: // Prohibited
-      met_abort("Invalid SOUNDCNT_H sound # 1-4 volume");
+      met_abort_raw("Invalid SOUNDCNT_H sound # 1-4 volume");
       break;
     }
 

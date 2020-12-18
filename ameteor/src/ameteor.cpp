@@ -38,56 +38,35 @@ public:
 } __ameteor;
 }
 
-// the clock must be initialized first since there are devices like
-// lcd which needs to set the timer
-Clock _clock;
-Io _io;
-// the interpreter (which is in the cpu) takes io addresses, thus the
-// cpu must be initialized after io
-Interpreter _cpu;
-Memory _memory;
-Dma _dma;
-// the lcd must be initialized after the memory since it takes
-// pointers from it
-Lcd _lcd;
-// the sound must be initialized after the io since it takes references
-// from it
-Sound _sound;
-// the keypad needs to take the vblank event from lcd, so it must be
-// initialized after lcd
-// it must also be initialized after io since it takes the keyinput
-// reference
-Keypad _keypad;
-Timer<3> _timer3(NULL);
-Timer<2> _timer2(&_timer3);
-Timer<1> _timer1(&_timer2);
-Timer<0> _timer0(&_timer1);
-Bios _bios;
+Core::Core()
+{
+}
 
-void Reset(uint32_t units)
+void Core::Reset(uint32_t units)
 {
 #define RESET(u, e)     \
   if (units & UNIT_##e) \
-    _##u.Reset();
-  RESET(clock, CLOCK);
-  RESET(io, IO);
-  RESET(cpu, CPU);
-  RESET(dma, DMA);
-  RESET(lcd, LCD);
-  RESET(sound, SOUND);
-  RESET(keypad, KEYPAD);
-  RESET(timer0, TIMER0);
-  RESET(timer1, TIMER1);
-  RESET(timer2, TIMER2);
-  RESET(timer3, TIMER3);
+    get<u>().Reset();
+  RESET(Clock, CLOCK);
+  RESET(Io, IO);
+  RESET(Cpu, CPU);
+  RESET(Dma, DMA);
+  RESET(Lcd, LCD);
+  RESET(Sound, SOUND);
+  RESET(Keypad, KEYPAD);
+  RESET(Timer<0>, TIMER0);
+  RESET(Timer<1>, TIMER1);
+  RESET(Timer<2>, TIMER2);
+  RESET(Timer<3>, TIMER3);
+  // RESET(Bios, BIOS);
 #undef RESET
   if (units & UNIT_MEMORY)
-    _memory.Reset(units);
+    get<Memory>().Reset(units);
 }
 
-bool SaveState(const char* filename)
+bool Core::SaveState(const char* filename)
 {
-  if (_cpu.IsRunning())
+  if (get<Cpu>().IsRunning())
     return false;
 
   std::ostringstream ss;
@@ -111,9 +90,9 @@ bool SaveState(const char* filename)
   return true;
 }
 
-bool LoadState(const char* filename)
+bool Core::LoadState(const char* filename)
 {
-  if (_cpu.IsRunning())
+  if (get<Cpu>().IsRunning())
     return false;
 
   std::istringstream ss;
@@ -138,36 +117,37 @@ bool LoadState(const char* filename)
   return LoadState(ss);
 }
 
-bool SaveState(std::ostream& stream)
+bool Core::SaveState(std::ostream& stream)
 {
-  if (_cpu.IsRunning())
+  if (get<Cpu>().IsRunning())
     return false;
 
   SS_WRITE_DATA(SS_MAGIC_STRING, SS_MS_SIZE);
 
-#define SAVE(dev)             \
-  if (!dev.SaveState(stream)) \
+#define SAVE(dev)                    \
+  if (!get<dev>().SaveState(stream)) \
   return false
-  SAVE(_clock);
-  SAVE(_io);
-  SAVE(_cpu);
-  SAVE(_memory);
-  SAVE(_dma);
-  SAVE(_lcd);
-  SAVE(_sound);
-  // SAVE(_keypad);
-  SAVE(_timer0);
-  SAVE(_timer1);
-  SAVE(_timer2);
-  SAVE(_timer3);
+  SAVE(Clock);
+  SAVE(Io);
+  SAVE(Cpu);
+  SAVE(Memory);
+  SAVE(Dma);
+  SAVE(Lcd);
+  SAVE(Sound);
+  // SAVE(Keypad);
+  SAVE(Timer<0>);
+  SAVE(Timer<1>);
+  SAVE(Timer<2>);
+  SAVE(Timer<3>);
+  // SAVE(Bios);
 #undef SAVE
 
   return true;
 }
 
-bool LoadState(std::istream& stream)
+bool Core::LoadState(std::istream& stream)
 {
-  if (_cpu.IsRunning())
+  if (get<Cpu>().IsRunning())
     return false;
 
   {
@@ -177,21 +157,22 @@ bool LoadState(std::istream& stream)
       return false;
   }
 
-#define LOAD(dev)             \
-  if (!dev.LoadState(stream)) \
+#define LOAD(dev)                    \
+  if (!get<dev>().LoadState(stream)) \
   return false
-  LOAD(_clock);
-  LOAD(_io);
-  LOAD(_cpu);
-  LOAD(_memory);
-  LOAD(_dma);
-  LOAD(_lcd);
-  LOAD(_sound);
-  // LOAD(_keypad);
-  LOAD(_timer0);
-  LOAD(_timer1);
-  LOAD(_timer2);
-  LOAD(_timer3);
+  LOAD(Clock);
+  LOAD(Io);
+  LOAD(Cpu);
+  LOAD(Memory);
+  LOAD(Dma);
+  LOAD(Lcd);
+  LOAD(Sound);
+  // LOAD(Keypad);
+  LOAD(Timer<0>);
+  LOAD(Timer<1>);
+  LOAD(Timer<2>);
+  LOAD(Timer<3>);
+  // LOAD(Bios);
 #undef LOAD
 
   uint8_t xxx;

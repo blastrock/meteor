@@ -30,6 +30,7 @@
 Video am_video;
 Audio am_audio;
 Input am_input;
+AMeteor::Core am_core;
 
 unsigned retro_api_version(void) { return RETRO_API_VERSION; }
 
@@ -72,7 +73,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_init(void) {}
 
-void retro_reset(void) { AMeteor::Reset(AMeteor::UNIT_ALL ^ (AMeteor::UNIT_MEMORY_BIOS | AMeteor::UNIT_MEMORY_ROM)); }
+void retro_reset(void) { am_core.Reset(AMeteor::UNIT_ALL ^ (AMeteor::UNIT_MEMORY_BIOS | AMeteor::UNIT_MEMORY_ROM)); }
 void retro_deinit(void) { retro_reset(); }
 
 static bool first_run;
@@ -81,7 +82,7 @@ static void first_run_load()
 	// Have to defer ROM loading as SRAM content is used to determine cart type. GBA stuff ...
 	if (first_run)
 	{
-		AMeteor::_memory.LoadCartInferred();
+		am_core.get<AMeteor::Memory>().LoadCartInferred();
 		am_video.InitAMeteor();
 		am_audio.InitAMeteor();
 		am_input.InitAMeteor();
@@ -93,14 +94,14 @@ void retro_run(void)
 {
 	first_run_load();
 	pretro_poll();
-	AMeteor::Run(10000000); // We emulate until VBlank.
+	am_core.Run(10000000); // We emulate until VBlank.
 }
 
 size_t retro_serialize_size(void)
 {
 	first_run_load();
 	std::ostringstream stream;
-	AMeteor::SaveState(stream);
+	am_core.SaveState(stream);
 	unsigned serialize_size = stream.str().size();
 
 	// We want constant sized streams, and thus we have to pad.
@@ -118,7 +119,7 @@ size_t retro_serialize_size(void)
 bool retro_serialize(void *data, size_t size)
 {
 	std::ostringstream stream;
-	AMeteor::SaveState(stream);
+	am_core.SaveState(stream);
 
 	std::string s = stream.str();
 	if (s.size() > size)
@@ -132,7 +133,7 @@ bool retro_unserialize(const void *data, size_t size)
 {
 	std::istringstream stream;
 	stream.str(std::string((char*)data, size));
-	AMeteor::LoadState(stream);
+	am_core.LoadState(stream);
 
 	return true;
 }
@@ -162,7 +163,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
    pretro_environment(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-	AMeteor::_memory.LoadRom((const uint8_t*)info->data, info->size);
+	am_core.get<AMeteor::Memory>().LoadRom((const uint8_t*)info->data, info->size);
 	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
 	retro_rgb565 = pretro_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
 	first_run = true;

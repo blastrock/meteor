@@ -114,7 +114,7 @@ void Objects::OamWrite(uint32_t begin, uint32_t end)
   uint32_t objnum;
   // FIXME is this possible ?
   if (begin & 0x3)
-    met_abort("OamWrite not 4 byte aligned");
+    met_abort_raw("OamWrite not 4 byte aligned");
   if (begin <= 0x07000000)
     objnum = 0;
   else
@@ -154,7 +154,7 @@ void Objects::OamWrite16(uint32_t add)
   case 6:
     break;
   default:
-    met_abort("Oam access not 16 bits aligned");
+    met_abort_raw("Oam access not 16 bits aligned");
     break;
   }
 }
@@ -175,7 +175,7 @@ void Objects::OamWrite32(uint32_t add)
     iter->UpdateAttr2(pOam[2]);
     break;
   default:
-    met_abort("Oam access not 32 bits aligned");
+    met_abort_raw("Oam access not 32 bits aligned");
     break;
   }
 }

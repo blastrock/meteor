@@ -79,7 +79,7 @@ void Timer<Num>::Reload()
 }
 
 template <unsigned Num>
-uint16_t Timer<Num>::GetCount() const
+uint16_t Timer<Num>::GetCount()
 {
   if (m_control.b.countup)
     return 65536 - m_count;
@@ -115,7 +115,7 @@ void Timer<Num>::TimeEvent()
     CPU.SendInterrupt(0x1 << (3 + Num));
 
   if constexpr (Num != 3)
-    m_next->Countup();
+    Core::get<Timer<Num + 1>>(*this).Countup();
 }
 
 template <unsigned Num>

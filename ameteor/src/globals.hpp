@@ -25,19 +25,19 @@
 
 #define R(reg) CPU.Reg(reg)
 
-#define CPU _cpu
-#define MEM _memory
-#define IO _io
-#define DMA _dma
-#define LCD _lcd
-#define SOUND _sound
-#define KEYPAD _keypad
-#define CLOCK _clock
-#define TIMER0 _timer0
-#define TIMER1 _timer1
-#define TIMER2 _timer2
-#define TIMER3 _timer3
-#define BIOS _bios
+#define CPU Core::get<Cpu>(*this)
+#define MEM Core::get<Memory>(*this)
+#define IO Core::get<Io>(*this)
+#define DMA Core::get<Dma>(*this)
+#define LCD Core::get<Lcd>(*this)
+#define SOUND Core::get<Sound>(*this)
+#define KEYPAD Core::get<Keypad>(*this)
+#define CLOCK Core::get<Clock>(*this)
+#define TIMER0 Core::get<Timer<0>>(*this)
+#define TIMER1 Core::get<Timer<1>>(*this)
+#define TIMER2 Core::get<Timer<2>>(*this)
+#define TIMER3 Core::get<Timer<3>>(*this)
+#define BIOS Core::get<Bios>(*this)
 
 #define CYCLES16NSeq(add, count) \
   CLOCK.TimePass(MEM.GetCycles16NoSeq(add, count))

@@ -24,7 +24,7 @@ class Configurator
 public:
   void Load();
 
-  void InitAMeteor();
+  void InitAMeteor(AMeteor::Core& core);
 
   const std::string& GetBatteryPath() const
   {

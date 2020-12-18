@@ -163,7 +163,7 @@ void Screen::DrawLine(uint8_t line)
       m_objs.DrawLineHighOnly(line, lineObj);
     break;
   default:
-    met_abort("not supported : " << (m_dispcnt & 0x7));
+    met_abort_raw("not supported : " << (m_dispcnt & 0x7));
     break;
   }
 

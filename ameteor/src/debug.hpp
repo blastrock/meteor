@@ -24,19 +24,29 @@
 
 // for abort macro
 #include "ameteor.hpp"
+#include "globals.hpp"
 
 #ifdef METDEBUG
-#define met_abort(str)                                                        \
-  {                                                                           \
-    std::cerr << IOS_NOR << "Fatal error :\n"                                 \
-              << str << "\nFile : " << __FILE__ << "\nLine : " << __LINE__    \
-              << "\nr15 = " << IOS_ADD << ::AMeteor::_cpu.Reg(15)             \
-              << "\n[r15] = " << IOS_ADD                                      \
-              << ::AMeteor::_memory.Read32(::AMeteor::_cpu.Reg(15))           \
-              << "\nFlag T : " << ::AMeteor::_cpu.ICpsr().thumb << std::endl; \
-    abort();                                                                  \
+#define met_abort(str)                                                     \
+  {                                                                        \
+    std::cerr << IOS_NOR << "Fatal error :\n"                              \
+              << str << "\nFile : " << __FILE__ << "\nLine : " << __LINE__ \
+              << "\nr15 = " << IOS_ADD << CPU.Reg(15)                      \
+              << "\n[r15] = " << IOS_ADD << MEM.Read32(CPU.Reg(15))        \
+              << "\nFlag T : " << CPU.ICpsr().thumb << std::endl;          \
+    abort();                                                               \
+  }
+#define met_abort_raw(str)                                                 \
+  {                                                                        \
+    std::cerr << IOS_NOR << "Fatal error :\n"                              \
+              << str << "\nFile : " << __FILE__ << "\nLine : " << __LINE__ \
+              << std::endl;                                                \
+    abort();                                                               \
   }
 #else
+#define met_abort_raw(str) \
+  {                        \
+  }
 #define met_abort(str) \
   {                    \
   }

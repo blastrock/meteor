@@ -17,6 +17,8 @@
 #ifndef __MYM_EVENTS_H__
 #define __MYM_EVENTS_H__
 
+#include <ameteor.hpp>
+
 #include <SFML/Window.hpp>
 
 namespace mym
@@ -26,12 +28,13 @@ class Events
 public:
   Events(sf::Window& window);
 
-  void InitAMeteor();
+  void InitAMeteor(AMeteor::Core& core);
 
   void CheckEvents();
 
 private:
   sf::Window& m_window;
+  AMeteor::Core* m_core;
 };
 }
 

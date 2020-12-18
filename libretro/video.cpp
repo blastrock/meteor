@@ -21,10 +21,11 @@
 
 extern retro_video_refresh_t pretro_refresh;
 extern bool retro_rgb565;
+extern AMeteor::Core am_core;
 
 void Video::InitAMeteor()
 {
-	AMeteor::_lcd.GetScreen().GetRenderer().SetFrameSlot(
+	am_core.get<AMeteor::Lcd>().GetScreen().GetRenderer().SetFrameSlot(
 			syg::mem_fun(*this, &Video::ShowFrame));
 }
 
@@ -56,6 +57,6 @@ void Video::ShowFrame (const uint16_t* frame)
       }
    }
 
-	AMeteor::Stop();
+	am_core.Stop();
 	pretro_refresh(conv_buf, 240, 160, 240 * 2);
 }

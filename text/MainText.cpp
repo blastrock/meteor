@@ -22,15 +22,17 @@
 #include <iostream>
 #include <stdexcept>
 
+using namespace AMeteor;
+
 MainText::MainText() : m_events(m_window.GetWindow()), m_running(false)
 {
   Configurator config;
   config.Load();
-  config.InitAMeteor();
+  config.InitAMeteor(m_core);
 
-  m_window.InitAMeteor();
-  m_audio.InitAMeteor();
-  m_events.InitAMeteor();
+  m_window.InitAMeteor(m_core);
+  m_audio.InitAMeteor(m_core);
+  m_events.InitAMeteor(m_core);
 
   m_batteryPath = config.GetBatteryPath();
   m_sstatePath = config.GetSStatePath();
@@ -42,7 +44,7 @@ void MainText::Open(const std::string& rom)
   std::cout << "Loading " << rom << std::endl;
 
   m_openFile = rom;
-  if (!AMeteor::_memory.LoadRom(m_openFile.c_str()))
+  if (!m_core.get<Memory>().LoadRom(m_openFile.c_str()))
     throw std::runtime_error("Failed to load ROM");
 
   std::string file = (std::filesystem::path(m_batteryPath) /
@@ -52,8 +54,8 @@ void MainText::Open(const std::string& rom)
     file.replace(file.end() - 3, file.end(), "mct");
   else
     file.append(".mct");
-  AMeteor::_memory.SetCartFile(file.c_str());
-  if (AMeteor::_memory.LoadCart() == AMeteor::Memory::CERR_FAIL)
+  m_core.get<Memory>().SetCartFile(file.c_str());
+  if (m_core.get<Memory>().LoadCart() == AMeteor::Memory::CERR_FAIL)
     std::cout << "Failed to load battery" << std::endl;
 
   std::cout << "Rom loaded" << std::endl;
@@ -61,7 +63,7 @@ void MainText::Open(const std::string& rom)
 
 void MainText::OpenBios(const std::string& file)
 {
-  if (!AMeteor::_memory.LoadBios(file.c_str()))
+  if (!m_core.get<Memory>().LoadBios(file.c_str()))
     throw std::runtime_error("Failed to load BIOS");
 }
 
@@ -69,7 +71,7 @@ void MainText::Close()
 {
   m_running = false;
 
-  AMeteor::Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
+  m_core.Reset(AMeteor::UNIT_ALL ^ AMeteor::UNIT_MEMORY_BIOS);
   m_window.Uninit();
   m_openFile.clear();
 }
@@ -79,7 +81,7 @@ void MainText::CloseBios()
   if (m_running)
     return;
 
-  AMeteor::Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
+  m_core.Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
 }
 
 void MainText::Run()
@@ -93,7 +95,7 @@ void MainText::Run()
   m_running = true;
   do
   {
-    AMeteor::Run(280000);
+    m_core.Run(280000);
   } while (m_running);
 }
 
@@ -104,7 +106,7 @@ void MainText::Stop()
 
 void MainText::Reset()
 {
-  AMeteor::Reset(
+  m_core.Reset(
       AMeteor::UNIT_ALL ^
       (AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
 }
@@ -119,7 +121,7 @@ void MainText::SaveState(uint8_t n)
   else
     file.append(".mst");
   file.insert(file.end() - 4, 1, n + '0');
-  if (!AMeteor::SaveState(file.c_str()))
+  if (!m_core.SaveState(file.c_str()))
     std::cout << "Cannot save state!" << std::endl;
 }
 
@@ -133,6 +135,6 @@ void MainText::LoadState(uint8_t n)
   else
     file.append(".mst");
   file.insert(file.end() - 4, 1, n + '0');
-  if (!AMeteor::LoadState(file.c_str()))
+  if (!m_core.LoadState(file.c_str()))
     std::cout << "Cannot load state!" << std::endl;
 }

@@ -30,9 +30,9 @@ Audio::~Audio()
   Uninit();
 }
 
-void Audio::InitAMeteor()
+void Audio::InitAMeteor(AMeteor::Core& core)
 {
-  AMeteor::_sound.GetSpeaker().SetFrameSlot(
+  core.get<AMeteor::Sound>().GetSpeaker().SetFrameSlot(
       syg::mem_fun(*this, &Audio::PlayFrames));
 }
 

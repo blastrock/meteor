@@ -17,6 +17,8 @@
 #ifndef __MYM_WINDOW_H__
 #define __MYM_WINDOW_H__
 
+#include <ameteor.hpp>
+
 #include <GL/glew.h>
 
 #include <GL/gl.h>
@@ -32,7 +34,7 @@ public:
 
   inline sf::Window& GetWindow();
 
-  void InitAMeteor();
+  void InitAMeteor(AMeteor::Core& core);
   void Init(sf::WindowHandle display = 0);
   void Uninit();
 

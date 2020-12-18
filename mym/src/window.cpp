@@ -61,9 +61,9 @@ Window::~Window()
   delete[] m_tbase;
 }
 
-void Window::InitAMeteor()
+void Window::InitAMeteor(AMeteor::Core& core)
 {
-  AMeteor::_lcd.GetScreen().GetRenderer().SetFrameSlot(
+  core.get<AMeteor::Lcd>().GetScreen().GetRenderer().SetFrameSlot(
       syg::mem_fun(*this, &Window::ShowFrame));
 }
 
@@ -116,8 +116,9 @@ void Window::InitGl()
   // 			const void* userParam )
   // 		{
   // 		fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x,
-  // message = %s\n", 				( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-  // 				type, severity, message );
+  // message = %s\n", 				( type == GL_DEBUG_TYPE_ERROR ? "**
+  // GL ERROR
+  // **" : "" ), 				type, severity, message );
   // 		}, 0 );
   glEnable(GL_TEXTURE_2D);
 

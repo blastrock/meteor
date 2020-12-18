@@ -85,19 +85,19 @@ void Config::SetInt(const std::string& key, int val)
   m_conf[key] = ss.str();
 }
 
-void Config::InitAMeteor()
+void Config::InitAMeteor(AMeteor::Core& core)
 {
-  AMeteor::_keypad.ResetBindings();
+  core.get<AMeteor::Keypad>().ResetBindings();
 
   int tmp;
-#define ASSIGN_BUTTON(btn, def)                                \
-  tmp = GetInt("keyboard_" #btn);                              \
-  if (tmp != INT_MIN)                                          \
-    AMeteor::_keypad.BindKey(tmp, AMeteor::Keypad::BTN_##btn); \
-  else                                                         \
-  {                                                            \
-    SetInt("keyboard_" #btn, def);                             \
-    AMeteor::_keypad.BindKey(def, AMeteor::Keypad::BTN_##btn); \
+#define ASSIGN_BUTTON(btn, def)                                           \
+  tmp = GetInt("keyboard_" #btn);                                         \
+  if (tmp != INT_MIN)                                                     \
+    core.get<AMeteor::Keypad>().BindKey(tmp, AMeteor::Keypad::BTN_##btn); \
+  else                                                                    \
+  {                                                                       \
+    SetInt("keyboard_" #btn, def);                                        \
+    core.get<AMeteor::Keypad>().BindKey(def, AMeteor::Keypad::BTN_##btn); \
   }
   ASSIGN_BUTTON(A, 0x77);
   ASSIGN_BUTTON(B, 0x78);
@@ -111,10 +111,10 @@ void Config::InitAMeteor()
   ASSIGN_BUTTON(DOWN, 0xFF54);
 #undef ASSIGN_BUTTON
 
-#define ASSIGN_BUTTON(btn)    \
-  tmp = GetInt("joy_" #btn);  \
-  if (tmp != INT_MIN)         \
-    AMeteor::_keypad.BindJoy( \
+#define ASSIGN_BUTTON(btn)               \
+  tmp = GetInt("joy_" #btn);             \
+  if (tmp != INT_MIN)                    \
+    core.get<AMeteor::Keypad>().BindJoy( \
         (tmp >> 16) & 0xFFFF, tmp & 0xFFFF, AMeteor::Keypad::BTN_##btn);
   ASSIGN_BUTTON(A);
   ASSIGN_BUTTON(B);
@@ -128,10 +128,10 @@ void Config::InitAMeteor()
   ASSIGN_BUTTON(DOWN);
 #undef ASSIGN_BUTTON
 
-#define ASSIGN_BUTTON(btn)       \
-  tmp = GetInt("joyaxis_" #btn); \
-  if (tmp != INT_MIN)            \
-    AMeteor::_keypad.BindAxis(   \
+#define ASSIGN_BUTTON(btn)                \
+  tmp = GetInt("joyaxis_" #btn);          \
+  if (tmp != INT_MIN)                     \
+    core.get<AMeteor::Keypad>().BindAxis( \
         (tmp >> 16) & 0xFFFF, tmp & 0xFFFF, AMeteor::Keypad::BTN_##btn);
   ASSIGN_BUTTON(A);
   ASSIGN_BUTTON(B);

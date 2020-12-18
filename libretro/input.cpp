@@ -21,10 +21,11 @@
 
 extern retro_input_state_t pretro_input;
 extern retro_input_poll_t pretro_poll;
+extern AMeteor::Core am_core;
 
 void Input::InitAMeteor()
 {
-	AMeteor::_lcd.sig_vblank.connect(
+	am_core.get<AMeteor::Lcd>().sig_vblank.connect(
 			syg::mem_fun(*this, &Input::CheckEvents));
 }
 
@@ -51,5 +52,5 @@ void Input::CheckEvents()
 
 	input ^= 0x3FF;
 
-	AMeteor::_keypad.SetPadState(input);
+	am_core.get<AMeteor::Keypad>().SetPadState(input);
 }

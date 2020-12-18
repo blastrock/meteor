@@ -51,7 +51,7 @@ bool Eeprom::Save(std::ostream& f)
 
 uint8_t Eeprom::Read(uint16_t MET_UNUSED(add))
 {
-  met_abort("8 bits write to EEPROM");
+  met_abort_raw("8 bits write to EEPROM");
   return 0;
 }
 
@@ -83,7 +83,7 @@ uint16_t Eeprom::Read()
 
 bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 {
-  met_abort("8 bits write to EEPROM");
+  met_abort_raw("8 bits write to EEPROM");
   return false;
 }
 // XXX
@@ -96,7 +96,7 @@ bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 				if (val & 0x1)
 					m_state = WAITING;
 				else
-					met_abort("First bit is not 1");
+					met_abort_raw("First bit is not 1");
 				return false;
 			case WAITING:
 				m_add = 0;
@@ -116,12 +116,12 @@ bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 				{
 					m_state = READ_END;
 					if (m_size == 0x2000 && (m_add & 0x3C000))
-						met_abort("In large EEPROM, 4 upper address bits are not 0");
+						met_abort_raw("In large EEPROM, 4 upper address bits are not 0");
 				}
 				return false;
 			case READ_END:
 				if (val & 0x1)
-					met_abort("Last bit of EEPROM read request is not 0");
+					met_abort_raw("Last bit of EEPROM read request is not 0");
 				m_pos = 0;
 				m_state = READ_GARBAGE;
 				return false;
@@ -136,7 +136,7 @@ bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 					m_state = WRITE_DATA;
 					m_pos = 0;
 					if (m_size == 0x2000 && (m_add & 0x3C000))
-						met_abort("In large EEPROM, 4 upper address bits are not 0");
+						met_abort_raw("In large EEPROM, 4 upper address bits are not 0");
 				}
 				return false;
 			case WRITE_DATA:
@@ -151,7 +151,7 @@ bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 				return true;
 			case WRITE_END:
 				if (val & 0x1)
-					met_abort("Last bit of EEPROM write request is not 0");
+					met_abort_raw("Last bit of EEPROM write request is not 0");
 				return false;
 		}
 	}
@@ -160,14 +160,14 @@ bool Eeprom::Write(uint16_t MET_UNUSED(add), uint8_t MET_UNUSED(val))
 bool Eeprom::Write(uint16_t* pData, uint16_t size)
 {
   if (!(*pData & 0x1))
-    met_abort("Bit 1 is not 1 in EEPROM DMA");
+    met_abort_raw("Bit 1 is not 1 in EEPROM DMA");
   ++pData;
 
   uint16_t add = 0;
   if (*pData & 0x1) // read
   {
     if (size != 9 && size != 17)
-      met_abort("Invalid size for read");
+      met_abort_raw("Invalid size for read");
     ++pData;
 
     // read address
@@ -175,11 +175,11 @@ bool Eeprom::Write(uint16_t* pData, uint16_t size)
          ++i, ++pData)
       add = (add << 1) | (*pData & 0x1);
     if (m_size == 0x2000 && (add & 0x3C00))
-      met_abort("In large EEPROM, 4 upper address bits are not 0");
+      met_abort_raw("In large EEPROM, 4 upper address bits are not 0");
 
     // XXX
     /*if (*pData & 0x1)
-            met_abort("Last bit of EEPROM read request is not 0");*/
+            met_abort_raw("Last bit of EEPROM read request is not 0");*/
 
     m_add = add * 8;
     m_state = READ_GARBAGE;
@@ -190,7 +190,7 @@ bool Eeprom::Write(uint16_t* pData, uint16_t size)
   else // write
   {
     if (size != 73 && size != 81)
-      met_abort("Invalid size for write");
+      met_abort_raw("Invalid size for write");
     ++pData;
 
     // read address
@@ -198,7 +198,7 @@ bool Eeprom::Write(uint16_t* pData, uint16_t size)
          ++i, ++pData)
       add = (add << 1) | (*pData & 0x1);
     if (m_size == 0x2000 && (add & 0x3C00))
-      met_abort("In large EEPROM, 4 upper address bits are not 0");
+      met_abort_raw("In large EEPROM, 4 upper address bits are not 0");
 
     // read data
     uint8_t* pMem = m_data + add * 8;
@@ -212,7 +212,7 @@ bool Eeprom::Write(uint16_t* pData, uint16_t size)
     }
 
     if (*pData & 0x1)
-      met_abort("Last bit of EEPROM write request is not 0");
+      met_abort_raw("Last bit of EEPROM write request is not 0");
 
     m_state = IDLE;
 
@@ -225,7 +225,7 @@ bool Eeprom::Write(uint16_t* pData, uint16_t size)
 	void Eeprom::Read (uint16_t* pOut)
 	{
 		if (m_state != READ)
-			met_abort("Read in invalid EEPROM state");
+			met_abort_raw("Read in invalid EEPROM state");
 
 		pOut += 4; // ignore these
 		uint8_t* pData = m_data + m_add;

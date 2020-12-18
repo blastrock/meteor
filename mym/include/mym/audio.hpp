@@ -17,6 +17,8 @@
 #ifndef __MYM_AUDIO_HPP__
 #define __MYM_AUDIO_HPP__
 
+#include <ameteor.hpp>
+
 #include <ao/ao.h>
 #include <stdint.h>
 
@@ -28,7 +30,7 @@ public:
   Audio();
   ~Audio();
 
-  void InitAMeteor();
+  void InitAMeteor(AMeteor::Core& core);
   void Init();
   void Uninit();
 

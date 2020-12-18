@@ -23,9 +23,11 @@ Events::Events(sf::Window& window) : m_window(window)
 {
 }
 
-void Events::InitAMeteor()
+void Events::InitAMeteor(AMeteor::Core& core)
 {
-  AMeteor::_lcd.sig_vblank.connect(syg::mem_fun(*this, &Events::CheckEvents));
+  m_core = &core;
+  core.get<AMeteor::Lcd>().sig_vblank.connect(
+      syg::mem_fun(*this, &Events::CheckEvents));
 }
 
 void Events::CheckEvents()
@@ -36,10 +38,10 @@ void Events::CheckEvents()
     switch (event.type)
     {
     case sf::Event::KeyPressed:
-      AMeteor::_keypad.KeyPressed(event.key.code);
+      m_core->get<AMeteor::Keypad>().KeyPressed(event.key.code);
       break;
     case sf::Event::KeyReleased:
-      AMeteor::_keypad.KeyReleased(event.key.code);
+      m_core->get<AMeteor::Keypad>().KeyReleased(event.key.code);
       break;
     case sf::Event::JoystickButtonPressed:
       switch (event.joystickButton.button)
@@ -50,7 +52,7 @@ void Events::CheckEvents()
       //	SOUND.SetSampleskip(SPDUP_SNDSKIP);
       //	break;
       default:
-        AMeteor::_keypad.JoyButtonPressed(
+        m_core->get<AMeteor::Keypad>().JoyButtonPressed(
             event.joystickButton.joystickId, event.joystickButton.button);
         break;
       }
@@ -64,13 +66,13 @@ void Events::CheckEvents()
       //	SOUND.SetSampleskip(0);
       //	break;
       default:
-        AMeteor::_keypad.JoyButtonReleased(
+        m_core->get<AMeteor::Keypad>().JoyButtonReleased(
             event.joystickButton.joystickId, event.joystickButton.button);
         break;
       }
       break;
     case sf::Event::JoystickMoved:
-      AMeteor::_keypad.JoyMoved(
+      m_core->get<AMeteor::Keypad>().JoyMoved(
           event.joystickMove.joystickId,
           event.joystickMove.axis,
           event.joystickMove.position);
@@ -79,7 +81,7 @@ void Events::CheckEvents()
     //	LCD.EventResize(event.Size.Width, event.Size.Height);
     //	break;
     case sf::Event::Closed:
-      AMeteor::_cpu.Stop();
+      m_core->get<AMeteor::Cpu>().Stop();
       break;
     default:
       break;

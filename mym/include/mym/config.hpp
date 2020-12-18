@@ -17,6 +17,8 @@
 #ifndef __MYM_CONFIG_HPP__
 #define __MYM_CONFIG_HPP__
 
+#include <ameteor.hpp>
+
 #include <map>
 #include <string>
 
@@ -48,7 +50,7 @@ public:
   int GetInt(const std::string& key) const;
   void SetInt(const std::string& key, int val);
 
-  void InitAMeteor();
+  void InitAMeteor(AMeteor::Core& core);
 
 private:
   typedef std::map<std::string, std::string> Config_t;

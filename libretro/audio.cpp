@@ -20,10 +20,11 @@
 #include <assert.h>
 
 extern retro_audio_sample_t pretro_sample;
+extern AMeteor::Core am_core;
 
 void Audio::InitAMeteor()
 {
-	AMeteor::_sound.GetSpeaker().SetFrameSlot(
+	am_core.get<AMeteor::Sound>().GetSpeaker().SetFrameSlot(
 			syg::mem_fun(*this, &Audio::PlayFrames));
 }
 
