@@ -82,7 +82,6 @@ public:
       m_brom = NULL;
     }
   }
-  bool LoadRom(const char* filename);
   void LoadRom(const uint8_t* data, uint32_t size);
   CartError LoadCart();
 #ifdef __LIBRETRO__

@@ -222,16 +222,6 @@ bool Memory::LoadBios(const char* filename)
   return true;
 }
 
-bool Memory::LoadRom(const char* filename)
-{
-  std::ifstream file(filename);
-  std::memset(m_rom, 0, 0x02000000);
-  file.read((char*)m_rom, 0x02000000);
-  if (file.bad())
-    return false;
-  return true;
-}
-
 void Memory::LoadRom(const uint8_t* data, uint32_t size)
 {
   uint32_t until = std::min(size, 0x02000000u);

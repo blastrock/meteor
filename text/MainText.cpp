@@ -39,13 +39,23 @@ MainText::MainText() : m_events(m_window.GetWindow()), m_running(false)
   m_romPath = config.GetRomPath();
 }
 
-void MainText::Open(const std::string& rom)
+void MainText::Open(const std::string& path)
 {
-  std::cout << "Loading " << rom << std::endl;
+  std::cout << "Loading " << path << std::endl;
 
-  m_openFile = rom;
-  if (!m_core.get<Memory>().LoadRom(m_openFile.c_str()))
-    throw std::runtime_error("Failed to load ROM");
+  m_openFile = path;
+  {
+    std::vector<uint8_t> rom(0x02000000);
+
+    std::ifstream file(path);
+    file.read((char*)rom.data(), 0x02000000);
+    if (file.bad())
+      throw std::runtime_error("Failed to load ROM");
+
+    rom.resize(file.gcount());
+
+    m_core.get<Memory>().LoadRom(rom.data(), rom.size());
+  }
 
   std::string file = (std::filesystem::path(m_batteryPath) /
                       std::filesystem::path(m_openFile).filename())
