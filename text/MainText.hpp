@@ -50,6 +50,8 @@ private:
   std::string m_openFile;
 
   bool m_running;
+
+  std::string GetSaveStatePath(uint8_t n);
 };
 
 #endif

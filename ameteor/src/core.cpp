@@ -64,59 +64,6 @@ void Core::Reset(uint32_t units)
     get<Memory>().Reset(units);
 }
 
-bool Core::SaveState(const char* filename)
-{
-  if (get<Cpu>().IsRunning())
-    return false;
-
-  std::ostringstream ss;
-
-  if (!SaveState(ss))
-    return false;
-
-  std::ofstream file(filename);
-
-  if (!file)
-    return false;
-
-  std::string buf = ss.str();
-  if (!file.write(buf.c_str(), buf.length()))
-    return false;
-
-  file.close();
-  if (file.bad())
-    return false;
-
-  return true;
-}
-
-bool Core::LoadState(const char* filename)
-{
-  if (get<Cpu>().IsRunning())
-    return false;
-
-  std::istringstream ss;
-  {
-    std::ifstream file(filename);
-    if (!file)
-      return false;
-
-    // 1Mo
-    std::vector<uint8_t> buf(0x100000);
-    if (file.read((char*)&buf[0], 0x100000).bad())
-      return false;
-    int nread = file.gcount();
-
-    file.close();
-    if (file.bad())
-      return false;
-
-    ss.str(std::string((char*)&buf[0], nread));
-  }
-
-  return LoadState(ss);
-}
-
 bool Core::SaveState(std::ostream& stream)
 {
   if (get<Cpu>().IsRunning())

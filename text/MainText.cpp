@@ -111,30 +111,86 @@ void MainText::Reset()
       (AMeteor::UNIT_MEMORY_ROM | AMeteor::UNIT_MEMORY_BIOS));
 }
 
+std::string MainText::GetSaveStatePath(uint8_t n)
+{
+  std::string filename = (std::filesystem::path(m_sstatePath) /
+                          std::filesystem::path(m_openFile).filename())
+                             .string();
+  if (filename[filename.size() - 4] == '.')
+    filename.replace(filename.end() - 3, filename.end(), "mst");
+  else
+    filename.append(".mst");
+  filename.insert(filename.end() - 4, 1, n + '0');
+
+  return filename;
+}
+
 void MainText::SaveState(uint8_t n)
 {
-  std::string file = (std::filesystem::path(m_sstatePath) /
-                      std::filesystem::path(m_openFile).filename())
-                         .string();
-  if (file[file.size() - 4] == '.')
-    file.replace(file.end() - 3, file.end(), "mst");
-  else
-    file.append(".mst");
-  file.insert(file.end() - 4, 1, n + '0');
-  if (!m_core.SaveState(file.c_str()))
+  std::ostringstream ss;
+
+  if (!m_core.SaveState(ss))
+  {
     std::cout << "Cannot save state!" << std::endl;
+    return;
+  }
+
+  std::ofstream file(GetSaveStatePath(n));
+
+  if (!file)
+  {
+    std::cout << "Cannot save state!" << std::endl;
+    return;
+  }
+
+  std::string buf = ss.str();
+  if (!file.write(buf.c_str(), buf.length()))
+  {
+    std::cout << "Cannot save state!" << std::endl;
+    return;
+  }
+
+  file.close();
+  if (file.bad())
+  {
+    std::cout << "Cannot save state!" << std::endl;
+    return;
+  }
 }
 
 void MainText::LoadState(uint8_t n)
 {
-  std::string file = (std::filesystem::path(m_sstatePath) /
-                      std::filesystem::path(m_openFile).filename())
-                         .string();
-  if (file[file.size() - 4] == '.')
-    file.replace(file.end() - 3, file.end(), "mst");
-  else
-    file.append(".mst");
-  file.insert(file.end() - 4, 1, n + '0');
-  if (!m_core.LoadState(file.c_str()))
+  std::istringstream ss;
+  {
+    std::ifstream file(GetSaveStatePath(n));
+    if (!file)
+    {
+      std::cout << "Cannot load state!" << std::endl;
+      return;
+    }
+
+    // 1Mo
+    std::vector<uint8_t> buf(0x100000);
+    if (file.read((char*)&buf[0], 0x100000).bad())
+    {
+      std::cout << "Cannot load state!" << std::endl;
+      return;
+    }
+    int nread = file.gcount();
+
+    file.close();
+    if (file.bad())
+    {
+      std::cout << "Cannot load state!" << std::endl;
+      return;
+    }
+
+    ss.str(std::string((char*)&buf[0], nread));
+  }
+
+  if (!m_core.LoadState(ss))
+  {
     std::cout << "Cannot load state!" << std::endl;
+    return;
+  }
 }

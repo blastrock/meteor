@@ -89,9 +89,6 @@ public:
 
   void Reset(uint32_t units);
 
-  bool SaveState(const char* filename);
-  bool LoadState(const char* filename);
-
   bool SaveState(std::ostream& stream);
   bool LoadState(std::istream& stream);
 
