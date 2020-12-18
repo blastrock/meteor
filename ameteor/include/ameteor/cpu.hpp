@@ -76,20 +76,17 @@ public:
   };
 
   Cpu();
-  virtual ~Cpu()
-  {
-  }
 
-  virtual void Reset();
-  virtual void SoftReset();
+  void Reset();
+  void SoftReset();
 
   void UpdateICpsr();
   void UpdateCpsr();
   void SwitchToMode(uint8_t newmode);
   void SwitchModeBack();
 
-  virtual void SendInterrupt(uint16_t interrupt) = 0;
-  virtual void CheckInterrupt() = 0;
+  void SendInterrupt(uint16_t interrupt);
+  void CheckInterrupt();
   void Interrupt();
   void SoftwareInterrupt(uint32_t comment);
   void SoftwareInterrupt();
@@ -148,8 +145,7 @@ protected:
   };
 
   CPUState m_st;
-
-  virtual void SetInterrupt(bool interrupt) = 0;
+  bool m_interrupt;
 
 private:
   void SaveMode(uint8_t mode);

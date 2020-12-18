@@ -36,18 +36,15 @@ public:
 
   void Reset()
   {
-    m_interrupt = m_interrupt_ = false;
+    m_interrupt_ = false;
     m_run = false;
     Cpu::Reset();
   }
   void SoftReset()
   {
-    m_interrupt_ = m_interrupt = false;
+    m_interrupt_ = false;
     Cpu::SoftReset();
   }
-
-  void SendInterrupt(uint16_t interrupt);
-  void CheckInterrupt();
 
   void Run(unsigned int cycles);
   void Stop()
@@ -62,16 +59,9 @@ public:
   bool SaveState(std::ostream& stream);
   bool LoadState(std::istream& stream);
 
-protected:
-  void SetInterrupt(bool interrupt)
-  {
-    m_interrupt = interrupt;
-  }
-
 private:
   bool m_run;
 
-  bool m_interrupt;
   bool m_interrupt_;
   uint32_t code;
   uint8_t& m_haltcnt;

@@ -39,6 +39,7 @@ void Cpu::Reset()
   m_st.icpsr.mode = M_SVC;
   m_st.icpsr.fiq_d = true;
   m_st.icpsr.irq_d = true;
+  m_interrupt = false;
 }
 
 void Cpu::SoftReset()
@@ -50,6 +51,7 @@ void Cpu::SoftReset()
   m_st.svc_r[0] = 0x03007FE0; // R13
   m_st.icpsr.mode = 0x1F;
   m_st.icpsr.fiq_d = true;
+  m_interrupt = false;
 }
 
 void Cpu::UpdateICpsr()
@@ -209,6 +211,21 @@ void Cpu::SaveMode(uint8_t mode)
   }
 }
 
+void Cpu::SendInterrupt(uint16_t interrupt)
+{
+  IO.GetRef16(Io::IF) |= interrupt;
+  if ((interrupt & IO.DRead16(Io::IE)) && (IO.DRead16(Io::IME) & 0x1) &&
+      !m_st.icpsr.irq_d)
+    // irq are enabled and theses irq are enabled...
+    m_interrupt = true;
+}
+
+void Cpu::CheckInterrupt()
+{
+  m_interrupt = (IO.DRead16(Io::IF) & IO.DRead16(Io::IE)) &&
+                (IO.DRead16(Io::IME) & 0x1) && !m_st.icpsr.irq_d;
+}
+
 void Cpu::Interrupt()
 {
   // Switch mode
@@ -222,7 +239,7 @@ void Cpu::Interrupt()
   m_st.icpsr.thumb = false;
   // Disable IRQ
   m_st.icpsr.irq_d = true;
-  SetInterrupt(false);
+  m_interrupt = false;
   // Branch on 0x18
   R(15) = 0x1C;
 }
@@ -237,7 +254,7 @@ void Cpu::SoftwareInterrupt()
   m_st.icpsr.thumb = false;
   // Disable IRQ
   m_st.icpsr.irq_d = true;
-  SetInterrupt(false);
+  m_interrupt = false;
   // Branch on 0x8
   R(15) = 0xC;
 }

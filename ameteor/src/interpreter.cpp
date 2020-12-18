@@ -37,21 +37,6 @@ Interpreter::Interpreter()
 {
 }
 
-void Interpreter::SendInterrupt(uint16_t interrupt)
-{
-  IO.GetRef16(Io::IF) |= interrupt;
-  if ((interrupt & IO.DRead16(Io::IE)) && (IO.DRead16(Io::IME) & 0x1) &&
-      !m_st.icpsr.irq_d)
-    // irq are enabled and theses irq are enabled...
-    m_interrupt = true;
-}
-
-void Interpreter::CheckInterrupt()
-{
-  m_interrupt = (IO.DRead16(Io::IF) & IO.DRead16(Io::IE)) &&
-                (IO.DRead16(Io::IME) & 0x1) && !m_st.icpsr.irq_d;
-}
-
 void Interpreter::Run(unsigned int cycles)
 {
   m_run = true;
