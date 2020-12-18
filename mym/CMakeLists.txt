@@ -2,10 +2,10 @@ set(CMAKE_CXX_FLAGS_RELEASE
 	"${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions -fno-rtti")
 
 set(mym_SRC
-	source/audio.cpp
-	source/config.cpp
-	source/events.cpp
-	source/window.cpp
+	src/audio.cpp
+	src/config.cpp
+	src/events.cpp
+	src/window.cpp
 )
 
 add_library(mym ${mym_SRC})
