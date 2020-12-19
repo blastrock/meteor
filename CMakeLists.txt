@@ -28,11 +28,16 @@ if(NOT SFML-GRAPHICS_LIBRARY OR NOT SFML-WINDOW_LIBRARY OR NOT SFML-SYSTEM_LIBRA
 	message(FATAL_ERROR "You must have SFML to compile this")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_definitions(-DMETDEBUG)
-endif()
-
 option(DISABLE_ASM "Force asm optimizations off")
+option(METEOR_ASSERTIONS "Enable assertions")
+option(METEOR_TRACE "Enable tracing")
+
+if(METEOR_ASSERTIONS)
+  add_definitions(-DMETEOR_ASSERTIONS=1)
+endif()
+if(METEOR_TRACE)
+  add_definitions(-DMETEOR_TRACE=1)
+endif()
 
 if(NOT DISABLE_ASM AND
 		(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR

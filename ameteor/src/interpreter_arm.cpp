@@ -69,7 +69,7 @@ ARM Binary Opcode Format
 // Load/Store immediate offset
 #define LSOff (code & 0xFFF)
 
-#ifdef METDEBUG
+#if METEOR_ASSERTIONS
 #define NOT_PC(reg) \
   if (reg == 15)    \
   met_abort("Register is PC")

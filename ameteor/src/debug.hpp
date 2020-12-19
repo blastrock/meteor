@@ -22,11 +22,10 @@
 #include <iomanip>
 #include <iostream>
 
-// for abort macro
 #include "ameteor/core.hpp"
 #include "globals.hpp"
 
-#ifdef METDEBUG
+#if METEOR_ASSERTIONS
 #define met_abort(str)                                                     \
   {                                                                        \
     std::cerr << IOS_NOR << "Fatal error :\n"                              \
@@ -55,9 +54,7 @@
 #define STDBG std::cout
 //#define STDBG debug_stream
 
-#if defined METDEBUG && defined METDEBUGLOG
-// XXX
-#define MYDEBUG
+#ifndef NDEBUG
 #define debug(str) STDBG << str << std::endl
 #define debug_(str) STDBG << str
 #else
@@ -79,12 +76,22 @@ namespace AMeteor
 void debug_bits(uint32_t u);
 void debug_bits_16(uint16_t u);
 
-#if defined MET_REGS_DEBUG
-void PrintRegs();
-void PrintStack(uint32_t stackadd);
+#if METEOR_TRACE
+void PrintRegs(Cpu& cpu);
+void PrintStack(Memory& memory, uint32_t stackadd);
+#define TRACE_THUMB_INSTRUCTION(pc, code)                               \
+  std::cerr << IOS_ADD << pc << ' '                                     \
+            << Disassembler::Instruction(pc, (uint16_t)code).ToString() \
+            << std::endl;
+#define TRACE_ARM_INSTRUCTION(pc, code)                                 \
+  std::cerr << IOS_ADD << pc << ' '                                     \
+            << Disassembler::Instruction(pc, (uint32_t)code).ToString() \
+            << std::endl;
 #else
-#define PrintRegs()
-#define PrintStack(b)
+#define PrintRegs(c)
+#define PrintStack(m, b)
+#define TRACE_THUMB_INSTRUCTION(pc, code)
+#define TRACE_ARM_INSTRUCTION(pc, code)
 #endif
 }
 

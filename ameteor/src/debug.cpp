@@ -27,8 +27,8 @@ namespace AMeteor
 // TODO make this more guidelined (like the above assert)
 void debug_bits(uint32_t u)
 {
-#if defined METDEBUG && defined METDEBUGLOG
-  for (register int8_t c = 31; c >= 0; --c)
+#ifndef NDEBUG
+  for (int8_t c = 31; c >= 0; --c)
   {
     STDBG << !!(u & (((uint32_t)0x1) << c));
     if (!(c % 8))
@@ -42,8 +42,8 @@ void debug_bits(uint32_t u)
 
 void debug_bits_16(uint16_t u)
 {
-#if defined METDEBUG && defined METDEBUGLOG
-  for (register int8_t c = 15; c >= 0; --c)
+#ifndef NDEBUG
+  for (int8_t c = 15; c >= 0; --c)
   {
     STDBG << !!(u & (((uint32_t)0x1) << c));
     if (!(c % 8))
@@ -55,32 +55,32 @@ void debug_bits_16(uint16_t u)
 #endif
 }
 
-#ifdef MET_REGS_DEBUG
-void PrintRegs()
+#ifdef METEOR_TRACE
+void PrintRegs(Cpu& cpu)
 {
   static uint32_t regs[17] = {0};
 
   for (uint8_t c = 0; c <= 15; ++c)
-    if (R(c) != regs[c])
+    if (cpu.Reg(c) != regs[c])
     {
-      STDBG << "R" << std::setbase(10) << (int)c << " = " << IOS_ADD << R(c)
-            << '\n';
-      regs[c] = R(c);
+      STDBG << "R" << std::setbase(10) << (int)c << " = " << IOS_ADD
+            << cpu.Reg(c) << '\n';
+      regs[c] = cpu.Reg(c);
     }
-  CPU.UpdateCpsr();
-  if (CPSR != regs[16])
+  cpu.UpdateCpsr();
+  if (cpu.Reg(16) != regs[16])
   {
-    STDBG << "R16 = " << IOS_ADD << CPSR << '\n';
-    regs[16] = CPSR;
+    STDBG << "R16 = " << IOS_ADD << cpu.Reg(16) << '\n';
+    regs[16] = cpu.Reg(16);
   }
 }
 
-void PrintStack(uint32_t stackadd)
+void PrintStack(Memory& memory, uint32_t stackadd)
 {
   uint32_t add = stackadd;
   debug("Stack : " << IOS_ADD << add);
   for (; add < 0x03008000; add += 4)
-    debug(IOS_ADD << MEM.Read32(add));
+    debug(IOS_ADD << memory.Read32(add));
 }
 #endif
 }

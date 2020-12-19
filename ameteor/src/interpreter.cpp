@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ameteor/interpreter.hpp"
-#include "ameteor/core.hpp"
 #include "ameteor/bios.hpp"
+#include "ameteor/core.hpp"
 #include "ameteor/cpu.hpp"
 #include "ameteor/disassembler/instruction.hpp"
 #include "ameteor/memory.hpp"
@@ -46,16 +46,14 @@ void Interpreter::Run(unsigned int cycles)
     switch (m_haltcnt)
     {
     case 255: // normal mode
-      PrintRegs();
+      PrintRegs(*this);
       if (FLAG_T)
       {
         if (R(15) & 0x1)
           met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
 
         code = MEM.Read16(R(15) - 2);
-        // std::cerr << IOS_ADD << R(15) << ' ' <<
-        // Disassembler::Instruction(R(15), (uint16_t)code).ToString() <<
-        // std::endl;
+        TRACE_THUMB_INSTRUCTION(R(15), code);
         R(15) += 2;
         t_Code();
       }
@@ -93,9 +91,7 @@ void Interpreter::Run(unsigned int cycles)
         else
         {
           code = MEM.Read32(R(15) - 4);
-          // std::cerr << IOS_ADD << R(15) << ' ' <<
-          // Disassembler::Instruction(R(15), (uint32_t)code).ToString() <<
-          // std::endl;
+          TRACE_ARM_INSTRUCTION(R(15), code);
           R(15) += 4;
           a_Code();
         }
