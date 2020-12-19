@@ -28,7 +28,7 @@ CartMem::CartMem()
 #ifdef __LIBRETRO__
   m_data(CartMemData)
 #else
-  m_data(new uint8_t[MAX_SIZE + 4])
+  m_data(new uint8_t[MAX_SIZE + 4]{0})
 #endif
 {
 }
