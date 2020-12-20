@@ -65,7 +65,7 @@ private:
     m_speaker.SoundTick();
   }
 
-  friend void Clock::Commit();
+  friend class Clock;
 };
 
 inline Audio::Speaker& Sound::GetSpeaker()

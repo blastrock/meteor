@@ -122,7 +122,7 @@ private:
 
   void TimeEvent();
 
-  friend void Clock::Commit();
+  friend class Clock;
 };
 }
 

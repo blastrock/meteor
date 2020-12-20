@@ -72,7 +72,7 @@ private:
   void TimeEvent();
   void Countup();
 
-  friend void Clock::Commit();
+  friend class Clock;
   friend class Timer<Num - 1>;
 };
 

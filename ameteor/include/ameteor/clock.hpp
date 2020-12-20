@@ -41,14 +41,19 @@ public:
   }
   unsigned int GetCounter() const
   {
-    return m_count;
+    return m_count + m_cycles;
   }
 
   void TimePass(unsigned short cycles)
   {
     m_cycles += cycles;
   }
-  void Commit();
+  void Commit()
+  {
+    if (m_cycles >= m_first)
+      Process();
+  }
+
   void WaitForNext();
 
   void AddLcd(uint32_t cycles)
@@ -105,6 +110,7 @@ private:
   unsigned int m_count;
 
   void SetFirst();
+  void Process();
 };
 }
 

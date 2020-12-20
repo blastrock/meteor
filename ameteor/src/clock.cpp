@@ -30,17 +30,16 @@ void Clock::Reset()
   m_battery = m_timer[0] = m_timer[1] = m_timer[2] = m_timer[3] = INT_MAX;
 }
 
-void Clock::Commit()
+void Clock::Process()
 {
   unsigned short tocommit;
-
-  m_count += m_cycles;
 
   // this loop is here because a timer can trigger a dma which will take a
   // long time, during this time the lcd must draw and the timers continue
   while (m_cycles >= m_first)
   {
     tocommit = m_cycles;
+    m_count += tocommit;
     m_cycles = 0;
 
     m_lcd -= tocommit;
