@@ -235,8 +235,9 @@ else ifeq ($(platform), emscripten)
 	CFLAGS += -O2 -DNDEBUG
 	CXXFLAGS += -O2 -DNDEBUG
 else
-	CFLAGS += -O3 -DNDEBUG
-	CXXFLAGS += -O3 -DNDEBUG
+	CFLAGS += -O3 -DNDEBUG -fomit-frame-pointer -flto
+	CXXFLAGS += -O3 -DNDEBUG -fomit-frame-pointer -flto
+	LDFLAGS += -flto
 endif
 
 include Makefile.common
