@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "mym/config.hpp"
+#include "config.hpp"
 #include <ameteor/core.hpp>
 #include <fstream>
 #include <limits.h>

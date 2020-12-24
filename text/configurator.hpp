@@ -17,7 +17,7 @@
 #ifndef __CONFIGURATOR_HPP__
 #define __CONFIGURATOR_HPP__
 
-#include <mym/config.hpp>
+#include "config.hpp"
 
 class Configurator
 {

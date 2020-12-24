@@ -17,10 +17,10 @@
 #ifndef __MAIN_TEXT_H__
 #define __MAIN_TEXT_H__
 
+#include "audio.hpp"
+#include "events.hpp"
+#include "window.hpp"
 #include <ameteor/core.hpp>
-#include <mym/audio.hpp>
-#include <mym/events.hpp>
-#include <mym/window.hpp>
 #include <string>
 
 class MainText

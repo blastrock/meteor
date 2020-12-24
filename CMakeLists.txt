@@ -56,5 +56,4 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 add_subdirectory(ameteor)
-add_subdirectory(mym)
 add_subdirectory(text)
