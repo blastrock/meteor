@@ -42,10 +42,8 @@ void Configurator::Load()
   m_cfg.LoadFile(file.c_str());
 }
 
-void Configurator::InitAMeteor(AMeteor::Core& core)
+void Configurator::Init()
 {
-  m_cfg.InitAMeteor(core);
-
   std::string str;
 #define SET_PATH(name, var)             \
   str = m_cfg.GetStr(name);             \

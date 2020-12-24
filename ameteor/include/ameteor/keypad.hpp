@@ -45,55 +45,13 @@ public:
   {
   }
 
-  void BindKey(int code, Button btn)
-  {
-    m_keys[code] = (uint16_t)btn;
-  }
-  void UnbindKey(int code)
-  {
-    m_keys.erase(code);
-  }
-  void BindJoy(uint16_t joyid, uint16_t button, Button btn)
-  {
-    m_joys[((int)joyid) << 16 | button] = (uint16_t)btn;
-  }
-  void UnbindJoy(uint16_t joyid, uint16_t button)
-  {
-    m_joys.erase(((int)joyid) << 16 | button);
-  }
-  void BindAxis(uint16_t joyid, uint16_t axis, Button btn)
-  {
-    m_axis[((int)joyid) << 16 | axis] = (uint16_t)btn;
-  }
-  void UnbindAxis(uint16_t joyid, uint16_t axis)
-  {
-    m_axis.erase(((int)joyid) << 16 | axis);
-  }
-
-  void ResetBindings()
-  {
-    m_keys.clear();
-    m_joys.clear();
-    m_axis.clear();
-  }
-
   inline void SetPadState(uint16_t keys);
-
-  void KeyPressed(int code);
-  void KeyReleased(int code);
-  void JoyButtonPressed(uint16_t joyid, uint16_t button);
-  void JoyButtonReleased(uint16_t joyid, uint16_t button);
-  void JoyMoved(uint16_t joyid, uint16_t axis, float pos);
 
   void VBlank();
 
 private:
   uint16_t& m_keyinput;
   uint16_t& m_keycnt;
-
-  std::map<int, uint16_t> m_keys;
-  std::map<int, uint16_t> m_joys;
-  std::map<int, uint16_t> m_axis;
 };
 
 void Keypad::SetPadState(uint16_t keys)

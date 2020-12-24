@@ -33,54 +33,32 @@ void Events::InitAMeteor(AMeteor::Core& core)
 
 void Events::CheckEvents()
 {
+  uint16_t input = 0;
+#define FETCH(key, btn)                                       \
+  input |= sf::Keyboard::isKeyPressed(sf::Keyboard::Key::key) \
+               ? AMeteor::Keypad::BTN_##btn                   \
+               : 0;
+  FETCH(A, A);
+  FETCH(B, B);
+  FETCH(Backspace, SELECT);
+  FETCH(Enter, START);
+  FETCH(Right, RIGHT);
+  FETCH(Left, LEFT);
+  FETCH(Up, UP);
+  FETCH(Down, DOWN);
+  FETCH(R, R);
+  FETCH(L, L);
+#undef FETCH
+
+  input ^= 0x3FF;
+
+  m_core->get<AMeteor::Keypad>().SetPadState(input);
+
   sf::Event event;
   while (m_window.pollEvent(event))
   {
     switch (event.type)
     {
-    case sf::Event::KeyPressed:
-      m_core->get<AMeteor::Keypad>().KeyPressed(event.key.code);
-      break;
-    case sf::Event::KeyReleased:
-      m_core->get<AMeteor::Keypad>().KeyReleased(event.key.code);
-      break;
-    case sf::Event::JoystickButtonPressed:
-      switch (event.joystickButton.button)
-      {
-      // XXX
-      // case 7:
-      //	LCD.SetFrameskip(SPDUP_FRMSKIP);
-      //	SOUND.SetSampleskip(SPDUP_SNDSKIP);
-      //	break;
-      default:
-        m_core->get<AMeteor::Keypad>().JoyButtonPressed(
-            event.joystickButton.joystickId, event.joystickButton.button);
-        break;
-      }
-      break;
-    case sf::Event::JoystickButtonReleased:
-      switch (event.joystickButton.button)
-      {
-      // XXX
-      // case 7:
-      //	LCD.SetFrameskip(0);
-      //	SOUND.SetSampleskip(0);
-      //	break;
-      default:
-        m_core->get<AMeteor::Keypad>().JoyButtonReleased(
-            event.joystickButton.joystickId, event.joystickButton.button);
-        break;
-      }
-      break;
-    case sf::Event::JoystickMoved:
-      m_core->get<AMeteor::Keypad>().JoyMoved(
-          event.joystickMove.joystickId,
-          event.joystickMove.axis,
-          event.joystickMove.position);
-      break;
-    // case sf::Event::Resized:
-    //	LCD.EventResize(event.Size.Width, event.Size.Height);
-    //	break;
     case sf::Event::Closed:
       m_maintext->Stop();
       break;

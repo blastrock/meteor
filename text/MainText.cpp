@@ -28,7 +28,7 @@ MainText::MainText() : m_events(m_window.GetWindow(), this), m_running(false)
 {
   Configurator config;
   config.Load();
-  config.InitAMeteor(m_core);
+  config.Init();
 
   m_window.InitAMeteor(m_core);
   m_audio.InitAMeteor(m_core);
