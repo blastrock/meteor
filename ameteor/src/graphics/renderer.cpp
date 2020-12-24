@@ -27,8 +27,7 @@ Renderer::Renderer(const uint16_t* surface) : m_base(surface)
 
 void Renderer::VBlank()
 {
-  if (m_sig_frame)
-    m_sig_frame(m_base);
+  sig_frame(m_base);
 }
 }
 }

@@ -32,8 +32,9 @@ Audio::~Audio()
 
 void Audio::InitAMeteor(AMeteor::Core& core)
 {
-  core.get<AMeteor::Sound>().GetSpeaker().SetFrameSlot(
-      syg::mem_fun(*this, &Audio::PlayFrames));
+  core.get<AMeteor::Sound>().GetSpeaker().sig_frame = [this](auto data) {
+    PlayFrames(data);
+  };
 }
 
 void Audio::Init()

@@ -23,11 +23,10 @@
 #include "io.hpp"
 #include "memory.hpp"
 
+#include <functional>
 #include <istream>
 #include <ostream>
 #include <stdint.h>
-
-#include <syg/signal.hpp>
 
 namespace AMeteor
 {
@@ -115,7 +114,7 @@ public:
   bool SaveState(std::ostream& stream);
   bool LoadState(std::istream& stream);
 
-  syg::signal<void> sig_vblank;
+  std::function<void()> sig_vblank = [] {};
 
 private:
   Graphics::Screen m_screen;

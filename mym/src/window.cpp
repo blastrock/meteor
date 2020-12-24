@@ -63,8 +63,8 @@ Window::~Window()
 
 void Window::InitAMeteor(AMeteor::Core& core)
 {
-  core.get<AMeteor::Lcd>().GetScreen().GetRenderer().SetFrameSlot(
-      syg::mem_fun(*this, &Window::ShowFrame));
+  core.get<AMeteor::Lcd>().GetScreen().GetRenderer().sig_frame =
+      [this](auto frame) { ShowFrame(frame); };
 }
 
 // TODO check if we crash if we don't Init()
@@ -116,8 +116,8 @@ void Window::InitGl()
   // 			const void* userParam )
   // 		{
   // 		fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x,
-  // message = %s\n", 				( type == GL_DEBUG_TYPE_ERROR ? "**
-  // GL ERROR
+  // message = %s\n", 				( type == GL_DEBUG_TYPE_ERROR ?
+  // "** GL ERROR
   // **" : "" ), 				type, severity, message );
   // 		}, 0 );
   glEnable(GL_TEXTURE_2D);

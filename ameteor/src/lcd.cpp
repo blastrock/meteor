@@ -73,7 +73,7 @@ void Lcd::TimeEvent()
       KEYPAD.VBlank();
 
       // we send the vblank signal
-      sig_vblank.emit();
+      sig_vblank();
     }
     // NOTE : v-blank finishes on line 227, not 0
     // FIXME on vba, it finishes on 0

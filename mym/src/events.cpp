@@ -26,8 +26,7 @@ Events::Events(sf::Window& window) : m_window(window)
 void Events::InitAMeteor(AMeteor::Core& core)
 {
   m_core = &core;
-  core.get<AMeteor::Lcd>().sig_vblank.connect(
-      syg::mem_fun(*this, &Events::CheckEvents));
+  core.get<AMeteor::Lcd>().sig_vblank = [this] { CheckEvents(); };
 }
 
 void Events::CheckEvents()

@@ -21,10 +21,10 @@
 #include "sound1.hpp"
 #include "sound2.hpp"
 #include "sound4.hpp"
+#include <functional>
 #include <istream>
 #include <ostream>
 #include <stdint.h>
-#include <syg/signal.hpp>
 
 namespace AMeteor
 {
@@ -33,8 +33,6 @@ namespace Audio
 class Speaker
 {
 public:
-  typedef syg::slot1<void, const int16_t*> FrameSlot;
-
   Speaker(
       uint16_t& cnt1l,
       uint16_t& cnt1h,
@@ -48,8 +46,6 @@ public:
       uint16_t& cntx,
       uint16_t& bias);
   ~Speaker();
-
-  inline void SetFrameSlot(const FrameSlot& slot);
 
   void Reset();
 
@@ -79,6 +75,8 @@ public:
   bool SaveState(std::ostream& stream);
   bool LoadState(std::istream& stream);
 
+  std::function<void(const int16_t*)> sig_frame = [](auto) {};
+
 private:
   Sound1 m_sound1;
   Sound2 m_sound2;
@@ -86,15 +84,8 @@ private:
   DSound m_dsa, m_dsb;
   uint16_t &m_cntl, &m_cnth, &m_cntx, &m_bias;
 
-  FrameSlot m_sig_frame;
-
   int16_t MixSample(uint16_t cntl, uint8_t cnth);
 };
-
-inline void Speaker::SetFrameSlot(const FrameSlot& slot)
-{
-  m_sig_frame = slot;
-}
 
 inline void Speaker::ResetSound1()
 {
