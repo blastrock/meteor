@@ -15,6 +15,7 @@ target_include_directories(meteor_text PUBLIC include)
 
 target_link_libraries(meteor_text
   ameteor
+  X11
   GL
   GLU
   GLEW

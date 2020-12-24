@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MainText.hpp"
+#include <X11/Xlib.h>
 #include <iostream>
 
 int main(int argc, char** argv)
@@ -24,6 +25,8 @@ int main(int argc, char** argv)
     std::cout << "Usage : " << argv[0] << " <rom>" << std::endl;
     return 1;
   }
+
+  XInitThreads();
 
   MainText text;
 
