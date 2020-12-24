@@ -36,6 +36,8 @@ public:
   void Close();
   void CloseBios();
 
+  void PushLoadState(uint8_t n);
+  void PushSaveState(uint8_t n);
   void SaveState(uint8_t n);
   void LoadState(uint8_t n);
 
@@ -50,6 +52,8 @@ private:
   std::string m_openFile;
 
   bool m_running;
+  int8_t m_save_state = -1;
+  int8_t m_load_state = -1;
 
   std::string GetSaveStatePath(uint8_t n);
 };

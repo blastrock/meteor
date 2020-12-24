@@ -94,6 +94,18 @@ void MainText::CloseBios()
   m_core.Reset(AMeteor::UNIT_MEMORY | AMeteor::UNIT_MEMORY_BIOS);
 }
 
+void MainText::PushLoadState(uint8_t n)
+{
+  m_load_state = n;
+  m_core.Stop();
+}
+
+void MainText::PushSaveState(uint8_t n)
+{
+  m_save_state = n;
+  m_core.Stop();
+}
+
 void MainText::Run()
 {
   if (m_running)
@@ -106,6 +118,16 @@ void MainText::Run()
   do
   {
     m_core.Run(280000);
+    if (m_load_state != -1)
+    {
+      LoadState(m_load_state);
+      m_load_state = -1;
+    }
+    else if (m_save_state != -1)
+    {
+      SaveState(m_save_state);
+      m_save_state = -1;
+    }
   } while (m_running);
 }
 
@@ -145,7 +167,9 @@ void MainText::SaveState(uint8_t n)
     return;
   }
 
-  std::ofstream file(GetSaveStatePath(n));
+  auto const path = GetSaveStatePath(n);
+  std::cout << "Saving to " << path << std::endl;
+  std::ofstream file(path);
 
   if (!file)
   {
@@ -172,6 +196,8 @@ void MainText::LoadState(uint8_t n)
 {
   std::istringstream ss;
   {
+    auto const path = GetSaveStatePath(n);
+    std::cout << "Loading from " << path << std::endl;
     std::ifstream file(GetSaveStatePath(n));
     if (!file)
     {

@@ -59,6 +59,12 @@ void Events::CheckEvents()
   {
     switch (event.type)
     {
+    case sf::Event::KeyPressed:
+      if (event.key.code == sf::Keyboard::Key::F1)
+        m_maintext->PushLoadState(0);
+      else if (event.key.code == sf::Keyboard::Key::F3)
+        m_maintext->PushSaveState(0);
+      break;
     case sf::Event::Closed:
       m_maintext->Stop();
       break;
