@@ -24,7 +24,7 @@
 
 using namespace AMeteor;
 
-MainText::MainText() : m_events(m_window.GetWindow()), m_running(false)
+MainText::MainText() : m_events(m_window.GetWindow(), this), m_running(false)
 {
   Configurator config;
   config.Load();

@@ -21,12 +21,14 @@
 
 #include <SFML/Window.hpp>
 
+class MainText;
+
 namespace mym
 {
 class Events
 {
 public:
-  Events(sf::Window& window);
+  Events(sf::Window& window, MainText* m);
 
   void InitAMeteor(AMeteor::Core& core);
 
@@ -34,6 +36,7 @@ public:
 
 private:
   sf::Window& m_window;
+  MainText* m_maintext;
   AMeteor::Core* m_core;
 };
 }

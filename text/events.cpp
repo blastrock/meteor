@@ -15,11 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "events.hpp"
+#include "MainText.hpp"
 #include <ameteor/core.hpp>
 
 namespace mym
 {
-Events::Events(sf::Window& window) : m_window(window)
+Events::Events(sf::Window& window, MainText* m)
+  : m_window(window), m_maintext(m)
 {
 }
 
@@ -80,7 +82,7 @@ void Events::CheckEvents()
     //	LCD.EventResize(event.Size.Width, event.Size.Height);
     //	break;
     case sf::Event::Closed:
-      m_core->get<AMeteor::Cpu>().Stop();
+      m_maintext->Stop();
       break;
     default:
       break;
