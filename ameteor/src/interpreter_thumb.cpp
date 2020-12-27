@@ -80,8 +80,7 @@ U_|_1___1___1___0___1_|_________________________var___________|_1_|UNDEF ARM9
   }
 #endif
 
-#define THUMB(name) inline void Interpreter::t##name()
-#define NITHUMB(name) void Interpreter::t##name()
+#define THUMB(name) void Interpreter::t##name()
 
 namespace AMeteor
 {
@@ -1121,7 +1120,7 @@ THUMB(_BL2)
   CYCLES16NSeq(R(15), 3);
 }
 
-NITHUMB(_Code)
+THUMB(_Code)
 {
   switch (code >> 13)
   {

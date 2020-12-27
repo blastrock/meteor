@@ -22,10 +22,8 @@
 #include <ostream>
 #include <stdint.h>
 
-#define ARM(name) inline void a##name()
-#define NIARM(name) void a##name()
-#define THUMB(name) inline void t##name()
-#define NITHUMB(name) void t##name()
+#define ARM(name) void a##name()
+#define THUMB(name) void t##name()
 
 namespace AMeteor
 {
@@ -69,16 +67,15 @@ private:
   uint16_t& m_if;
   uint16_t& m_ie;
 
-  NIARM(_Code);
-  inline bool a_CheckCondition(uint8_t cond);
-  inline void a_DataProcCore(
-      uint8_t rd, uint32_t op1, uint32_t op2, bool shiftcarry);
+  ARM(_Code);
+  bool a_CheckCondition(uint8_t cond);
+  void a_DataProcCore(uint8_t rd, uint32_t op1, uint32_t op2, bool shiftcarry);
 
   ARM(BXBLX);
   ARM(BBL);
-  NIARM(_DataProcShiftImm);
-  NIARM(_DataProcShiftReg);
-  NIARM(_DataProcImm);
+  ARM(_DataProcShiftImm);
+  ARM(_DataProcShiftReg);
+  ARM(_DataProcImm);
   ARM(PSR);
   ARM(_Multiply);
   ARM(LDRSTR);
@@ -87,7 +84,7 @@ private:
   ARM(SWP);
   ARM(SWI);
 
-  NITHUMB(_Code);
+  THUMB(_Code);
 
   THUMB(_Shift);
   THUMB(ADDSUB);
@@ -112,8 +109,6 @@ private:
 }
 
 #undef ARM
-#undef NIARM
 #undef THUMB
-#undef NITHUMB
 
 #endif

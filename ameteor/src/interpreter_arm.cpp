@@ -100,8 +100,7 @@ ARM Binary Opcode Format
   }
 #endif
 
-#define ARM(name) inline void Interpreter::a##name()
-#define NIARM(name) void Interpreter::a##name()
+#define ARM(name) void Interpreter::a##name()
 
 namespace AMeteor
 {
@@ -166,7 +165,7 @@ ARM(BBL)
 }
 
 // Data Processing
-NIARM(_DataProcShiftImm)
+ARM(_DataProcShiftImm)
 {
   if ((code >> 26) & 0x3)
     met_abort("Bits 26-27 must be 00 for DataProc instructions");
@@ -233,7 +232,7 @@ NIARM(_DataProcShiftImm)
   a_DataProcCore(rd, R(Rn), op2, shiftcarry);
 }
 
-NIARM(_DataProcShiftReg)
+ARM(_DataProcShiftReg)
 {
   if ((code >> 26) & 0x3)
     met_abort("Bits 26-27 must be 00 for DataProc instructions");
@@ -318,7 +317,7 @@ NIARM(_DataProcShiftReg)
   a_DataProcCore(rd, op1, op2, shiftcarry);
 }
 
-NIARM(_DataProcImm)
+ARM(_DataProcImm)
 {
   if ((code >> 26) & 0x3)
     met_abort("Bits 26-27 must be 00 for DataProc instructions");
@@ -339,7 +338,7 @@ NIARM(_DataProcImm)
   a_DataProcCore(rd, R(Rn), op2, shiftcarry);
 }
 
-inline void Interpreter::a_DataProcCore(
+void Interpreter::a_DataProcCore(
     uint8_t rd, uint32_t op1, uint32_t op2, bool shiftcarry)
 {
   uint8_t opcode = (code >> 21) & 0xF;
@@ -1216,7 +1215,7 @@ ARM(SWI)
   CYCLES32NSeq(0, 3);
 }
 
-inline bool Interpreter::a_CheckCondition(uint8_t cond)
+bool Interpreter::a_CheckCondition(uint8_t cond)
 {
   if (cond == 0xE)
     return true;
@@ -1288,7 +1287,7 @@ inline bool Interpreter::a_CheckCondition(uint8_t cond)
   return true;
 }
 
-NIARM(_Code)
+ARM(_Code)
 {
   if (!a_CheckCondition(code >> 28)) // condition failed
     CYCLES32Seq(R(15), 1);
