@@ -778,30 +778,33 @@ ARM(_Multiply)
     if (Rd != 0)
       met_abort("Rd must be 0 for MUL instructions");
     NOT_SAME2(Rn, Rm);
+    MULICYCLES(Rs);
+    CYCLES32Seq(R(15), 1);
     R(Rn) = R(Rm) * R(Rs);
     if (code & (0x1 << 20))
     {
       FZ(R(Rn));
       FN(R(Rn));
     }
-    MULICYCLES(Rs);
-    CYCLES32Seq(R(15), 1);
     break;
   case 0x1: // MLA
     NOT_SAME2(Rn, Rm);
+    MULICYCLES(Rs);
+    ICYCLES(1);
+    CYCLES32Seq(R(15), 1);
     R(Rn) = R(Rm) * R(Rs) + R(Rd);
     if (code & (0x1 << 20))
     {
       FZ(R(Rn));
       FN(R(Rn));
     }
-    MULICYCLES(Rs);
-    ICYCLES(1);
-    CYCLES32Seq(R(15), 1);
     break;
   case 0x4: // UMULL
   {
     NOT_SAME3(Rn, Rd, Rm);
+    MULICYCLES(Rs);
+    ICYCLES(1);
+    CYCLES32Seq(R(15), 1);
     uint64_t out = ((uint64_t)R(Rm)) * ((uint64_t)R(Rs));
     R(Rn) = out >> 32;
     R(Rd) = out & 0xFFFFFFFF;
@@ -811,13 +814,13 @@ ARM(_Multiply)
       FN(R(Rn));
     }
   }
-    MULICYCLES(Rs);
-    ICYCLES(1);
-    CYCLES32Seq(R(15), 1);
-    break;
+  break;
   case 0x5: // UMLAL
   {
     NOT_SAME3(Rn, Rd, Rm);
+    MULICYCLES(Rs);
+    ICYCLES(2);
+    CYCLES32Seq(R(15), 1);
     uint64_t out = ((uint64_t)R(Rm)) * ((uint64_t)R(Rs)) +
                    ((((uint64_t)R(Rn)) << 32) | ((uint64_t)R(Rd)));
     R(Rn) = out >> 32;
@@ -828,13 +831,13 @@ ARM(_Multiply)
       FN(R(Rn));
     }
   }
-    MULICYCLES(Rs);
-    ICYCLES(2);
-    CYCLES32Seq(R(15), 1);
-    break;
+  break;
   case 0x6: // SMULL
   {
     NOT_SAME3(Rn, Rd, Rm);
+    MULICYCLES(Rs);
+    ICYCLES(1);
+    CYCLES32Seq(R(15), 1);
     int64_t out = ((int64_t)(int32_t)R(Rm)) * ((int64_t)(int32_t)R(Rs));
     R(Rn) = out >> 32;
     R(Rd) = out & 0xFFFFFFFF;
@@ -844,13 +847,13 @@ ARM(_Multiply)
       FN(R(Rn));
     }
   }
-    MULICYCLES(Rs);
-    ICYCLES(1);
-    CYCLES32Seq(R(15), 1);
-    break;
+  break;
   case 0x7: // SMLAL
   {
     NOT_SAME3(Rn, Rd, Rm);
+    MULICYCLES(Rs);
+    ICYCLES(2);
+    CYCLES32Seq(R(15), 1);
     int64_t out = ((int64_t)(int32_t)R(Rm)) * ((int64_t)(int32_t)R(Rs)) +
                   ((((int64_t)R(Rn)) << 32) | ((int64_t)R(Rd)));
     R(Rn) = out >> 32;
@@ -861,10 +864,7 @@ ARM(_Multiply)
       FN(R(Rn));
     }
   }
-    MULICYCLES(Rs);
-    ICYCLES(2);
-    CYCLES32Seq(R(15), 1);
-    break;
+  break;
   case 0x8: // SMLAxy
   case 0x9: // SMLAW/SMULW
   case 0xA: // SMLALxy
