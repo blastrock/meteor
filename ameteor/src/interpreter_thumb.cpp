@@ -424,12 +424,16 @@ THUMB(_ALU)
     res = R(Rd) + R(Rs) + FLAG_C;
     FLAG_C = ADDCARRY(R(Rd), R(Rs), res);
     FLAG_V = ADDOVERFLOW(R(Rd), R(Rs), res);
+    FLAG_Z = !res;
+    FLAG_N = res >> 31;
     R(Rd) = res;
     break;
   case 0x6: // SBC
     res = R(Rd) - R(Rs) + FLAG_C - 1;
     FLAG_C = SUBCARRY(R(Rd), R(Rs), res);
     FLAG_V = SUBOVERFLOW(R(Rd), R(Rs), res);
+    FLAG_Z = !res;
+    FLAG_N = res >> 31;
     R(Rd) = res;
     break;
   case 0x7: // ROR
