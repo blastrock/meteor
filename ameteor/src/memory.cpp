@@ -88,6 +88,7 @@ void Memory::SetCartTypeFromSize(uint32_t size)
     SetCartType(CTYPE_FLASH128);
     break;
   default:
+    SetCartType(CTYPE_UNKNOWN);
     met_abort("Unknown cartridge memory size");
     break;
   }
@@ -245,9 +246,12 @@ Memory::CartError Memory::LoadCart()
 bool Memory::LoadCartInferred()
 {
   uint32_t size = *(uint32_t*)(CartMemData + CartMem::MAX_SIZE);
-  if (!size)
+  // On some platforms, the buffer seems to be initialized to -1 instead of 0.
+  if (size == 0 || size == -1)
     return false;
   SetCartTypeFromSize(size);
+  if (!m_cart)
+    return false;
   std::istringstream ss;
   ss.str(std::string((char*)CartMemData, CartMem::MAX_SIZE));
   if (!m_cart->Load(ss))
