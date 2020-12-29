@@ -61,6 +61,7 @@ void Audio::Uninit()
 
 void Audio::PlayFrames(const int16_t* data)
 {
+  return;
   // ugly :(
   if (!ao_play(m_device, const_cast<char*>((const char*)data), 2 * 2))
     ;
