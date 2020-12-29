@@ -1125,90 +1125,112 @@ THUMB(_BL2)
 
 THUMB(_Code)
 {
-  switch (code >> 13)
+  switch (code >> 10)
   {
-  case 0:                          // 000
-    if ((code & 0x1800) == 0x1800) // 00011
-      tADDSUB();
-    else // 000
-      t_Shift();
+  case 0b000000:
+  case 0b000001:
+  case 0b000010:
+  case 0b000011:
+  case 0b000100:
+  case 0b000101:
+    t_Shift();
     break;
-  case 1: // 001
+  case 0b000110:
+  case 0b000111:
+    tADDSUB();
+    break;
+  case 0b001000:
+  case 0b001001:
+  case 0b001010:
+  case 0b001011:
+  case 0b001100:
+  case 0b001101:
+  case 0b001110:
+  case 0b001111:
     t_Imm();
     break;
-  case 2: // 010
-    switch ((code >> 10) & 0x7)
-    {
-    case 0: // 010000
-      t_ALU();
-      break;
-    case 1: // 010001
-      t_HiRegOp();
-      break;
-    case 2:
-    case 3: // 01001x
-      tLDRimm();
-      break;
-    default:
-      tSTRLDRreg();
-      break;
-    }
+  case 0b010000:
+    t_ALU();
     break;
-  case 3: // 011
+  case 0b010001:
+    t_HiRegOp();
+    break;
+  case 0b010010:
+  case 0b010011:
+    tLDRimm();
+    break;
+  case 0b010100:
+  case 0b010101:
+  case 0b010110:
+  case 0b010111:
+    tSTRLDRreg();
+    break;
+  case 0b011000:
+  case 0b011001:
+  case 0b011010:
+  case 0b011011:
+  case 0b011100:
+  case 0b011101:
+  case 0b011110:
+  case 0b011111:
     tSTRLDRoff();
     break;
-  case 4:                   // 100
-    if (code & (0x1 << 12)) // 1001
-      tSTRLDRsp();
-    else // 100
-      tLDRHSTRHoff();
+  case 0b100000:
+  case 0b100001:
+  case 0b100010:
+  case 0b100011:
+    tLDRHSTRHoff();
     break;
-  case 5:                   // 101
-    if (code & (0x1 << 12)) // 1011
-    {
-      switch (code & 0x0600)
-      {
-      case 0x0000: // 1011x00
-        tADDsp();
-        break;
-      case 0x0400: // 1011x10
-        tPUSHPOP();
-        break;
-      default:
-        met_abort("not implemented or unknown");
-        break;
-      }
-    }
-    else // 101
-      tADDpcsp();
+  case 0b100100:
+  case 0b100101:
+  case 0b100110:
+  case 0b100111:
+    tSTRLDRsp();
     break;
-  case 6:                   // 110
-    if (code & (0x1 << 12)) // 1101
-    {
-      if ((code & 0x0F00) == 0x0F00) // 11011111
-        tSWI();
-      else // 1101xxxx
-        t_CondBranch();
-    }
-    else // 1100
-      tSTMLDM();
+  case 0b101000:
+  case 0b101001:
+  case 0b101010:
+  case 0b101011:
+    tADDpcsp();
     break;
-  case 7: // 111
-    switch ((code >> 11) & 0x3)
-    {
-    case 0: // 11100
-      tB();
-      break;
-    case 2: // 11110
-      t_BL1();
-      break;
-    case 3: // 11111
-      t_BL2();
-      break;
-    default:
-      met_abort("not implemented or unknown");
-      break;
-    }
+  case 0b101100:
+    tADDsp();
+    break;
+  case 0b101101:
+  case 0b101111:
+    tPUSHPOP();
+    break;
+  case 0b110000:
+  case 0b110001:
+  case 0b110010:
+  case 0b110011:
+    tSTMLDM();
+    break;
+  case 0b110100:
+  case 0b110101:
+  case 0b110110:
+    t_CondBranch();
+    break;
+  case 0b110111:
+    if ((code & 0x0F00) == 0x0F00) // 11011111
+      tSWI();
+    else // 1101xxxx
+      t_CondBranch();
+    break;
+  case 0b111000:
+  case 0b111001:
+    tB();
+    break;
+  case 0b111100:
+  case 0b111101:
+    t_BL1();
+    break;
+  case 0b111110:
+  case 0b111111:
+    t_BL2();
+    break;
+  default:
+    met_abort("not implemented or unknown");
     break;
   }
 }
