@@ -42,7 +42,8 @@
 
 namespace AMeteor
 {
-Memory::Memory() : m_brom(NULL), m_carttype(CTYPE_UNKNOWN), m_cart(NULL)
+Memory::Memory()
+  : m_brom(NULL), m_memoryMap{}, m_carttype(CTYPE_UNKNOWN), m_cart(NULL)
 {
   m_wbram = new uint8_t[0x00040000];
   m_wcram = new uint8_t[0x00008000];
@@ -50,6 +51,27 @@ Memory::Memory() : m_brom(NULL), m_carttype(CTYPE_UNKNOWN), m_cart(NULL)
   m_vram = new uint8_t[0x00018000];
   m_oram = new uint8_t[0x00000400];
   m_rom = new uint8_t[0x02000000];
+
+  m_memoryMap[0x2].ptr = m_wbram;
+  m_memoryMap[0x2].mask = 0x3ffff;
+  m_memoryMap[0x3].ptr = m_wcram;
+  m_memoryMap[0x3].mask = 0x7fff;
+  m_memoryMap[0x5].ptr = m_pram;
+  m_memoryMap[0x5].mask = 0x3ff;
+  m_memoryMap[0x7].ptr = m_oram;
+  m_memoryMap[0x7].mask = 0x3ff;
+  m_memoryMap[0x8].ptr = m_rom;
+  m_memoryMap[0x8].mask = 0xffffff;
+  m_memoryMap[0x9].ptr = m_rom + 0x01000000;
+  m_memoryMap[0x9].mask = 0xffffff;
+  m_memoryMap[0xa].ptr = m_rom;
+  m_memoryMap[0xa].mask = 0xffffff;
+  m_memoryMap[0xb].ptr = m_rom + 0x01000000;
+  m_memoryMap[0xb].mask = 0xffffff;
+  m_memoryMap[0xc].ptr = m_rom;
+  m_memoryMap[0xc].mask = 0xffffff;
+  m_memoryMap[0xd].ptr = m_rom + 0x01000000;
+  m_memoryMap[0xd].mask = 0xffffff;
 
   Reset();
 }
@@ -590,6 +612,28 @@ uint32_t Memory::Read32(uint32_t add)
     }
     return *r;
   }
+}
+
+uint32_t Memory::ReadQuick16(uint32_t add)
+{
+  auto const upperAdd = add >> 24;
+  if (upperAdd >= 0x10)
+    met_abort("invalid ReadQuick16 at " << IOS_ADD << add);
+  auto const& descriptor = m_memoryMap[upperAdd];
+  if (!descriptor.ptr)
+    met_abort("invalid ReadQuick16 at " << IOS_ADD << add);
+  return *(uint16_t*)(descriptor.ptr + (add & descriptor.mask));
+}
+
+uint32_t Memory::ReadQuick32(uint32_t add)
+{
+  auto const upperAdd = add >> 24;
+  if (upperAdd >= 0x10)
+    met_abort("invalid ReadQuick32 at " << IOS_ADD << add);
+  auto const& descriptor = m_memoryMap[upperAdd];
+  if (!descriptor.ptr)
+    met_abort("invalid ReadQuick32 at " << IOS_ADD << add);
+  return *(uint32_t*)(descriptor.ptr + (add & descriptor.mask));
 }
 
 uint8_t Memory::ReadCart(uint16_t add)

@@ -109,6 +109,9 @@ public:
   uint16_t Read16(uint32_t add);
   uint32_t Read32(uint32_t add);
 
+  uint32_t ReadQuick16(uint32_t add);
+  uint32_t ReadQuick32(uint32_t add);
+
   void Write8(uint32_t add, uint8_t val);
   void Write16(uint32_t add, uint16_t val);
   void Write32(uint32_t add, uint32_t val);
@@ -119,6 +122,12 @@ public:
   void TimeEvent();
 
 private:
+  struct MapDescriptor
+  {
+    uint8_t* ptr;
+    uint32_t mask;
+  };
+
   // times for a 8 or 16 bits access
   uint8_t m_memtime[0xF];
   // times for a sequential 8 or 16 bits access in GamePak ROM
@@ -134,6 +143,8 @@ private:
   uint8_t* m_oram; // OAM - OBJ Attributes
   // External Memory (Game Pak)
   uint8_t* m_rom; // Game Pake ROM/FlashROM (max 32MB)
+
+  MapDescriptor m_memoryMap[0x10];
 
   uint8_t m_carttype;
   CartMem* m_cart;

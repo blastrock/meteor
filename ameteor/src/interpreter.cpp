@@ -52,7 +52,7 @@ void Interpreter::Run(unsigned int cycles)
         if (R(15) & 0x1)
           met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
 
-        code = MEM.Read16(R(15) - 2);
+        code = MEM.ReadQuick16(R(15) - 2);
         TRACE_THUMB_INSTRUCTION(R(15), code);
         R(15) += 2;
         t_Code();
@@ -90,7 +90,7 @@ void Interpreter::Run(unsigned int cycles)
         }
         else
         {
-          code = MEM.Read32(R(15) - 4);
+          code = MEM.ReadQuick32(R(15) - 4);
           TRACE_ARM_INSTRUCTION(R(15), code);
           R(15) += 4;
           a_Code();
