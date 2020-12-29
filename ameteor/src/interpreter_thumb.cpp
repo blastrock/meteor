@@ -614,15 +614,16 @@ THUMB(_HiRegOp)
   case 0x2:
     if (rd != 8 || rs != 8) // MOV
     {
-      R(rd) = R(rs);
       if (rd == 15)
       {
-        R(15) &= 0xFFFFFFFE;
+        R(15) = (R(rs) & 0xFFFFFFFE) + 2;
         CYCLES16NSeq(R(15), 3);
-        R(15) += 2;
       }
       else
+      {
+        R(rd) = R(rs);
         CYCLES16Seq(R(15), 1);
+      }
     }
     else // NOP
       CYCLES16Seq(R(15), 1);

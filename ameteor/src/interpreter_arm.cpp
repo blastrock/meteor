@@ -125,7 +125,7 @@ ARM(BXBLX)
   {
     FLAG_T = 1;
     R(15) = R(Rm) + 1;
-    CYCLES32NSeq(R(15), 3);
+    CYCLES16NSeq(R(15), 3);
   }
   else
   {
@@ -671,16 +671,8 @@ void Interpreter::a_DataProcCore(
 
   if (rd == 15 && (opcode < 0x8 || opcode > 0xB))
   {
-    if (FLAG_T)
-    {
-      CYCLES16NSeq(R(15), 3);
-      R(15) += 2;
-    }
-    else
-    {
-      CYCLES32NSeq(R(15), 3);
-      R(15) += 4;
-    }
+    CYCLES32NSeq(R(15), 3);
+    R(15) += 4;
   }
   else
     CYCLES32Seq(R(15), 1);
@@ -1143,12 +1135,13 @@ ARM(LDMSTM)
       if (regs & (0x1 << n))
       {
         R(n) = MEM.Read32(add);
-        if (n == 15)
-          R(15) += 4;
         add += 4;
       }
     if (regs & (0x1 << 15))
+    {
+      R(15) += 4;
       CYCLES32NSeq(R(15), 3);
+    }
     else
       CYCLES32Seq(R(15), 1);
   }
