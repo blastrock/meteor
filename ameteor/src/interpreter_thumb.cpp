@@ -649,6 +649,7 @@ THUMB(_HiRegOp)
         FLAG_T = 0;
         R(15) = (R(rs) & 0xFFFFFFFC) + 4;
         CYCLES32NSeq(R(15), 3);
+        CLOCK.SetEventPending();
       }
     }
     break;
@@ -1062,6 +1063,7 @@ THUMB(_CondBranch)
 THUMB(SWI)
 {
   CPU.SoftwareInterrupt(code & 0xFF);
+  CLOCK.SetEventPending();
 
   // FIXME seems wrong !
   CYCLES32NSeq(0, 3);

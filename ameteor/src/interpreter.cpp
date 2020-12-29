@@ -46,54 +46,68 @@ void Interpreter::Run(unsigned int cycles)
     switch (m_haltcnt)
     {
     case 255: // normal mode
-      PrintRegs(*this);
       if (FLAG_T)
       {
-        if (R(15) & 0x1)
-          met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
+        while (!CLOCK.IsEventPending())
+        {
+#if METEOR_TRACE
+          std::cout << CLOCK.GetCounter() << std::endl;
+#endif
+          PrintRegs(*this);
+          if (R(15) & 0x1)
+            met_abort("PC not 16 bit aligned : " << IOS_ADD << R(15));
 
-        code = MEM.ReadQuick16(R(15) - 2);
-        TRACE_THUMB_INSTRUCTION(R(15), code);
-        R(15) += 2;
-        t_Code();
+          code = MEM.ReadQuick16(R(15) - 2);
+          TRACE_THUMB_INSTRUCTION(R(15), code);
+          R(15) += 2;
+          t_Code();
+        }
       }
       else
       {
-        if (R(15) & 0x3)
-          met_abort("PC not 32 bit aligned : " << IOS_ADD << R(15));
+        while (!CLOCK.IsEventPending())
+        {
+#if METEOR_TRACE
+          std::cout << CLOCK.GetCounter() << std::endl;
+#endif
+          PrintRegs(*this);
+          if (R(15) & 0x3)
+            met_abort("PC not 32 bit aligned : " << IOS_ADD << R(15));
 
-        if (R(15) < 0x01000000 && !MEM.HasBios())
-        {
-          switch (R(15))
+          if (R(15) < 0x01000000 && !MEM.HasBios())
           {
-          case 0x004:
-            BIOS.Bios000h();
-            break;
-          case 0x00C:
-            BIOS.Bios008h();
-            break;
-          case 0x01C:
-            BIOS.Bios018h();
-            break;
-          case 0x134:
-            BIOS.Bios130h();
-            break;
-          case 0x33C:
-            BIOS.Bios338h();
-            break;
-          case 0x16C:
-            BIOS.Bios168h();
-            break;
-          default:
-            met_abort("Jump to " << IOS_ADD << R(15));
+            switch (R(15))
+            {
+            case 0x004:
+              BIOS.Bios000h();
+              break;
+            case 0x00C:
+              BIOS.Bios008h();
+              break;
+            case 0x01C:
+              BIOS.Bios018h();
+              break;
+            case 0x134:
+              BIOS.Bios130h();
+              break;
+            case 0x33C:
+              BIOS.Bios338h();
+              break;
+            case 0x16C:
+              BIOS.Bios168h();
+              break;
+            default:
+              met_abort("Jump to " << IOS_ADD << R(15));
+            }
+            CLOCK.SetEventPending();
           }
-        }
-        else
-        {
-          code = MEM.ReadQuick32(R(15) - 4);
-          TRACE_ARM_INSTRUCTION(R(15), code);
-          R(15) += 4;
-          a_Code();
+          else
+          {
+            code = MEM.ReadQuick32(R(15) - 4);
+            TRACE_ARM_INSTRUCTION(R(15), code);
+            R(15) += 4;
+            a_Code();
+          }
         }
       }
       if (R(15) < 0x01000000 && FLAG_T && !MEM.HasBios())
@@ -125,7 +139,10 @@ void Interpreter::Run(unsigned int cycles)
             CPU.Interrupt();
           }
           else
+          {
             m_interrupt_ = true;
+            CLOCK.SetEventPending(1);
+          }
         }
       }
 

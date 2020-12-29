@@ -126,6 +126,7 @@ ARM(BXBLX)
     FLAG_T = 1;
     R(15) = R(Rm) + 1;
     CYCLES16NSeq(R(15), 3);
+    CLOCK.SetEventPending();
   }
   else
   {
@@ -1203,6 +1204,7 @@ ARM(SWI)
     met_abort("Bits 24-27 must be 1111 for SWI instructions");
 
   CPU.SoftwareInterrupt((code >> 16) & 0xFF);
+  CLOCK.SetEventPending();
 
   // FIXME seems wrong !
   CYCLES32NSeq(0, 3);

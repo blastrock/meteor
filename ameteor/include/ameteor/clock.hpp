@@ -48,6 +48,14 @@ public:
   {
     m_cycles += cycles;
   }
+  void SetEventPending(unsigned delay = 0)
+  {
+    m_first = delay;
+  }
+  bool IsEventPending()
+  {
+    return m_cycles >= m_first;
+  }
   void Commit()
   {
     if (m_cycles >= m_first)
