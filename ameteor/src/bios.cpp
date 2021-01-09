@@ -92,6 +92,33 @@ static const int16_t sineTable[256] = {
     (int16_t)0xF384, (int16_t)0xF50F, (int16_t)0xF69C, (int16_t)0xF82B,
     (int16_t)0xF9BB, (int16_t)0xFB4B, (int16_t)0xFCDD, (int16_t)0xFE6E};
 
+void Bios::BiosEntry(uint32_t addr)
+{
+  switch (addr)
+  {
+  case 0x004:
+    Bios000h();
+    break;
+  case 0x00C:
+    Bios008h();
+    break;
+  case 0x01C:
+    Bios018h();
+    break;
+  case 0x134:
+    Bios130h();
+    break;
+  case 0x33C:
+    Bios338h();
+    break;
+  case 0x16C:
+    Bios168h();
+    break;
+  default:
+    met_abort("Jump to " << IOS_ADD << R(15));
+  }
+}
+
 void Bios::Bios000h()
 {
   debug("Bios entry point");

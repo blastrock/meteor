@@ -76,29 +76,7 @@ void Interpreter::Run(unsigned int cycles)
 
           if (R(15) < 0x01000000 && !MEM.HasBios())
           {
-            switch (R(15))
-            {
-            case 0x004:
-              BIOS.Bios000h();
-              break;
-            case 0x00C:
-              BIOS.Bios008h();
-              break;
-            case 0x01C:
-              BIOS.Bios018h();
-              break;
-            case 0x134:
-              BIOS.Bios130h();
-              break;
-            case 0x33C:
-              BIOS.Bios338h();
-              break;
-            case 0x16C:
-              BIOS.Bios168h();
-              break;
-            default:
-              met_abort("Jump to " << IOS_ADD << R(15));
-            }
+            BIOS.BiosEntry(R(15));
             CLOCK.SetEventPending();
           }
           else

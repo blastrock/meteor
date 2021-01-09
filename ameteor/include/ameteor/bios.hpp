@@ -17,11 +17,15 @@
 #ifndef __BIOS_H__
 #define __BIOS_H__
 
+#include <cstdint>
+
 namespace AMeteor
 {
 class Bios
 {
 public:
+  void BiosEntry(uint32_t addr);
+
   // Entry point
   void Bios000h();
   // Software IRQ
