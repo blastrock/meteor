@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/memory.hpp"
-#include "ameteor/core.hpp"
-#include "ameteor/eeprom.hpp"
-#include "ameteor/flash.hpp"
-#include "ameteor/io.hpp"
-#include "ameteor/sram.hpp"
-#include "globals.hpp"
+#include <ameteor/memory.hpp>
 
-#include "debug.hpp"
+#include <ameteor/core.hpp>
+#include <ameteor/eeprom.hpp>
+#include <ameteor/flash.hpp>
+#include <ameteor/io.hpp>
+#include <ameteor/sram.hpp>
 
 #include <cerrno>
 #include <cstring>
@@ -31,6 +29,9 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#include "debug.hpp"
+#include "globals.hpp"
 
 #define RET_ADD(mem, low, high, size)     \
   if (add >= low && (add + size) <= high) \

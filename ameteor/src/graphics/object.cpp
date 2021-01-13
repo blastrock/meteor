@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/graphics/object.hpp"
+#include <ameteor/graphics/object.hpp>
+
+#include <ameteor/graphics/screen.hpp>
+
 #include "../debug.hpp"
-#include "ameteor/graphics/screen.hpp"
 
 namespace AMeteor
 {

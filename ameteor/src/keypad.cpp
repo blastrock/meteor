@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/keypad.hpp"
-#include "ameteor/core.hpp"
+#include <ameteor/keypad.hpp>
+
+#include <ameteor/core.hpp>
+
 #include "globals.hpp"
 
 namespace AMeteor

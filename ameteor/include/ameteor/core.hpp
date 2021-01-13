@@ -17,16 +17,16 @@
 #ifndef __AMETEOR_H__
 #define __AMETEOR_H__
 
-#include "ameteor/bios.hpp"
-#include "ameteor/clock.hpp"
-#include "ameteor/dma.hpp"
-#include "ameteor/interpreter.hpp"
-#include "ameteor/io.hpp"
-#include "ameteor/keypad.hpp"
-#include "ameteor/lcd.hpp"
-#include "ameteor/memory.hpp"
-#include "ameteor/sound.hpp"
-#include "ameteor/timer.hpp"
+#include <ameteor/bios.hpp>
+#include <ameteor/clock.hpp>
+#include <ameteor/dma.hpp>
+#include <ameteor/interpreter.hpp>
+#include <ameteor/io.hpp>
+#include <ameteor/keypad.hpp>
+#include <ameteor/lcd.hpp>
+#include <ameteor/memory.hpp>
+#include <ameteor/sound.hpp>
+#include <ameteor/timer.hpp>
 
 namespace AMeteor
 {

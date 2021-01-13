@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/lcd.hpp"
-#include "ameteor/core.hpp"
-#include "ameteor/io.hpp"
-#include "globals.hpp"
+#include <ameteor/lcd.hpp>
+
+#include <ameteor/core.hpp>
+#include <ameteor/io.hpp>
 
 #include "debug.hpp"
+#include "globals.hpp"
 
 namespace AMeteor
 {

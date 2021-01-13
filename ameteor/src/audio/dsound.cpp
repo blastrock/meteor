@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/audio/dsound.hpp"
-#include "../globals.hpp"
+#include <ameteor/audio/dsound.hpp>
+
 #include <cstring>
+
+#include "../globals.hpp"
 
 namespace AMeteor
 {

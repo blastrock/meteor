@@ -17,14 +17,15 @@
 #ifndef __AUDIO_SPEAKER_H__
 #define __AUDIO_SPEAKER_H__
 
-#include "dsound.hpp"
-#include "sound1.hpp"
-#include "sound2.hpp"
-#include "sound4.hpp"
+#include <ameteor/audio/dsound.hpp>
+#include <ameteor/audio/sound1.hpp>
+#include <ameteor/audio/sound2.hpp>
+#include <ameteor/audio/sound4.hpp>
+
+#include <cstdint>
 #include <functional>
 #include <istream>
 #include <ostream>
-#include <stdint.h>
 
 namespace AMeteor
 {

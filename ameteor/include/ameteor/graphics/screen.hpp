@@ -17,13 +17,13 @@
 #ifndef __GRAPHICS_SCREEN_H__
 #define __GRAPHICS_SCREEN_H__
 
-#include "bglayer.hpp"
-#include "objects.hpp"
-#include "renderer.hpp"
+#include <ameteor/graphics/bglayer.hpp>
+#include <ameteor/graphics/objects.hpp>
+#include <ameteor/graphics/renderer.hpp>
 
+#include <cstdint>
 #include <istream>
 #include <ostream>
-#include <stdint.h>
 
 namespace AMeteor
 {

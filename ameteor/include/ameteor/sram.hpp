@@ -17,8 +17,8 @@
 #ifndef __SRAM_H__
 #define __SRAM_H__
 
-#include "cartmem.hpp"
-#include <fstream>
+#include <ameteor/cartmem.hpp>
+
 #include <istream>
 #include <ostream>
 #include <stdint.h>

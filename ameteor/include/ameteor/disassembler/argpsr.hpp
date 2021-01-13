@@ -17,7 +17,7 @@
 #ifndef __ARG_PSR_H__
 #define __ARG_PSR_H__
 
-#include "argument.hpp"
+#include <ameteor/disassembler/argument.hpp>
 
 #include <stdint.h>
 

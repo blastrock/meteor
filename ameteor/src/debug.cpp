@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "debug.hpp"
-#include "ameteor/core.hpp"
-#include "ameteor/cpu.hpp"
-#include "globals.hpp"
+
+#include <ameteor/core.hpp>
+#include <ameteor/cpu.hpp>
 
 #include <map>
 #include <sstream>

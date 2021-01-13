@@ -17,13 +17,12 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
+#include <ameteor/core.hpp>
+
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-
-#include "ameteor/core.hpp"
-#include "globals.hpp"
 
 #if METEOR_ASSERTIONS
 #define met_abort(str)                                                     \

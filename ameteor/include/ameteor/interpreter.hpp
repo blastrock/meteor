@@ -17,10 +17,11 @@
 #ifndef __INTERPRETER_H__
 #define __INTERPRETER_H__
 
-#include "cpu.hpp"
+#include <ameteor/cpu.hpp>
+
+#include <cstdint>
 #include <istream>
 #include <ostream>
-#include <stdint.h>
 
 #define ARM(name) void a##name()
 #define THUMB(name) void t##name()

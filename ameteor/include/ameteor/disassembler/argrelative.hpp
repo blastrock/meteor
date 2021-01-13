@@ -17,9 +17,9 @@
 #ifndef __ARG_RELATIVE_H__
 #define __ARG_RELATIVE_H__
 
-#include "argimmediate.hpp"
-#include "argregister.hpp"
-#include "argument.hpp"
+#include <ameteor/disassembler/argimmediate.hpp>
+#include <ameteor/disassembler/argregister.hpp>
+#include <ameteor/disassembler/argument.hpp>
 
 namespace AMeteor
 {

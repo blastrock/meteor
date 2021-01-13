@@ -50,14 +50,15 @@ U_|_1___1___1___0___1_|_________________________var___________|_1_|UNDEF ARM9
 
 */
 
-#include "ameteor/core.hpp"
-#include "ameteor/interpreter.hpp"
-#include "ameteor/memory.hpp"
+#include <ameteor/interpreter.hpp>
+
+#include <ameteor/core.hpp>
+#include <ameteor/memory.hpp>
+
+#include "debug.hpp"
 #include "globals.hpp"
 
 #include "cpu_globals.hpp"
-
-#include "debug.hpp"
 
 #define Rb ((code >> 8) & 0x7)
 #define Ro ((code >> 6) & 0x7)

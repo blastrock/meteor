@@ -17,7 +17,7 @@
 #ifndef __ARG_MUL_REGISTERS_H__
 #define __ARG_MUL_REGISTERS_H__
 
-#include "argument.hpp"
+#include <ameteor/disassembler/argument.hpp>
 
 #include <stdint.h>
 #include <vector>

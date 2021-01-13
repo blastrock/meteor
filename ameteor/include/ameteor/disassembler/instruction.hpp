@@ -17,7 +17,7 @@
 #ifndef __INSTRUCTION_H__
 #define __INSTRUCTION_H__
 
-#include "arguments.hpp"
+#include <ameteor/disassembler/arguments.hpp>
 
 #include <stdint.h>
 #include <string>

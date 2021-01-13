@@ -17,9 +17,9 @@
 #ifndef __GRAPHICS_OBJECTS_H__
 #define __GRAPHICS_OBJECTS_H__
 
-#include "ameteor/io.hpp"
-#include "ameteor/memory.hpp"
-#include "object.hpp"
+#include <ameteor/graphics/object.hpp>
+#include <ameteor/io.hpp>
+#include <ameteor/memory.hpp>
 
 #include <vector>
 

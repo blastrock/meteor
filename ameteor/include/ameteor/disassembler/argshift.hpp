@@ -17,7 +17,7 @@
 #ifndef __ARG_SHIFT_H__
 #define __ARG_SHIFT_H__
 
-#include "argument.hpp"
+#include <ameteor/disassembler/argument.hpp>
 
 namespace AMeteor
 {

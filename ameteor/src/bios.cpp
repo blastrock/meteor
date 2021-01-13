@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/bios.hpp"
-#include "ameteor/cpu.hpp"
-#include "ameteor/memory.hpp"
+#include <ameteor/bios.hpp>
 
-#include "globals.hpp"
-
-#include "debug.hpp"
+#include <ameteor/cpu.hpp>
+#include <ameteor/memory.hpp>
 
 #include <cmath>
+
+#include "debug.hpp"
+#include "globals.hpp"
 
 namespace AMeteor
 {

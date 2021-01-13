@@ -17,11 +17,12 @@
 #ifndef __SOUND_H__
 #define __SOUND_H__
 
-#include "audio/speaker.hpp"
-#include "clock.hpp"
+#include <ameteor/audio/speaker.hpp>
+#include <ameteor/clock.hpp>
+
+#include <cstdint>
 #include <istream>
 #include <ostream>
-#include <stdint.h>
 
 namespace AMeteor
 {

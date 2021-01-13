@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/disassembler/instruction.hpp"
+#include <ameteor/disassembler/instruction.hpp>
 
-#include "ameteor/disassembler/argimmediate.hpp"
-#include "ameteor/disassembler/argmulregisters.hpp"
-#include "ameteor/disassembler/argpsr.hpp"
-#include "ameteor/disassembler/argregister.hpp"
-#include "ameteor/disassembler/argrelative.hpp"
-#include "ameteor/disassembler/argshift.hpp"
-#include "ameteor/disassembler/arguimmediate.hpp"
+#include <ameteor/disassembler/argimmediate.hpp>
+#include <ameteor/disassembler/argmulregisters.hpp>
+#include <ameteor/disassembler/argpsr.hpp>
+#include <ameteor/disassembler/argregister.hpp>
+#include <ameteor/disassembler/argrelative.hpp>
+#include <ameteor/disassembler/argshift.hpp>
+#include <ameteor/disassembler/arguimmediate.hpp>
 
 #include "../globals.hpp" // for ROR
 

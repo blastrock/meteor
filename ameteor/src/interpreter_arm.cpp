@@ -53,13 +53,14 @@ ARM Binary Opcode Format
 
 */
 
-#include "ameteor/core.hpp"
-#include "ameteor/interpreter.hpp"
+#include <ameteor/interpreter.hpp>
+
+#include <ameteor/core.hpp>
+
+#include "debug.hpp"
 #include "globals.hpp"
 
 #include "cpu_globals.hpp"
-
-#include "debug.hpp"
 
 #define Rn ((code >> 16) & 0xF)
 #define Rd ((code >> 12) & 0xF)

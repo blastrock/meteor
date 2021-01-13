@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "ameteor/eeprom.hpp"
-#include "debug.hpp"
-#include "globals.hpp"
+#include <ameteor/eeprom.hpp>
 
 #include <cstring>
+
+#include "debug.hpp"
+#include "globals.hpp"
 
 namespace AMeteor
 {

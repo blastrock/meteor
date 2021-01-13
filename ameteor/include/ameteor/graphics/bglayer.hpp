@@ -17,8 +17,8 @@
 #ifndef __GRAPHICS_BG_LAYER_H__
 #define __GRAPHICS_BG_LAYER_H__
 
-#include "ameteor/io.hpp"
-#include "ameteor/memory.hpp"
+#include <ameteor/io.hpp>
+#include <ameteor/memory.hpp>
 
 #include <stdint.h>
 #include <vector>

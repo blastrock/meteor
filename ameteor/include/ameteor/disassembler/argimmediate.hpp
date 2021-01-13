@@ -17,8 +17,9 @@
 #ifndef __ARG_IMMEDIATE_H__
 #define __ARG_IMMEDIATE_H__
 
-#include "argument.hpp"
-#include <stdint.h>
+#include <ameteor/disassembler/argument.hpp>
+
+#include <cstdint>
 
 namespace AMeteor
 {

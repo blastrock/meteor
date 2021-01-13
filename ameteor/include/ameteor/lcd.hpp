@@ -17,16 +17,15 @@
 #ifndef __LCD_H__
 #define __LCD_H__
 
-#include "clock.hpp"
+#include <ameteor/clock.hpp>
+#include <ameteor/graphics/screen.hpp>
+#include <ameteor/io.hpp>
+#include <ameteor/memory.hpp>
 
-#include "graphics/screen.hpp"
-#include "io.hpp"
-#include "memory.hpp"
-
+#include <cstdint>
 #include <functional>
 #include <istream>
 #include <ostream>
-#include <stdint.h>
 
 namespace AMeteor
 {
