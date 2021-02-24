@@ -133,6 +133,9 @@ private:
   uint16_t m_dispcnt;
   int32_t m_refX2, m_refY2, m_refX3, m_refY3;
   uint16_t* m_pPalette;
+  uint16_t* m_lineBg;
+  uint32_t* m_lineObj;
+  uint8_t* m_window;
 
   // FIXME is this REALLY useful ?
   static BgLayer Screen::*const BgLayers[4];

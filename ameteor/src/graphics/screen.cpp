@@ -46,6 +46,9 @@ Screen::Screen(Memory& memory, Io& io)
   , m_refX3(0)
   , m_refY3(0)
   , m_pPalette((uint16_t*)memory.GetRealAddress(0x05000000))
+  , m_lineBg(new uint16_t[4 * WIDTH])
+  , m_lineObj(new uint32_t[WIDTH])
+  , m_window(new uint8_t[WIDTH])
   , m_bgLayer0(0, memory, io, m_pPalette)
   , m_bgLayer1(1, memory, io, m_pPalette)
   , m_bgLayer2(2, memory, io, m_pPalette)
@@ -73,11 +76,9 @@ void Screen::DrawLine(uint8_t line)
     return;
   }
 
-  uint16_t* lineBg = new uint16_t[4 * WIDTH];
   // layers may draw transparent pixels, so we need to clear them
-  memset(lineBg, 0, 4 * WIDTH * sizeof(uint16_t));
-  uint32_t* lineObj = new uint32_t[WIDTH];
-  for (uint32_t* p = lineObj + WIDTH - 1; p >= lineObj; --p)
+  memset(m_lineBg, 0, 4 * WIDTH * sizeof(uint16_t));
+  for (uint32_t* p = m_lineObj; p < m_lineObj + WIDTH; ++p)
     *p = 0x00030000;
   uint8_t prio[4];
   prio[0] = m_bgLayer0.GetPriority();
@@ -91,35 +92,35 @@ void Screen::DrawLine(uint8_t line)
   case 0: // all in mode 0
     // if the bg is enabled draw it
     if (layersOn & (0x1))
-      m_bgLayer0.DrawLine0(line, lineBg);
+      m_bgLayer0.DrawLine0(line, m_lineBg);
     if (layersOn & (0x1 << 1))
-      m_bgLayer1.DrawLine0(line, lineBg + WIDTH);
+      m_bgLayer1.DrawLine0(line, m_lineBg + WIDTH);
     if (layersOn & (0x1 << 2))
-      m_bgLayer2.DrawLine0(line, lineBg + 2 * WIDTH);
+      m_bgLayer2.DrawLine0(line, m_lineBg + 2 * WIDTH);
     if (layersOn & (0x1 << 3))
-      m_bgLayer3.DrawLine0(line, lineBg + 3 * WIDTH);
+      m_bgLayer3.DrawLine0(line, m_lineBg + 3 * WIDTH);
     // if objects are enabled draw them
     if (layersOn & (0x1 << 4))
-      m_objs.DrawLine(line, lineObj);
+      m_objs.DrawLine(line, m_lineObj);
     break;
   case 1: // bg0 and bg1 in mode 0 and bg2 in mode 2, no bg3
     // disable layer 3
     layersOn &= 0xF7;
     // if the bg is enabled draw it
     if (layersOn & (0x1))
-      m_bgLayer0.DrawLine0(line, lineBg);
+      m_bgLayer0.DrawLine0(line, m_lineBg);
     if (layersOn & (0x1 << 1))
-      m_bgLayer1.DrawLine0(line, lineBg + WIDTH);
+      m_bgLayer1.DrawLine0(line, m_lineBg + WIDTH);
     if (layersOn & (0x1 << 2))
       m_bgLayer2.DrawLine2(
-          lineBg + 2 * WIDTH,
+          m_lineBg + 2 * WIDTH,
           m_refX2,
           m_refY2,
           m_io.DRead16(Io::BG2PA),
           m_io.DRead16(Io::BG2PC));
     // if objects are enabled draw them
     if (layersOn & (0x1 << 4))
-      m_objs.DrawLine(line, lineObj);
+      m_objs.DrawLine(line, m_lineObj);
     break;
   case 2: // bg2 and bg3 in mode 2, no bg0 and bg1
     // disable layers 0 and 1
@@ -127,21 +128,21 @@ void Screen::DrawLine(uint8_t line)
     // if the bg is enabled draw it
     if (layersOn & (0x1 << 2))
       m_bgLayer2.DrawLine2(
-          lineBg + 2 * WIDTH,
+          m_lineBg + 2 * WIDTH,
           m_refX2,
           m_refY2,
           m_io.DRead16(Io::BG2PA),
           m_io.DRead16(Io::BG2PC));
     if (layersOn & (0x1 << 3))
       m_bgLayer3.DrawLine2(
-          lineBg + 3 * WIDTH,
+          m_lineBg + 3 * WIDTH,
           m_refX3,
           m_refY3,
           m_io.DRead16(Io::BG3PA),
           m_io.DRead16(Io::BG3PC));
     // if objects are enabled draw them
     if (layersOn & (0x1 << 4))
-      m_objs.DrawLine(line, lineObj);
+      m_objs.DrawLine(line, m_lineObj);
     break;
   // TODO (remember, HIGH ONLY for objs, don't make shitty copy paste)
   case 4: // bg2 only in mode 4 (bitmap 256)
@@ -151,7 +152,7 @@ void Screen::DrawLine(uint8_t line)
       // draw it
       m_bgLayer2.DrawLine4(
           line,
-          lineBg + 2 * WIDTH,
+          m_lineBg + 2 * WIDTH,
           m_refX2,
           m_refY2,
           m_io.DRead16(Io::BG2PA),
@@ -162,7 +163,7 @@ void Screen::DrawLine(uint8_t line)
     // if objs are enabled
     if (layersOn & (0x1 << 4))
       // all objs with the current priority
-      m_objs.DrawLineHighOnly(line, lineObj);
+      m_objs.DrawLineHighOnly(line, m_lineObj);
     break;
   default:
     met_abort_raw("not supported : " << (m_dispcnt & 0x7));
@@ -172,20 +173,18 @@ void Screen::DrawLine(uint8_t line)
   // windows
   /* I got very little information for this, it may not be accurate. All
    * the sources don't say the same thing */
-  uint8_t* window = NULL;
   if (m_dispcnt >> 13)
   {
-    window = new uint8_t[WIDTH];
     // Outside window
-    memset(window, m_io.DRead16(Io::WINOUT) & 0x3F, WIDTH * sizeof(uint8_t));
+    memset(m_window, m_io.DRead16(Io::WINOUT) & 0x3F, WIDTH * sizeof(uint8_t));
     // OBJ window
     if (m_dispcnt & (0x1 << 15))
-      m_objs.DrawWindow(line, window);
+      m_objs.DrawWindow(line, m_window);
     // Window 1
     if (m_dispcnt & (0x1 << 14))
       DrawWindow(
           line,
-          window,
+          m_window,
           m_io.DRead16(Io::WIN1V),
           m_io.DRead16(Io::WIN1H),
           (m_io.DRead16(Io::WININ) >> 8) & 0x3F);
@@ -193,7 +192,7 @@ void Screen::DrawLine(uint8_t line)
     if (m_dispcnt & (0x1 << 13))
       DrawWindow(
           line,
-          window,
+          m_window,
           m_io.DRead16(Io::WIN0V),
           m_io.DRead16(Io::WIN0H),
           m_io.DRead16(Io::WININ) & 0x3F);
@@ -214,17 +213,14 @@ void Screen::DrawLine(uint8_t line)
   // priority | layer
   uint8_t top, back;
   uint8_t curprio;
-  uint32_t* pObj = lineObj;
-  uint16_t* pBg = lineBg;
-  uint8_t* pWin = window;
-  uint8_t winmask;
-  // if window are disabled, we draw everything which is enabled by
-  // layersOn
-  if (!window)
-    winmask = 0xFF;
+  uint32_t* pObj = m_lineObj;
+  uint16_t* pBg = m_lineBg;
+  uint8_t* pWin = m_window;
+  // by default, we draw everything which is enabled by layersOn
+  uint8_t winmask = 0xFF;
   for (uint8_t x = 0; x < WIDTH; ++x, ++pBg, ++pObj, ++pWin)
   {
-    if (window)
+    if (m_dispcnt >> 13)
       winmask = *pWin;
 
     // backdrop
@@ -304,7 +300,8 @@ void Screen::DrawLine(uint8_t line)
     // else if no window or window and effects are enabled in window
     // and we have a first target on top
     else if (
-        (!window || (*pWin & (0x1 << 5))) && (bldcnt & (0x1 << (top & 0xF))))
+        (!(m_dispcnt >> 13) || (*pWin & (0x1 << 5))) &&
+        (bldcnt & (0x1 << (top & 0xF))))
       switch (colorEffect)
       {
       case 1: // alpha blend
@@ -352,11 +349,6 @@ void Screen::DrawLine(uint8_t line)
   m_refY2 += (int16_t)m_io.DRead16(Io::BG2PD);
   m_refX3 += (int16_t)m_io.DRead16(Io::BG3PB);
   m_refY3 += (int16_t)m_io.DRead16(Io::BG3PD);
-
-  if (window)
-    delete[] window;
-  delete[] lineBg;
-  delete[] lineObj;
 
   // VBlank
   if (line == 159)
