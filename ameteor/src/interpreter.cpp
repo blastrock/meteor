@@ -31,7 +31,6 @@ namespace AMeteor
 {
 Interpreter::Interpreter()
   : m_run(false)
-  , m_interrupt_(false)
   , m_haltcnt(IO.GetRef8(Io::HALTCNT))
   , m_if(IO.GetRef16(Io::IF))
   , m_ie(IO.GetRef16(Io::IE))
@@ -95,34 +94,9 @@ void Interpreter::Run(unsigned int cycles)
       CLOCK.Commit();
 
       if (m_interrupt)
-      // irq are enabled and there are irq waiting...
       {
-        // FIXME : do we really need this ??
-        // if not, we can get rid of save and load state and reset
-        if (m_interrupt_)
-        {
-          m_interrupt_ = false;
-          // XXX we must be sure the cpu isn't halted when an interrupt
-          // occurs
-          // should be removed after since it takes no time to make a new
-          // iteration of the loop
-          m_haltcnt = 255;
-          CPU.Interrupt();
-        }
-        else
-        {
-          // XXX
-          if (m_haltcnt != 255)
-          {
-            m_haltcnt = 255;
-            CPU.Interrupt();
-          }
-          else
-          {
-            m_interrupt_ = true;
-            CLOCK.SetEventPending(1);
-          }
-        }
+        m_haltcnt = 255;
+        CPU.Interrupt();
       }
 
       break;
@@ -131,19 +105,11 @@ void Interpreter::Run(unsigned int cycles)
       {
         m_haltcnt = 255; // return to normal mode
         CPU.Interrupt();
-        // XXX use an else
-        break;
       }
-
-      CLOCK.WaitForNext();
-
-      // XXX remove this block
-      if (m_if & m_ie) // interrupt occured
+      else
       {
-        m_haltcnt = 255; // return to normal mode
-        CPU.Interrupt();
+        CLOCK.WaitForNext();
       }
-
       break;
     case 1: // stop mode
       met_abort("Stop mode not implemented");
@@ -158,14 +124,17 @@ void Interpreter::Run(unsigned int cycles)
 
 bool Interpreter::SaveState(std::ostream& stream)
 {
-  SS_WRITE_VAR(m_interrupt_);
+  // Keep this for savestate compatibility with older versions
+  bool unused = false;
+  SS_WRITE_VAR(unused);
 
   return Cpu::SaveState(stream);
 }
 
 bool Interpreter::LoadState(std::istream& stream)
 {
-  SS_READ_VAR(m_interrupt_);
+  bool unused;
+  SS_READ_VAR(unused);
 
   return Cpu::LoadState(stream);
 }

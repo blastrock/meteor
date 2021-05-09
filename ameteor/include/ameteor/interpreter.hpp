@@ -35,13 +35,11 @@ public:
 
   void Reset()
   {
-    m_interrupt_ = false;
     m_run = false;
     Cpu::Reset();
   }
   void SoftReset()
   {
-    m_interrupt_ = false;
     Cpu::SoftReset();
   }
 
@@ -61,7 +59,6 @@ public:
 private:
   bool m_run;
 
-  bool m_interrupt_;
   uint32_t code;
   uint8_t& m_haltcnt;
   // only for use in halt mode, in normal mode we use m_interrupt
