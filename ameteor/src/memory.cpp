@@ -150,7 +150,7 @@ void Memory::SetCartType(uint8_t type)
 
 void Memory::Reset(uint32_t params)
 {
-  static const uint8_t InitMemoryTime[0xF] = {
+  static const uint8_t InitMemoryTimeNoSeq[0xF] = {
       1, // 00 - BIOS
       0, // 01 - Not used
       3, // 02 - Work RAM 256K
@@ -165,13 +165,7 @@ void Memory::Reset(uint32_t params)
       5, // 0B - ROM, Wait1
       5, // 0C - ROM, Wait2
       5, // 0D - ROM, Wait2
-      5  // 0E - SRAM
-  };
-
-  static const uint8_t InitMemoryTimeSeq[0x3] = {
-      3, // 08-09 - ROM, Wait0
-      5, // 0A-0B - ROM, Wait1
-      9  // 0C-0D - ROM, Wait2
+      5, // 0E - SRAM
   };
 
   if (m_brom && (params & UNIT_MEMORY_BIOS))
@@ -179,8 +173,9 @@ void Memory::Reset(uint32_t params)
     delete[] m_brom;
     m_brom = NULL;
   }
-  std::memcpy(m_memtime, InitMemoryTime, sizeof(m_memtime));
-  std::memcpy(m_memtimeseq, InitMemoryTimeSeq, sizeof(m_memtimeseq));
+  std::memcpy(m_memtime16noseq, InitMemoryTimeNoSeq, sizeof(m_memtime16noseq));
+  std::memcpy(m_memtime16seq, InitMemoryTimeNoSeq, sizeof(m_memtime16seq));
+  UpdateWaitStates(0);
   std::memset(m_wbram, 0, 0x00040000);
   std::memset(m_wcram, 0, 0x00008000);
   std::memset(m_pram, 0, 0x00000400);
@@ -353,129 +348,74 @@ void Memory::UpdateWaitStates(uint16_t waitcnt)
   static const uint8_t GamePakTimeFirstAccess[] = {5, 4, 3, 9};
 
   // SRAM
-  m_memtime[0xE] = GamePakTimeFirstAccess[waitcnt & 0x3];
+  m_memtime16seq[0xE] = m_memtime16noseq[0xE] =
+      GamePakTimeFirstAccess[waitcnt & 0x3];
 
   // Second access
   if (waitcnt & (0x1 << 4))
-    m_memtimeseq[0] = 2;
+    m_memtime16seq[0x8] = m_memtime16seq[0x9] = 2;
   else
-    m_memtimeseq[0] = 3;
+    m_memtime16seq[0x8] = m_memtime16seq[0x9] = 3;
   if (waitcnt & (0x1 << 7))
-    m_memtimeseq[1] = 2;
+    m_memtime16seq[0xA] = m_memtime16seq[0xB] = 2;
   else
-    m_memtimeseq[1] = 5;
+    m_memtime16seq[0xA] = m_memtime16seq[0xB] = 5;
   if (waitcnt & (0x1 << 10))
-    m_memtimeseq[2] = 2;
+    m_memtime16seq[0xC] = m_memtime16seq[0xD] = 2;
   else
-    m_memtimeseq[2] = 9;
+    m_memtime16seq[0xC] = m_memtime16seq[0xD] = 9;
 
   // First access
-  m_memtime[0x8] = m_memtime[0x9] =
+  m_memtime16noseq[0x8] = m_memtime16noseq[0x9] =
       GamePakTimeFirstAccess[(waitcnt >> 2) & 0x3];
-  m_memtime[0xA] = m_memtime[0xB] =
+  m_memtime16noseq[0xA] = m_memtime16noseq[0xB] =
       GamePakTimeFirstAccess[(waitcnt >> 5) & 0x3];
-  m_memtime[0xC] = m_memtime[0xD] =
+  m_memtime16noseq[0xC] = m_memtime16noseq[0xD] =
       GamePakTimeFirstAccess[(waitcnt >> 8) & 0x3];
+
+  // these have a 32 bits bus
+  for (auto const a : {0x0, 0x3, 0x4, 0x7})
+  {
+    m_memtime32seq[a] = m_memtime16seq[a];
+    m_memtime32noseq[a] = m_memtime16noseq[a];
+  }
+
+  // these have a 16 bits bus
+  for (auto const a : {0x2, 0x5, 0x6, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe})
+  {
+    m_memtime32seq[a] = m_memtime16seq[a] * 2;
+    m_memtime32noseq[a] = m_memtime16noseq[a] + m_memtime16seq[a];
+  }
 }
 
 uint8_t Memory::GetCycles16NoSeq(uint32_t add, uint32_t count)
 {
   add >>= 24;
-  switch (add)
-  {
-  case 0x00:
-  case 0x03:
-  case 0x04:
-  case 0x07:
-    // 32 bits bus
-    return m_memtime[add] * count;
-  case 0x08:
-  case 0x09:
-  case 0x0A:
-  case 0x0B:
-  case 0x0C:
-  case 0x0D:
-    // 16 bits bus
-    // sequencial and non sequencial reads don't take the same time
-    return m_memtime[add] + m_memtimeseq[(add - 0x08) & 0xFE] * (count - 1);
-  default:
-    // 16 bits bus (and 8 for SRAM, but only 8 bits accesses are
-    // authorized in this area, so we don't care about 16 and 32 bits
-    // accesses)
-    return m_memtime[add] * count;
-  }
+  return m_memtime16noseq[add] + m_memtime16seq[add] * (count - 1);
 }
 
 uint8_t Memory::GetCycles16Seq(uint32_t add, uint32_t count)
 {
-  add >>= 24;
-  switch (add)
-  {
-  case 0x00:
-  case 0x03:
-  case 0x04:
-  case 0x07:
-    return m_memtime[add] * count;
-  case 0x08:
-  case 0x09:
-  case 0x0A:
-  case 0x0B:
-  case 0x0C:
-  case 0x0D:
-    return m_memtimeseq[(add - 0x08) & 0xFE] * count;
-  default:
-    return m_memtime[add] * count;
-  }
+  return m_memtime16seq[add >> 24] * count;
 }
 
 uint8_t Memory::GetCycles32NoSeq(uint32_t add, uint32_t count)
 {
   add >>= 24;
-  switch (add)
-  {
-  case 0x00:
-  case 0x03:
-  case 0x04:
-  case 0x07:
-    return m_memtime[add] * count;
-  case 0x08:
-  case 0x09:
-  case 0x0A:
-  case 0x0B:
-  case 0x0C:
-  case 0x0D:
-    return m_memtime[add] + m_memtimeseq[(add - 0x08) & 0xFE] * (count * 2 - 1);
-  default:
-    return m_memtime[add] * count * 2;
-  }
+  return m_memtime32noseq[add] + m_memtime32seq[add] * (count - 1);
 }
 
 uint8_t Memory::GetCycles32Seq(uint32_t add, uint32_t count)
 {
-  add >>= 24;
-  switch (add)
-  {
-  case 0x00:
-  case 0x03:
-  case 0x04:
-  case 0x07:
-    return m_memtime[add] * count;
-  case 0x08:
-  case 0x09:
-  case 0x0A:
-  case 0x0B:
-  case 0x0C:
-  case 0x0D:
-    return m_memtimeseq[(add - 0x08) & 0xFE] * count * 2;
-  default:
-    return m_memtime[add] * count * 2;
-  }
+  return m_memtime32seq[add >> 24] * count;
 }
 
 bool Memory::SaveState(std::ostream& stream)
 {
-  SS_WRITE_ARRAY(m_memtime);
-  SS_WRITE_ARRAY(m_memtimeseq);
+  uint8_t unused1[0xf];
+  uint8_t unused2[0x3];
+  SS_WRITE_ARRAY(unused1);
+  SS_WRITE_ARRAY(unused2);
   // write if we have a custom bios and write it too
   bool b = m_brom;
   SS_WRITE_VAR(b);
@@ -500,8 +440,15 @@ bool Memory::LoadState(std::istream& stream)
 {
   Reset(0);
 
-  SS_READ_ARRAY(m_memtime);
-  SS_READ_ARRAY(m_memtimeseq);
+  // we had memory timings stored there before
+  uint8_t unused1[0xf];
+  uint8_t unused2[0x3];
+  SS_READ_ARRAY(unused1);
+  SS_READ_ARRAY(unused2);
+
+  // We can call Io because Io state is loaded before Memory
+  UpdateWaitStates(IO.Read16(Io::WAITCNT) & 0xDFFF);
+
   // read if we have a custom bios and write it too
   bool b;
   SS_READ_VAR(b);

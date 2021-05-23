@@ -128,10 +128,14 @@ private:
     uint32_t mask;
   };
 
-  // times for a 8 or 16 bits access
-  uint8_t m_memtime[0xF];
-  // times for a sequential 8 or 16 bits access in GamePak ROM
-  uint8_t m_memtimeseq[0x3];
+  // timings for a non-sequential 8 or 16 bits access
+  uint8_t m_memtime16noseq[0xF];
+  // timings for a sequential 8 or 16 bits access
+  uint8_t m_memtime16seq[0xF];
+  // timings for a non-sequential 32 bits access
+  uint8_t m_memtime32noseq[0xF];
+  // timings for a sequential 32 bits access
+  uint8_t m_memtime32seq[0xF];
 
   // General Internal Memory
   uint8_t* m_brom;  // BIOS - System ROM
