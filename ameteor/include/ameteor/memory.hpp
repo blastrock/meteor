@@ -93,10 +93,28 @@ public:
     return m_brom;
   }
 
-  uint8_t GetCycles16NoSeq(uint32_t add, uint32_t count);
-  uint8_t GetCycles16Seq(uint32_t add, uint32_t count);
-  uint8_t GetCycles32NoSeq(uint32_t add, uint32_t count);
-  uint8_t GetCycles32Seq(uint32_t add, uint32_t count);
+  uint8_t GetCycles16NoSeq(uint32_t add, uint32_t count)
+  {
+    add >>= 24;
+    return m_memtime16noseq[add] + m_memtime16seq[add] * (count - 1);
+  }
+
+  uint8_t GetCycles16Seq(uint32_t add, uint32_t count)
+  {
+    return m_memtime16seq[add >> 24] * count;
+  }
+
+  uint8_t GetCycles32NoSeq(uint32_t add, uint32_t count)
+  {
+    add >>= 24;
+    return m_memtime32noseq[add] + m_memtime32seq[add] * (count - 1);
+  }
+
+  uint8_t GetCycles32Seq(uint32_t add, uint32_t count)
+  {
+    return m_memtime32seq[add >> 24] * count;
+  }
+
   void UpdateWaitStates(uint16_t waitcnt);
 
   uint8_t* GetRealAddress(uint32_t add, uint8_t size = 0);
